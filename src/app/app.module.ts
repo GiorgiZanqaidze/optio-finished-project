@@ -6,11 +6,13 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BannersListComponent } from './banners-list/banners-list.component';
 import {StoreModule} from "@ngrx/store";
+import { BannerItemComponent } from './banners-list/banner-item/banner-item.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    BannersListComponent
+    BannersListComponent,
+    BannerItemComponent
   ],
   imports: [
     BrowserModule,
