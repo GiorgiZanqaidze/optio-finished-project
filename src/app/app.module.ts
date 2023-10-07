@@ -8,12 +8,13 @@ import { BannersListComponent } from './banners-list/banners-list.component';
 import {StoreModule} from "@ngrx/store";
 import { BannerItemComponent } from './banners-list/banner-item/banner-item.component';
 import {HttpClientModule} from "@angular/common/http";
+import {MatPaginator} from "@angular/material/paginator";
 
 @NgModule({
   declarations: [
     AppComponent,
     BannersListComponent,
-    BannerItemComponent
+    BannerItemComponent,
   ],
   imports: [
     BrowserModule,
