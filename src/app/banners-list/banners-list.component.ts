@@ -1,10 +1,12 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterContentInit, Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {HttpClient} from "@angular/common/http";
 import {PageEvent} from "@angular/material/paginator";
 import {BannerModel} from "../types/banners/banner.model";
 import {FormControl, FormGroup} from "@angular/forms";
 import {BannersService} from "../services/banners.service";
+import {Observable} from "rxjs";
+import { Store} from "@ngrx/store";
 
 @Component({
   selector: 'app-banners-list',
@@ -17,11 +19,12 @@ export class BannersListComponent implements OnInit{
     private router: Router,
     private route: ActivatedRoute,
     private bannersService: BannersService,
-    private http: HttpClient
+    private http: HttpClient,
+    private store: Store<{banner:any}>
   ) {
   }
 
-  banners!: BannerModel[]
+  banners$: Observable<BannerModel[]> = this.store.select(state => state.banner)
   page!: number
   totalPages!: number
   searchInput: string = ''
@@ -35,15 +38,19 @@ export class BannersListComponent implements OnInit{
   }
 
   ngOnInit() {
-    // this.route.queryParams.subscribe((route :Params) => {
-    //   this.page = +route['page']
-    //   this.bannersService.fetchBanners(this.searchInput, this.page)
-    //     .subscribe((data) => {
-    //       this.totalPages = data.totalPages
-    //       this.banners = data.banners
-    //     })
-    // })
+    this.route.queryParams.subscribe((route :Params) => {
+      this.page = +route['page']
+      this.bannersService.fetchBanners(this.searchInput, this.page)
+        .subscribe((data) => {
+          this.totalPages = data.totalPages
+          this.banners$ = data.banners
+        })
+
+    })
   }
+
+
+
 
   onPageChange(event: PageEvent) {
     const queryParams = { page: event.pageIndex };

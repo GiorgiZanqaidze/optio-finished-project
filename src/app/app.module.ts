@@ -15,7 +15,6 @@ import {MatInputModule} from "@angular/material/input";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { EffectsModule } from '@ngrx/effects';
 import {bannersReducer} from "./store/banners/banners.reducer";
-import {BannersEffects} from "./store/banners/banners.effects";
 
 @NgModule({
   declarations: [
@@ -38,7 +37,6 @@ import {BannersEffects} from "./store/banners/banners.effects";
       banners: bannersReducer
     }),
     EffectsModule.forRoot([
-      BannersEffects
     ])
   ],
   providers: [],

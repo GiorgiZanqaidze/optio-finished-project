@@ -1,13 +1,10 @@
-import {createReducer, on} from "@ngrx/store";
-import {BannerModel} from "../../types/banners/banner.model";
-
-
-
-const initialState: {totalPages: number | null, data: BannerModel[]} = {
-  totalPages: null,
-  data: []
-}
-
-export const bannersReducer = createReducer(
-  initialState,
-)
+// import {createReducer, on} from "@ngrx/store";
+// import {getBanners} from "./banners.actions";
+//
+//
+// const initialState = {}
+//
+// export const bannersReducer = createReducer(
+//   initialState,
+//   on(getBanners, (state, action) => action)
+// )
