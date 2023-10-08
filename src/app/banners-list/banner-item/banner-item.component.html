@@ -1,3 +1,10 @@
-<div>
-  <h1 class="bg-red-500">{{banner.id}}</h1>
+<div class="bg-blue-500 flex flex-col p-10 rounded-xl">
+  <div class="rounded-xl overflow-hidden">
+    <img [src]="banner.url"  alt="banner" class="w-full">
+  </div>
+  <div>
+    <h1 class="">{{banner.name}}</h1>
+    <p>Active {{banner.active}}</p>
+    <p>Zone {{banner.zoneId}}</p>
+  </div>
 </div>

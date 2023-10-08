@@ -1,4 +1,5 @@
 import {Component, Input} from '@angular/core';
+import {BannerModel} from "../../types/banners/banner.model";
 
 @Component({
   selector: 'app-banner-item',
@@ -7,6 +8,6 @@ import {Component, Input} from '@angular/core';
 })
 export class BannerItemComponent {
 
-  @Input() banner: any
+  @Input() banner!: BannerModel
 
 }
