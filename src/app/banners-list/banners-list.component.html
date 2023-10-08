@@ -1,6 +1,11 @@
 <div class="bg-red-50 rounded-xl p-20 w-full">
   <div>
-
+    <form [formGroup]="searchBannersForm" (submit)="searchBanners()">
+      <mat-form-field appearance="fill" color="primary" [formGroup]="searchBannersForm" (submit)="searchBanners()">
+        <mat-label>Search banners</mat-label>
+        <input  matInput placeholder="Banner name" formControlName="textInput">
+      </mat-form-field>
+    </form>
   </div>
   <div class="grid gap-10 grid-cols-1 md:grid-cols-2 mb-10">
     <app-banner-item *ngFor="let banner of banners" [banner]="banner"></app-banner-item>

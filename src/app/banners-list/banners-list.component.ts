@@ -3,6 +3,7 @@ import {ActivatedRoute, Params, Router} from "@angular/router";
 import {HttpClient} from "@angular/common/http";
 import {PageEvent} from "@angular/material/paginator";
 import {BannerModel} from "../types/banners/banner.model";
+import {FormControl, FormGroup} from "@angular/forms";
 
 @Component({
   selector: 'app-banners-list',
@@ -21,13 +22,22 @@ export class BannersListComponent implements OnInit{
   banners!: BannerModel[]
   page!: number
   totalPages!: number
+  searchInput: string = ''
+
+  searchBannersForm = new FormGroup({
+    "textInput": new FormControl(''),
+  })
+
+  searchBanners() {
+    console.log(this.searchBannersForm.value)
+  }
 
   ngOnInit() {
     this.route.queryParams.subscribe((route :Params) => {
       this.page = +route['page']
       this.http.post('https://development.api.optio.ai/api/v2/banners/find',
         {
-          search:'',
+          search:this.searchInput,
           "pageSize": 10,
           "pageIndex": this.page,
         },
