@@ -1,3 +1,12 @@
-<div>
-  <h1 class="bg-red-500">{{banner.id}}</h1>
+<div class="bg-blue-500 flex flex-col p-10 rounded-xl text-4xl md:text-xl">
+  <div class="rounded-xl overflow-hidden w-full">
+    <img [src]="banner.url"  alt="banner" class="w-full">
+  </div>
+  <div>
+    <p>Name: {{banner.name}}</p>
+    <p >Active: {{banner.active}}</p>
+    <p>Zone: {{banner.zoneId}}</p>
+    <p>startDate: {{banner.startDate | date}} - {{banner.endDate | date}}</p>
+    <p>Labels: <span *ngFor="let label of banner.labels">{{label}}</span></p>
+  </div>
 </div>

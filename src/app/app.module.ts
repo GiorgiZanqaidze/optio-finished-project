@@ -9,6 +9,10 @@ import {StoreModule} from "@ngrx/store";
 import { BannerItemComponent } from './banners-list/banner-item/banner-item.component';
 import {HttpClientModule} from "@angular/common/http";
 import {MatPaginatorModule} from "@angular/material/paginator";
+import {NgOptimizedImage} from "@angular/common";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatInputModule} from "@angular/material/input";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -22,7 +26,12 @@ import {MatPaginatorModule} from "@angular/material/paginator";
     BrowserAnimationsModule,
     MatPaginatorModule,
     HttpClientModule,
-    StoreModule.forRoot({})
+    StoreModule.forRoot({}),
+    NgOptimizedImage,
+    MatFormFieldModule,
+    MatInputModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
