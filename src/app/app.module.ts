@@ -13,6 +13,8 @@ import {NgOptimizedImage} from "@angular/common";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import { EffectsModule } from '@ngrx/effects';
+import {bannersReducer} from "./store/banners/banners.reducer";
 
 @NgModule({
   declarations: [
@@ -26,12 +28,16 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
     BrowserAnimationsModule,
     MatPaginatorModule,
     HttpClientModule,
-    StoreModule.forRoot({}),
     NgOptimizedImage,
     MatFormFieldModule,
     MatInputModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    StoreModule.forRoot({
+      banners: bannersReducer
+    }),
+    EffectsModule.forRoot([
+    ])
   ],
   providers: [],
   bootstrap: [AppComponent]

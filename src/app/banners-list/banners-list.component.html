@@ -1,4 +1,4 @@
-<div class="bg-red-50 rounded-xl p-20 w-full">
+<div class="bg-red-50 rounded-xl p-20">
   <div>
     <form [formGroup]="searchBannersForm" (submit)="searchBanners()">
       <mat-form-field appearance="fill" color="primary" [formGroup]="searchBannersForm" (submit)="searchBanners()">
@@ -7,8 +7,8 @@
       </mat-form-field>
     </form>
   </div>
-  <div class="grid gap-10 grid-cols-1 sm:grid-cols-2 mb-10">
-    <app-banner-item *ngFor="let banner of banners" [banner]="banner"></app-banner-item>
+  <div class="grid gap-10 grid-cols-1 md:grid-cols-2 mb-10" *ngIf="(banners$ | async) as banners">
+    <app-banner-item *ngFor="let banner  of banners" [banner]="banner"></app-banner-item>
   </div>
   <div class="flex justify-center">
     <mat-paginator [pageIndex]="page" showFirstLastButtons="true" hidePageSize pageSize="10" [length]="totalPages" (page)="onPageChange($event)"></mat-paginator>
