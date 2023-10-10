@@ -5,7 +5,7 @@ import {BannerModel} from "../types/banners/banner.model";
 import {FormControl, FormGroup} from "@angular/forms";
 import {BannersService} from "../services/banners/banners.service";
 import {MatDrawer} from "@angular/material/sidenav";
-import {distinctUntilChanged, map, switchMap, tap} from "rxjs";
+import {distinctUntilChanged} from "rxjs";
 
 @Component({
   selector: 'app-banners-list',
@@ -27,7 +27,6 @@ export class BannersListComponent implements OnInit{
   searchInput: string = ''
   @ViewChild('drawer') drawer!: MatDrawer
   drawerIsOpen!: boolean
-  blobsArray!: string[]
 
   searchBannersForm = new FormGroup({
     "textInput": new FormControl(''),
@@ -51,7 +50,6 @@ export class BannersListComponent implements OnInit{
         this.page = +route['page'];
         this.bannersService
           .fetchBanners(this.searchInput, this.page)
-
           .subscribe((data: any) => {
             console.log(data)
             this.totalPages = data.data.total;

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {HttpClient} from "@angular/common/http";
+import {FormArray, FormControl, FormGroup, Validators} from "@angular/forms";
+import {FormsService} from "../../services/forms/forms.service";
+import {switchMap} from "rxjs";
 
 type Input = string | null
 
@@ -22,41 +23,38 @@ export class BannerFormComponent {
       "channelId": new FormControl<Input>(null, [Validators.required]),
       "language": new FormControl<Input>(null, [Validators.required]),
       "url": new FormControl<Input>(null, [Validators.required]),
-      "labels": new FormControl<string[]>([])
+      "labels": new FormArray([
+
+      ])
   })
+    fileFormData = new FormData()
+
 
 
 
   submitBannerData() {
-    console.log(this.bannerForm.value)
-      this.http.post('https://development.api.optio.ai/api/v2/banners/save',
-          this.bannerForm.value,
-          {
-              headers: {
-                  accept: "application/json",
-                  Authorization: "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImludGVybnNoaXBAb3B0aW8uYWkiLCJzdWIiOiJpbnRlcm5zaGlwIiwiaW50ZXJuc2hpcElkIjoiZ2lvcmdpemFucWFpZHplb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk2NTY4OTI3LCJleHAiOjE2OTc0MzI5Mjd9.eXt_P4gBxAH6QwUDRpmKixVLn0BgLAq09Kj3F8W8oMJQqid8Sjxi-xVR1PNnrfRCViWuvVHX8D4B6FLzX15X9Q"
-              },
-          }).subscribe((res:any) => {
-          console.log(res)
-      })
+        this.formService.submitBlob(this.fileFormData).subscribe(res => console.log(res))
+      this.formService.submitBannerForm(this.bannerForm.value).subscribe(res => console.log(res))
+      this.formService.submitBlob(this.fileFormData).pipe(
+          switchMap((blobResponse: any) => {
+              console.log(blobResponse)
+              const mergedSubmitData = {
+                  ...this.bannerForm.value,
+                  fileId: blobResponse.data.id
+              }
+              return this.formService.submitBannerForm(mergedSubmitData);
+          })
+      ).subscribe((bannerResponse) => {
+          console.log('Second request response:', bannerResponse);
+      });
   }
 
-  constructor(private http: HttpClient) {
+  constructor(
+      private formService: FormsService,
+      ) {
   }
-
   onSelectedFile(event: any) {
-    const formData = new FormData();
     const file:any = event.target.files[0]
-    formData.set('blob', file);
-    this.http.post('https://development.api.optio.ai/api/v2/blob/upload',
-        formData,
-        {
-            headers: {
-                accept: "application/json",
-                Authorization: "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImludGVybnNoaXBAb3B0aW8uYWkiLCJzdWIiOiJpbnRlcm5zaGlwIiwiaW50ZXJuc2hpcElkIjoiZ2lvcmdpemFucWFpZHplb2ZmaWNpYWxAZ21haWwuY29tIiwiaWF0IjoxNjk2NTY4OTI3LCJleHAiOjE2OTc0MzI5Mjd9.eXt_P4gBxAH6QwUDRpmKixVLn0BgLAq09Kj3F8W8oMJQqid8Sjxi-xVR1PNnrfRCViWuvVHX8D4B6FLzX15X9Q"
-            },
-        }).subscribe((res:any) => {
-            this.bannerForm.patchValue({'fileId': res.data.id})
-    })
+      this.fileFormData.set('blob', file);
   }
 }
