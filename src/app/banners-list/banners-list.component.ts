@@ -3,7 +3,7 @@ import {ActivatedRoute, Params, Router} from "@angular/router";
 import {PageEvent} from "@angular/material/paginator";
 import {BannerModel} from "../types/banners/banner.model";
 import {FormControl, FormGroup} from "@angular/forms";
-import {BannersService} from "../services/banners.service";
+import {BannersService} from "../services/banners/banners.service";
 import {MatDrawer} from "@angular/material/sidenav";
 import {distinctUntilChanged} from "rxjs";
 
