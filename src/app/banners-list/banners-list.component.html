@@ -1,8 +1,7 @@
 <div >
   <mat-drawer-container  [hasBackdrop]="true">
-    <mat-drawer #drawer mode="over" position="end" opened="false">I'm a drawer</mat-drawer>
+    <mat-drawer #drawer mode="over" position="end" [opened]="drawerIsOpen" (openedChange)="drawerChange()">I'm a drawer</mat-drawer>
     <mat-drawer-content>
-
       <button mat-icon-button (click)="drawer.toggle()">Toggle drawer</button>
       <div class="bg-red-50 rounded-xl p-20 mx-[5rem] py-20">
         <form [formGroup]="searchBannersForm" (submit)="searchBanners()">

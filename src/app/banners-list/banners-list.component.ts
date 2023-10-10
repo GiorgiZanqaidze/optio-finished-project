@@ -1,4 +1,4 @@
-import {AfterContentInit, Component, OnInit} from '@angular/core';
+import {AfterContentInit, ChangeDetectionStrategy, Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {HttpClient} from "@angular/common/http";
 import {PageEvent} from "@angular/material/paginator";
@@ -7,11 +7,12 @@ import {FormControl, FormGroup} from "@angular/forms";
 import {BannersService} from "../services/banners.service";
 import {Observable} from "rxjs";
 import { Store} from "@ngrx/store";
+import {MatDrawer} from "@angular/material/sidenav";
 
 @Component({
   selector: 'app-banners-list',
   templateUrl: './banners-list.component.html',
-  styleUrls: ['./banners-list.component.css']
+  styleUrls: ['./banners-list.component.css'],
 })
 export class BannersListComponent implements OnInit{
 
@@ -28,6 +29,8 @@ export class BannersListComponent implements OnInit{
   page!: number
   totalPages!: number
   searchInput: string = ''
+  @ViewChild('drawer') drawer!: MatDrawer
+  drawerIsOpen!: boolean
 
   searchBannersForm = new FormGroup({
     "textInput": new FormControl(''),
@@ -40,6 +43,8 @@ export class BannersListComponent implements OnInit{
   ngOnInit() {
     this.route.queryParams.subscribe((route :Params) => {
       this.page = +route['page']
+      console.log(typeof JSON.parse(route['drawerIsOpen']))
+      this.drawerIsOpen = JSON.parse(route['drawerIsOpen'])
       this.bannersService.fetchBanners(this.searchInput, this.page)
         .subscribe((data: any) => {
           this.totalPages = data.data.total
@@ -48,7 +53,14 @@ export class BannersListComponent implements OnInit{
     })
   }
 
-
+  drawerChange() {
+    const queryParams = { drawerIsOpen: this.drawer.opened };
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: queryParams,
+      queryParamsHandling: 'merge',
+    })
+  }
 
 
   onPageChange(event: PageEvent) {
@@ -57,6 +69,6 @@ export class BannersListComponent implements OnInit{
       relativeTo: this.route,
       queryParams: queryParams,
       queryParamsHandling: 'merge',
-    });
+    })
   }
 }
