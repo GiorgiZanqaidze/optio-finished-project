@@ -6,7 +6,7 @@ import {BannerModel} from "../../types/banners/banner.model";
   templateUrl: './banner-item.component.html',
   styleUrls: ['./banner-item.component.css']
 })
-export class BannerItemComponent {
+export class BannerItemComponent{
 
   @Input() banner!: BannerModel
 

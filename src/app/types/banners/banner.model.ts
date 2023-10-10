@@ -6,5 +6,6 @@ export interface BannerModel {
   endDate: string,
   labels: string[],
   zoneId: string,
-  url: string
+  url: string,
+  fileId: number
 }
