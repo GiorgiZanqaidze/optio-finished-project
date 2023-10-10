@@ -1,17 +1,25 @@
-<div class="bg-red-50 rounded-xl p-20">
-  <div>
-    <form [formGroup]="searchBannersForm" (submit)="searchBanners()">
-      <mat-form-field appearance="fill" color="primary" [formGroup]="searchBannersForm" (submit)="searchBanners()">
-        <mat-label>Search banners</mat-label>
-        <input  matInput placeholder="Banner name" formControlName="textInput">
-      </mat-form-field>
-    </form>
-  </div>
-  <div class="grid gap-10 grid-cols-1 md:grid-cols-2 mb-10">
-    <app-banner-item *ngFor="let banner  of banners" [banner]="banner"></app-banner-item>
-  </div>
-  <div class="flex justify-center">
-    <mat-paginator [pageIndex]="page" showFirstLastButtons="true" hidePageSize pageSize="10" [length]="totalPages" (page)="onPageChange($event)"></mat-paginator>
-  </div>
+<div >
+  <mat-drawer-container  [hasBackdrop]="true">
+    <mat-drawer #drawer mode="over" position="end" opened="false">I'm a drawer</mat-drawer>
+    <mat-drawer-content>
+
+      <button mat-icon-button (click)="drawer.toggle()">Toggle drawer</button>
+      <div class="bg-red-50 rounded-xl p-20 mx-[5rem] py-20">
+        <form [formGroup]="searchBannersForm" (submit)="searchBanners()">
+          <mat-form-field appearance="fill" color="primary" [formGroup]="searchBannersForm" (submit)="searchBanners()">
+            <mat-label>Search banners</mat-label>
+            <input  matInput placeholder="Banner name" formControlName="textInput">
+          </mat-form-field>
+        </form>
+        <div class="grid gap-10 grid-cols-1 md:grid-cols-2 mb-10">
+          <app-banner-item *ngFor="let banner  of banners" [banner]="banner"></app-banner-item>
+        </div>
+        <div class="flex justify-center">
+          <mat-paginator [pageIndex]="page" showFirstLastButtons="true" hidePageSize pageSize="10" [length]="totalPages" (page)="onPageChange($event)"></mat-paginator>
+        </div>
+      </div>
+    </mat-drawer-content>
+  </mat-drawer-container>
+
 </div>
 

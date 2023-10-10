@@ -14,7 +14,9 @@ import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { EffectsModule } from '@ngrx/effects';
-import { BannerFormComponent } from './banner-form/banner-form.component';
+import { BannerFormComponent } from './banners-list/banner-form/banner-form.component';
+import {MatSidenavModule} from "@angular/material/sidenav";
+import {MatSelectModule} from "@angular/material/select";
 
 @NgModule({
   declarations: [
@@ -34,10 +36,10 @@ import { BannerFormComponent } from './banner-form/banner-form.component';
     MatInputModule,
     FormsModule,
     ReactiveFormsModule,
-    StoreModule.forRoot({
-    }),
-    EffectsModule.forRoot([
-    ])
+    StoreModule.forRoot({}),
+    EffectsModule.forRoot([]),
+    MatSidenavModule,
+    MatSelectModule
   ],
   providers: [],
   bootstrap: [AppComponent]
