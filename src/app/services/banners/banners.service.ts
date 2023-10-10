@@ -16,7 +16,7 @@ export class BannersService {
         this.ApiBaseUrl = environment.ApiUrl
   }
 
-  fetchBanners(searchInput: string, page: number) {
+  fetchBanners(searchInput: string | null | undefined, page: number) {
     return this.http.post("/banners/find",
       {
         search:searchInput,

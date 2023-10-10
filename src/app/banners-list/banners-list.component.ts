@@ -24,17 +24,12 @@ export class BannersListComponent implements OnInit{
   banners!: BannerModel[]
   page!: number
   totalPages!: number
-  searchInput: string = ''
   @ViewChild('drawer') drawer!: MatDrawer
   drawerIsOpen!: boolean
 
   searchBannersForm = new FormGroup({
-    "textInput": new FormControl(''),
+    "search": new FormControl<string>(''),
   })
-
-  searchBanners() {
-    console.log(this.searchBannersForm.value)
-  }
 
   ngOnInit() {
     this.route.queryParams.subscribe((route :Params) => {
@@ -48,8 +43,9 @@ export class BannersListComponent implements OnInit{
       )
       .subscribe((route: Params) => {
         this.page = +route['page'];
+        this.searchBannersForm.patchValue({'search': route['search']} )
         this.bannersService
-          .fetchBanners(this.searchInput, this.page)
+          .fetchBanners(this.searchBannersForm.value.search, this.page)
           .subscribe((data: any) => {
             console.log(data)
             this.totalPages = data.data.total;
@@ -75,6 +71,24 @@ export class BannersListComponent implements OnInit{
       queryParams: queryParams,
       queryParamsHandling: 'merge',
     })
+  }
+
+  searchBanners() {
+    const queryParams = { search: this.searchBannersForm.value.search };
+    console.log(queryParams)
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: queryParams,
+      queryParamsHandling: 'merge',
+    })
+    this.bannersService
+        .fetchBanners(this.searchBannersForm.value.search, this.page)
+        .subscribe((data: any) => {
+          console.log(data)
+          this.totalPages = data.data.total;
+          this.banners = data.data.entities;
+        });
+
   }
 
 
