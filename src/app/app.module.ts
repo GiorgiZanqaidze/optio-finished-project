@@ -23,6 +23,7 @@ import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatNativeDateModule} from "@angular/material/core";
 import {MatIconModule} from "@angular/material/icon";
 import {AuthInterceptorService} from "./services/interceptors/auth-interceptor.service";
+import {ApiUrlInterceptorService} from "./services/interceptors/api-url-interceptor.service";
 
 @NgModule({
   declarations: [
@@ -55,7 +56,12 @@ import {AuthInterceptorService} from "./services/interceptors/auth-interceptor.s
   providers: [
       {
           provide: HTTP_INTERCEPTORS,
-          useClass: AuthInterceptorService, // Add your interceptor class here
+          useClass: AuthInterceptorService,
+          multi: true,
+      },
+      {
+          provide: HTTP_INTERCEPTORS,
+          useClass: ApiUrlInterceptorService,
           multi: true,
       },
   ],

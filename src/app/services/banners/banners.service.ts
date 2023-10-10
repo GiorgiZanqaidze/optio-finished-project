@@ -17,7 +17,7 @@ export class BannersService {
   }
 
   fetchBanners(searchInput: string, page: number) {
-    return this.http.post(`${this.ApiBaseUrl}/banners/find`,
+    return this.http.post("/banners/find",
       {
         search:searchInput,
         "pageSize": 4,
