@@ -1,6 +1,6 @@
-<div >
+<div class="max-w-[150rem] mx-auto">
   <mat-drawer-container class="min-h-screen" [hasBackdrop]="true">
-    <mat-drawer #drawer mode="over" position="end" [opened]="drawerIsOpen" (openedChange)="drawerChange()">
+    <mat-drawer class="w-full md:w-2/3" #drawer mode="over" position="end" [opened]="drawerIsOpen" (openedChange)="drawerChange()">
       <app-banner-form></app-banner-form>
     </mat-drawer>
     <mat-drawer-content>

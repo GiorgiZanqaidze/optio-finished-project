@@ -38,7 +38,9 @@ export class BannersListComponent implements OnInit{
 
   ngOnInit() {
     this.route.queryParams.subscribe((route :Params) => {
-      this.drawerIsOpen = JSON.parse(route['drawerIsOpen'])
+      if (route['drawerIsOpen']) {
+        this.drawerIsOpen = JSON.parse(route['drawerIsOpen'])
+      }
     })
     this.route.queryParams
       .pipe(
