@@ -14,12 +14,14 @@ import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { EffectsModule } from '@ngrx/effects';
+import { BannerFormComponent } from './banner-form/banner-form.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     BannersListComponent,
     BannerItemComponent,
+    BannerFormComponent,
   ],
   imports: [
     BrowserModule,
