@@ -12,6 +12,14 @@ type Input = string | null
   styleUrls: ['./banner-form.component.css']
 })
 export class BannerFormComponent {
+
+    constructor(private formService: FormsService) {
+    }
+
+    toppingList = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato']
+
+    imageName: string | null = null
+
   bannerForm = new FormGroup({
     "name": new FormControl<Input>(null, [Validators.required]),
       "zoneId": new FormControl<Input>(null, [Validators.required]),
@@ -23,21 +31,13 @@ export class BannerFormComponent {
       "channelId": new FormControl<Input>(null, [Validators.required]),
       "language": new FormControl<Input>(null, [Validators.required]),
       "url": new FormControl<Input>(null, [Validators.required]),
-      "labels": new FormArray([
-
-      ])
+      "labels": new FormControl<string[]>([])
   })
     fileFormData = new FormData()
 
-
-
-
   submitBannerData() {
-        this.formService.submitBlob(this.fileFormData).subscribe(res => console.log(res))
-      this.formService.submitBannerForm(this.bannerForm.value).subscribe(res => console.log(res))
       this.formService.submitBlob(this.fileFormData).pipe(
           switchMap((blobResponse: any) => {
-              console.log(blobResponse)
               const mergedSubmitData = {
                   ...this.bannerForm.value,
                   fileId: blobResponse.data.id
@@ -49,12 +49,14 @@ export class BannerFormComponent {
       });
   }
 
-  constructor(
-      private formService: FormsService,
-      ) {
-  }
   onSelectedFile(event: any) {
     const file:any = event.target.files[0]
+      console.log(event.target.files[0].name)
+      this.imageName = event.target.files[0].name
       this.fileFormData.set('blob', file);
+    const fileField = this.bannerForm.get('fileId')
+      fileField?.clearValidators()
+
   }
+
 }

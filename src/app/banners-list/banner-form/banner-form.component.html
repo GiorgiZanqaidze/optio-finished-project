@@ -1,7 +1,6 @@
 <div class="min-w-full">
   <form [formGroup]="bannerForm" (submit)="submitBannerData()">
     <div class="flex flex-col w-1/3 ml-10 mt-10">
-
       <mat-form-field>
         <mat-label>Name</mat-label>
         <input type="text" formControlName="name" id="name" matInput>
@@ -9,7 +8,8 @@
       <div class=" h-12 rounded-t border border-b-gray-300 bg-gray-100 mb-4">
         <label mat-mini-fab for="image"  class="flex items-center text-center text-md w-full h-full cursor-pointer hover:bg-gray-200">
           <mat-icon>attach_file</mat-icon>
-          <span>Upload Image</span>
+          <span *ngIf="!imageName">Upload Image </span>
+          <span *ngIf="imageName">{{imageName}}</span>
         </label>
         <input class="invisible" type="file" id="image" formControlName="fileId" (change)="onSelectedFile($event)">
       </div>
@@ -57,6 +57,12 @@
         <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
         <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-date-range-picker #picker></mat-date-range-picker>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Toppings</mat-label>
+        <mat-select formControlName="labels" multiple>
+          <mat-option *ngFor="let topping of toppingList" [value]="topping">{{topping}}</mat-option>
+        </mat-select>
       </mat-form-field>
       <button class="bg-blue-300 md:text-xl rounded disabled:bg-amber-10 disabled:cursor-not-allowed" [disabled]="bannerForm.invalid"  mat-raised-button color="accent">Submit</button>
     </div>

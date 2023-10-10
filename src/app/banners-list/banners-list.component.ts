@@ -55,9 +55,7 @@ export class BannersListComponent implements OnInit{
             this.totalPages = data.data.total;
             this.banners = data.data.entities;
           });
-
       });
-
   }
 
   drawerChange() {
@@ -78,4 +76,6 @@ export class BannersListComponent implements OnInit{
       queryParamsHandling: 'merge',
     })
   }
+
+
 }
