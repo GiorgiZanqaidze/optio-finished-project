@@ -1,6 +1,6 @@
 <div class="bg-blue-500 flex-col p-10 rounded-xl text-xl">
   <div class="rounded-xl overflow-hidden w-full">
-    <img [src]="banner.url"  alt="banner" class="w-full">
+    <img [src]="'https://development.api.optio.ai/api/v2/blob/'+banner.fileId"  alt="banner" class="w-full">
   </div>
   <div>
     <p>Name: {{banner.name}}</p>

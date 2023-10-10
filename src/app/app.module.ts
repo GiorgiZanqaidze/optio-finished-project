@@ -19,6 +19,9 @@ import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatSelectModule} from "@angular/material/select";
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import {MatRadioModule} from "@angular/material/radio";
+import {MatDatepickerModule} from "@angular/material/datepicker";
+import {MatNativeDateModule} from "@angular/material/core";
+import {MatIconModule} from "@angular/material/icon";
 
 @NgModule({
   declarations: [
@@ -27,24 +30,27 @@ import {MatRadioModule} from "@angular/material/radio";
     BannerItemComponent,
     BannerFormComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    MatPaginatorModule,
-    HttpClientModule,
-    NgOptimizedImage,
-    MatFormFieldModule,
-    MatInputModule,
-    FormsModule,
-    ReactiveFormsModule,
-    StoreModule.forRoot({}),
-    EffectsModule.forRoot([]),
-    MatSidenavModule,
-    MatSelectModule,
-    MatButtonToggleModule,
-    MatRadioModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        MatPaginatorModule,
+        HttpClientModule,
+        NgOptimizedImage,
+        MatFormFieldModule,
+        MatInputModule,
+        FormsModule,
+        ReactiveFormsModule,
+        StoreModule.forRoot({}),
+        EffectsModule.forRoot([]),
+        MatSidenavModule,
+        MatSelectModule,
+        MatButtonToggleModule,
+        MatRadioModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        MatIconModule
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })
