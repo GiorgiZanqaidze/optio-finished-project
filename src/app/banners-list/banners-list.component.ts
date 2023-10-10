@@ -1,13 +1,11 @@
-import {AfterContentInit, ChangeDetectionStrategy, Component, OnInit, ViewChild} from '@angular/core';
+import { Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Params, Router} from "@angular/router";
-import {HttpClient} from "@angular/common/http";
 import {PageEvent} from "@angular/material/paginator";
 import {BannerModel} from "../types/banners/banner.model";
 import {FormControl, FormGroup} from "@angular/forms";
 import {BannersService} from "../services/banners.service";
-import {Observable} from "rxjs";
-import { Store} from "@ngrx/store";
 import {MatDrawer} from "@angular/material/sidenav";
+import {distinctUntilChanged} from "rxjs";
 
 @Component({
   selector: 'app-banners-list',
@@ -20,8 +18,6 @@ export class BannersListComponent implements OnInit{
     private router: Router,
     private route: ActivatedRoute,
     private bannersService: BannersService,
-    private http: HttpClient,
-    private store: Store<{banner:any}>
   ) {
   }
 
@@ -42,15 +38,21 @@ export class BannersListComponent implements OnInit{
 
   ngOnInit() {
     this.route.queryParams.subscribe((route :Params) => {
-      this.page = +route['page']
-      console.log(typeof JSON.parse(route['drawerIsOpen']))
       this.drawerIsOpen = JSON.parse(route['drawerIsOpen'])
-      this.bannersService.fetchBanners(this.searchInput, this.page)
-        .subscribe((data: any) => {
-          this.totalPages = data.data.total
-          this.banners = data.data.entities
-        })
     })
+    this.route.queryParams
+      .pipe(
+        distinctUntilChanged((prev, current) => prev['page'] === current['page'])
+      )
+      .subscribe((route: Params) => {
+        this.page = +route['page'];
+        this.bannersService
+          .fetchBanners(this.searchInput, this.page)
+          .subscribe((data: any) => {
+            this.totalPages = data.data.total;
+            this.banners = data.data.entities;
+          });
+      });
   }
 
   drawerChange() {

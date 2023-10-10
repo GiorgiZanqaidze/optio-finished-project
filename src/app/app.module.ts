@@ -17,6 +17,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { BannerFormComponent } from './banners-list/banner-form/banner-form.component';
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatSelectModule} from "@angular/material/select";
+import {MatButtonToggleModule} from "@angular/material/button-toggle";
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import {MatSelectModule} from "@angular/material/select";
     StoreModule.forRoot({}),
     EffectsModule.forRoot([]),
     MatSidenavModule,
-    MatSelectModule
+    MatSelectModule,
+    MatButtonToggleModule
   ],
   providers: [],
   bootstrap: [AppComponent]
