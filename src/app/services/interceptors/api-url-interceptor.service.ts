@@ -13,12 +13,10 @@ export class ApiUrlInterceptorService {
   private readonly baseUrl = environment.ApiUrl
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    // Clone the request to set the base URL
     const modifiedRequest = request.clone({
       url: `${this.baseUrl}${request.url}`,
     });
 
-    // Pass the modified request to the next handler
     return next.handle(modifiedRequest);
   }
 }
