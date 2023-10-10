@@ -9,10 +9,10 @@ export class FormsService {
   constructor(private http: HttpClient) { }
 
   submitBlob(formData: any) {
-    return this.http.post('https://development.api.optio.ai/api/v2/blob/upload', formData)
+    return this.http.post('/blob/upload', formData)
   }
 
   submitBannerForm(formData:any) {
-    return this.http.post('https://development.api.optio.ai/api/v2/banners/save', formData)
+    return this.http.post('/banners/save', formData)
   }
 }
