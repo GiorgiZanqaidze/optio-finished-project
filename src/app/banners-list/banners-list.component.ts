@@ -24,7 +24,7 @@ export class BannersListComponent implements OnInit{
   ) {
   }
 
-  banners$: Observable<BannerModel[]> = this.store.select(state => state.banner)
+  banners!: BannerModel[]
   page!: number
   totalPages!: number
   searchInput: string = ''
@@ -41,11 +41,10 @@ export class BannersListComponent implements OnInit{
     this.route.queryParams.subscribe((route :Params) => {
       this.page = +route['page']
       this.bannersService.fetchBanners(this.searchInput, this.page)
-        .subscribe((data) => {
-          this.totalPages = data.totalPages
-          this.banners$ = data.banners
+        .subscribe((data: any) => {
+          this.totalPages = data.data.total
+          this.banners = data.data.entities
         })
-
     })
   }
 
