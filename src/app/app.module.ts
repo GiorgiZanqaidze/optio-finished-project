@@ -25,6 +25,7 @@ import {AuthInterceptorService} from "./services/interceptors/auth-interceptor.s
 import {ApiUrlInterceptorService} from "./services/interceptors/api-url-interceptor.service";
 import {MatTableModule} from "@angular/material/table";
 import { BannerTableComponent } from './banners-list/banner-table/banner-table.component';
+import { BannersFilterSortComponent } from './banners-list/banners-filter-sort/banners-filter-sort.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { BannerTableComponent } from './banners-list/banner-table/banner-table.c
     BannersListComponent,
     BannerFormComponent,
     BannerTableComponent,
+    BannersFilterSortComponent,
   ],
     imports: [
         BrowserModule,

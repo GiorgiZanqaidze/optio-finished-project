@@ -13,6 +13,12 @@
             <mat-label>Search banners</mat-label>
             <input  matInput placeholder="Banner name" formControlName="search">
           </mat-form-field>
+          <mat-form-field>
+            <mat-label>Sort Direction</mat-label>
+            <mat-select formControlName="channelId">
+              <mat-option [value]="option" *ngFor="let option of sortDirectionsEnums">{{ option }}</mat-option>
+            </mat-select>
+          </mat-form-field>
         </form>
         <div class="mat-elevation-z8">
           <app-banner-table [dataSource]="banners" ></app-banner-table>

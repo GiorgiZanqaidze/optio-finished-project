@@ -7,7 +7,6 @@ import {BannersService} from "../services/banners/banners.service";
 import {MatDrawer} from "@angular/material/sidenav";
 import {distinctUntilChanged} from "rxjs";
 import {MatTableDataSource} from "@angular/material/table";
-import {TableColumn} from "../shared/enums";
 
 @Component({
   selector: 'app-banners-list',
@@ -30,7 +29,9 @@ export class BannersListComponent implements OnInit, AfterViewInit{
   drawerIsOpen!: boolean
   searchBannersForm = new FormGroup({
     "search": new FormControl<string>(''),
+    "sortDirection": new  FormControl<string>('asc')
   })
+  sortDirectionsEnums = ['asc', 'desc']
 
   ngOnInit() {
     this.route.queryParams.subscribe((route :Params) => {
