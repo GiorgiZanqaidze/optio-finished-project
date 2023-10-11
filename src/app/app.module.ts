@@ -24,6 +24,8 @@ import {MatNativeDateModule} from "@angular/material/core";
 import {MatIconModule} from "@angular/material/icon";
 import {AuthInterceptorService} from "./services/interceptors/auth-interceptor.service";
 import {ApiUrlInterceptorService} from "./services/interceptors/api-url-interceptor.service";
+import {MatTableModule} from "@angular/material/table";
+import { BannerTableComponent } from './banners-list/banner-table/banner-table.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +33,7 @@ import {ApiUrlInterceptorService} from "./services/interceptors/api-url-intercep
     BannersListComponent,
     BannerItemComponent,
     BannerFormComponent,
+    BannerTableComponent,
   ],
     imports: [
         BrowserModule,
@@ -51,7 +54,8 @@ import {ApiUrlInterceptorService} from "./services/interceptors/api-url-intercep
         MatRadioModule,
         MatDatepickerModule,
         MatNativeDateModule,
-        MatIconModule
+        MatIconModule,
+        MatTableModule
     ],
   providers: [
       {
