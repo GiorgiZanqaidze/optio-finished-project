@@ -16,7 +16,7 @@ export class BannersService {
         this.ApiBaseUrl = environment.ApiUrl
   }
 
-  fetchBanners(search: string | null | undefined, pageIndex: number, pageSize: number) {
-    return this.http.post("/banners/find",{search, pageIndex, pageSize})
+  fetchBanners(search: string | null | undefined, pageIndex: number, pageSize: number, sortBy?: string | null | undefined, sortDirection?: string | null | undefined) {
+    return this.http.post("/banners/find",{search, pageIndex, pageSize, sortBy, sortDirection})
   }
 }

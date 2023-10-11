@@ -26,6 +26,7 @@ import {ApiUrlInterceptorService} from "./services/interceptors/api-url-intercep
 import {MatTableModule} from "@angular/material/table";
 import { BannerTableComponent } from './banners-list/banner-table/banner-table.component';
 import { BannersFilterSortComponent } from './banners-list/banners-filter-sort/banners-filter-sort.component';
+import {MatButtonModule} from "@angular/material/button";
 
 @NgModule({
   declarations: [
@@ -35,28 +36,29 @@ import { BannersFilterSortComponent } from './banners-list/banners-filter-sort/b
     BannerTableComponent,
     BannersFilterSortComponent,
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        BrowserAnimationsModule,
-        MatPaginatorModule,
-        HttpClientModule,
-        NgOptimizedImage,
-        MatFormFieldModule,
-        MatInputModule,
-        FormsModule,
-        ReactiveFormsModule,
-        StoreModule.forRoot({}),
-        EffectsModule.forRoot([]),
-        MatSidenavModule,
-        MatSelectModule,
-        MatButtonToggleModule,
-        MatRadioModule,
-        MatDatepickerModule,
-        MatNativeDateModule,
-        MatIconModule,
-        MatTableModule
-    ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    MatPaginatorModule,
+    HttpClientModule,
+    NgOptimizedImage,
+    MatFormFieldModule,
+    MatInputModule,
+    FormsModule,
+    ReactiveFormsModule,
+    StoreModule.forRoot({}),
+    EffectsModule.forRoot([]),
+    MatSidenavModule,
+    MatSelectModule,
+    MatButtonToggleModule,
+    MatRadioModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatIconModule,
+    MatTableModule,
+    MatButtonModule
+  ],
   providers: [
       {
           provide: HTTP_INTERCEPTORS,

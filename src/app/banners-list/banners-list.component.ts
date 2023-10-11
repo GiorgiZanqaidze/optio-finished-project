@@ -29,13 +29,12 @@ export class BannersListComponent implements OnInit, AfterViewInit{
   drawerIsOpen!: boolean
   searchBannersForm = new FormGroup({
     "search": new FormControl<string>(''),
-    "sortDirection": new  FormControl<string>('asc')
+    "sortDirection": new  FormControl<string>('asc'),
+    "sortBy": new FormControl<string>('name.raw')
   })
-  sortDirectionsEnums = ['asc', 'desc']
 
   ngOnInit() {
     this.route.queryParams.subscribe((route :Params) => {
-
       if (route['drawerIsOpen']) {
         this.drawerIsOpen = JSON.parse(route['drawerIsOpen'])
       }
@@ -47,8 +46,16 @@ export class BannersListComponent implements OnInit, AfterViewInit{
       .subscribe((route: Params) => {
         this.page = +route['page'];
         this.searchBannersForm.patchValue({'search': route['search']} )
+        this.searchBannersForm.patchValue({'sortDirection': route['sortDirection']})
+        this.searchBannersForm.patchValue({'sortBy': route['sortBy']})
         this.bannersService
-          .fetchBanners(this.searchBannersForm.value.search, this.page, 4)
+          .fetchBanners(
+            this.searchBannersForm.value.search,
+            this.page,
+            2,
+            this.searchBannersForm.value.sortBy,
+        this.searchBannersForm.value.sortDirection
+          )
           .subscribe((data: any) => {
             console.log(data)
             this.totalPages = data.data.total;
@@ -77,15 +84,23 @@ export class BannersListComponent implements OnInit, AfterViewInit{
   }
 
   searchBanners() {
-    const queryParams = { search: this.searchBannersForm.value.search };
-    console.log(queryParams)
+    const queryParams = {
+      search: this.searchBannersForm.value.search,
+      sortDirection: this.searchBannersForm.value.sortDirection,
+      sortBy: this.searchBannersForm.value.sortBy
+    };
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: queryParams,
       queryParamsHandling: 'merge',
     })
     this.bannersService
-        .fetchBanners(this.searchBannersForm.value.search, this.page, 4)
+        .fetchBanners(
+          this.searchBannersForm.value.search,
+          this.page,
+          2,
+          this.searchBannersForm.value.sortBy,
+          this.searchBannersForm.value.sortDirection)
         .subscribe((data: any) => {
           console.log(data)
           this.totalPages = data.data.total;
