@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {BannerModel} from "../../types/banners/banner.model";
+import {BannerModel} from "../../shared/types/banners/banner.model";
 import {environment} from "../../../environments/environment";
 
 @Component({

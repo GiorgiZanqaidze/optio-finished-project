@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {PageEvent} from "@angular/material/paginator";
-import {BannerModel} from "../types/banners/banner.model";
+import {BannerModel} from "../shared/types/banners/banner.model";
 import {FormControl, FormGroup} from "@angular/forms";
 import {BannersService} from "../services/banners/banners.service";
 import {MatDrawer} from "@angular/material/sidenav";
@@ -23,7 +23,7 @@ export class BannersListComponent implements OnInit{
 
   banners!: BannerModel[]
   page!: number
-  pageSize = 2
+  pageSize = 5
   totalPages!: number
   @ViewChild('drawer') drawer!: MatDrawer
   drawerIsOpen!: boolean
@@ -34,7 +34,8 @@ export class BannersListComponent implements OnInit{
   })
 
   ngOnInit() {
-    this.route.queryParams.subscribe((route :Params) => {
+    this.route.queryParams
+      .subscribe((route :Params) => {
       if (route['drawerIsOpen']) {
         this.drawerIsOpen = JSON.parse(route['drawerIsOpen'])
       }
@@ -86,7 +87,6 @@ export class BannersListComponent implements OnInit{
       queryParamsHandling: 'merge',
     })
   }
-
   searchBanners() {
     const queryParams = {
       search: this.searchBannersForm.value.search,
