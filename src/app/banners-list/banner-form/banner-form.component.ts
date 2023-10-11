@@ -25,7 +25,7 @@ export class BannerFormComponent {
       "zoneId": new FormControl<Input>(null, [Validators.required]),
       "active": new FormControl<Input>(null, [Validators.required]),
       "startDate": new FormControl<Input>(null, [Validators.required]),
-      "endDate": new FormControl<Input>(null, ),
+      "endDate": new FormControl<Input>(null),
       "fileId": new FormControl(null, [Validators.required]),
       "priority": new FormControl<Input>('', [Validators.required, Validators.min(1)]),
       "channelId": new FormControl<Input>(null, [Validators.required]),
@@ -51,7 +51,6 @@ export class BannerFormComponent {
 
   onSelectedFile(event: any) {
     const file:any = event.target.files[0]
-      console.log(event.target.files[0].name)
       this.imageName = event.target.files[0].name
       this.fileFormData.set('blob', file);
     const fileField = this.bannerForm.get('fileId')

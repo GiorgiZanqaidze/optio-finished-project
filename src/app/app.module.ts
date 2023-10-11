@@ -7,7 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BannersListComponent } from './banners-list/banners-list.component';
 import {StoreModule} from "@ngrx/store";
 import { BannerItemComponent } from './banners-list/banner-item/banner-item.component';
-import {HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {NgOptimizedImage} from "@angular/common";
 import {MatFormFieldModule} from "@angular/material/form-field";
@@ -22,6 +22,8 @@ import {MatRadioModule} from "@angular/material/radio";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatNativeDateModule} from "@angular/material/core";
 import {MatIconModule} from "@angular/material/icon";
+import {AuthInterceptorService} from "./services/interceptors/auth-interceptor.service";
+import {ApiUrlInterceptorService} from "./services/interceptors/api-url-interceptor.service";
 
 @NgModule({
   declarations: [
@@ -51,7 +53,18 @@ import {MatIconModule} from "@angular/material/icon";
         MatNativeDateModule,
         MatIconModule
     ],
-  providers: [],
+  providers: [
+      {
+          provide: HTTP_INTERCEPTORS,
+          useClass: AuthInterceptorService,
+          multi: true,
+      },
+      {
+          provide: HTTP_INTERCEPTORS,
+          useClass: ApiUrlInterceptorService,
+          multi: true,
+      },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
