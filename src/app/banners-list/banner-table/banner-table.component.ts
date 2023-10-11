@@ -15,9 +15,4 @@ export class BannerTableComponent {
 
   public readonly apiUrl = environment.ApiUrl
 
-  public imageBaseUrl!:string
-
-  ngOnInit() {
-  }
-
 }

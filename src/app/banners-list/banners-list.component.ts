@@ -1,19 +1,17 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import { Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Params, Router} from "@angular/router";
-import {MatPaginator, PageEvent} from "@angular/material/paginator";
+import {PageEvent} from "@angular/material/paginator";
 import {BannerModel} from "../types/banners/banner.model";
 import {FormControl, FormGroup} from "@angular/forms";
 import {BannersService} from "../services/banners/banners.service";
 import {MatDrawer} from "@angular/material/sidenav";
-import {distinctUntilChanged} from "rxjs";
-import {MatTableDataSource} from "@angular/material/table";
 
 @Component({
   selector: 'app-banners-list',
   templateUrl: './banners-list.component.html',
   styleUrls: ['./banners-list.component.css'],
 })
-export class BannersListComponent implements OnInit, AfterViewInit{
+export class BannersListComponent implements OnInit{
 
   constructor(
     private router: Router,
@@ -24,6 +22,7 @@ export class BannersListComponent implements OnInit, AfterViewInit{
 
   banners!: BannerModel[]
   page!: number
+  pageSize = 5
   totalPages!: number
   @ViewChild('drawer') drawer!: MatDrawer
   drawerIsOpen!: boolean
@@ -40,21 +39,19 @@ export class BannersListComponent implements OnInit, AfterViewInit{
       }
     })
     this.route.queryParams
-      .pipe(
-        distinctUntilChanged((prev, current) => prev['page'] === current['page'])
-      )
       .subscribe((route: Params) => {
         this.page = +route['page'];
         this.searchBannersForm.patchValue({'search': route['search']} )
         this.searchBannersForm.patchValue({'sortDirection': route['sortDirection']})
         this.searchBannersForm.patchValue({'sortBy': route['sortBy']})
+        this.pageSize= +route['pageSize'] || this.pageSize
         this.bannersService
           .fetchBanners(
             this.searchBannersForm.value.search,
             this.page,
-            2,
+            this.pageSize,
             this.searchBannersForm.value.sortBy,
-        this.searchBannersForm.value.sortDirection
+            this.searchBannersForm.value.sortDirection
           )
           .subscribe((data: any) => {
             console.log(data)
@@ -75,7 +72,10 @@ export class BannersListComponent implements OnInit, AfterViewInit{
 
 
   onPageChange(event: PageEvent) {
-    const queryParams = { page: event.pageIndex };
+    const queryParams = {
+      page: event.pageIndex,
+      pageSize: event.pageSize
+    };
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: queryParams,
@@ -87,7 +87,7 @@ export class BannersListComponent implements OnInit, AfterViewInit{
     const queryParams = {
       search: this.searchBannersForm.value.search,
       sortDirection: this.searchBannersForm.value.sortDirection,
-      sortBy: this.searchBannersForm.value.sortBy
+      sortBy: this.searchBannersForm.value.sortBy,
     };
     this.router.navigate([], {
       relativeTo: this.route,
@@ -98,21 +98,12 @@ export class BannersListComponent implements OnInit, AfterViewInit{
         .fetchBanners(
           this.searchBannersForm.value.search,
           this.page,
-          2,
+          this.pageSize,
           this.searchBannersForm.value.sortBy,
           this.searchBannersForm.value.sortDirection)
         .subscribe((data: any) => {
-          console.log(data)
           this.totalPages = data.data.total;
           this.banners = data.data.entities;
         });
-  }
-
-  dataSource = new MatTableDataSource<BannerModel>();
-
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
   }
 }

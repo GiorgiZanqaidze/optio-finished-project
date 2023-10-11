@@ -13,26 +13,30 @@
             <mat-label>Search By Name</mat-label>
             <input  matInput placeholder="Banner name" formControlName="search">
           </mat-form-field>
-          <mat-radio-group class="flex flex-col"  formControlName="sortDirection" aria-label="Select an option">
-              <mat-radio-button  value="asc"><mat-icon>keyboard_arrow_up</mat-icon></mat-radio-button>
-              <mat-radio-button value="desc"><mat-icon>keyboard_arrow_down</mat-icon></mat-radio-button>
-          </mat-radio-group>
+          <mat-form-field>
+            <mat-label>Order</mat-label>
+            <mat-select formControlName="sortDirection">
+              <mat-option value="asc">Increasing</mat-option>
+              <mat-option value="desc">Decreasing</mat-option>
+            </mat-select>
+          </mat-form-field>
           <mat-form-field>
             <mat-label>Sort By</mat-label>
             <mat-select formControlName="sortBy">
               <mat-option value="name.raw">Name</mat-option>
-              <mat-option value="2">Second option</mat-option>
-              <mat-option value="2">Second option</mat-option>
+              <mat-option value="id">Id</mat-option>
+              <mat-option value="language">Language</mat-option>
+              <mat-option value="startDate">Start Date</mat-option>
             </mat-select>
           </mat-form-field>
-          <button class="ml-4" mat-raised-button color="primary">Filter<mat-icon>filter_list</mat-icon></button>
+          <button class="ml-4" mat-raised-button color="primary">Filter & Sort<mat-icon>filter_list</mat-icon></button>
         </form>
         <div class="mat-elevation-z8">
           <app-banner-table [dataSource]="banners" ></app-banner-table>
           <mat-paginator
-            [pageSizeOptions]="[1, 10, 20]"
+            [pageSizeOptions]="[5, 10, 20]"
+            [pageSize]="pageSize"
             showFirstLastButtons
-            aria-label="Select page of periodic elements"
             [pageIndex]="page"
             [length]="totalPages" (page)="onPageChange($event)"
           >

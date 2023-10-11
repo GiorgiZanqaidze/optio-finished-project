@@ -8,12 +8,10 @@ import {environment} from '../../../environments/environment'
 })
 export class BannersService {
 
-    private readonly ApiBaseUrl: string
 
   constructor(
     private http: HttpClient,
   ) {
-        this.ApiBaseUrl = environment.ApiUrl
   }
 
   fetchBanners(search: string | null | undefined, pageIndex: number, pageSize: number, sortBy?: string | null | undefined, sortDirection?: string | null | undefined) {
