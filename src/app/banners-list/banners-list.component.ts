@@ -42,34 +42,34 @@ export class BannersListComponent implements OnInit{
     })
     this.route.queryParams
       .pipe(
-        distinctUntilChanged((prev, current) => prev['drawerIsOpen'] !== current['drawerIsOpen'])
+        distinctUntilChanged((prev, current) => {
+         return  prev['drawerIsOpen'] !== current['drawerIsOpen']
+        })
       )
       .subscribe((route: Params) => {
-        this.page = +route['page'];
-        this.searchBannersForm.patchValue({'search': route['search']} )
-        this.searchBannersForm.patchValue({'sortDirection': route['sortDirection']})
-        this.searchBannersForm.patchValue({'sortBy': route['sortBy']})
-        this.pageSize= +route['pageSize'] || this.pageSize
-        this.bannersService
-          .fetchBanners(
-            this.searchBannersForm.value.search,
-            this.page,
-            this.pageSize,
-            this.searchBannersForm.value.sortBy,
-            this.searchBannersForm.value.sortDirection
-          )
-          .subscribe((data: any) => {
-            console.log(data)
-            this.totalPages = data.data.total;
-            this.banners = data.data.entities;
-          });
+          this.page = +route['page'];
+          this.searchBannersForm.patchValue({'search': route['search']} )
+          this.searchBannersForm.patchValue({'sortDirection': route['sortDirection']})
+          this.searchBannersForm.patchValue({'sortBy': route['sortBy']})
+          this.pageSize= +route['pageSize']
+          this.bannersService
+            .fetchBanners(
+              this.searchBannersForm.value.search,
+              this.page,
+              this.pageSize,
+              this.searchBannersForm.value.sortBy,
+              this.searchBannersForm.value.sortDirection
+            )
+            .subscribe((data: any) => {
+              this.totalPages = data.data.total;
+              this.banners = data.data.entities;
+            });
       });
   }
 
   drawerChange() {
     const queryParams = { drawerIsOpen: this.drawer.opened };
     this.router.navigate([], {
-      relativeTo: this.route,
       queryParams: queryParams,
       queryParamsHandling: 'merge',
     })
