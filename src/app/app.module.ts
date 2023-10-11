@@ -6,7 +6,6 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BannersListComponent } from './banners-list/banners-list.component';
 import {StoreModule} from "@ngrx/store";
-import { BannerItemComponent } from './banners-list/banner-item/banner-item.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {NgOptimizedImage} from "@angular/common";
@@ -31,7 +30,6 @@ import { BannerTableComponent } from './banners-list/banner-table/banner-table.c
   declarations: [
     AppComponent,
     BannersListComponent,
-    BannerItemComponent,
     BannerFormComponent,
     BannerTableComponent,
   ],

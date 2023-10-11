@@ -28,12 +28,6 @@ export class BannersListComponent implements OnInit, AfterViewInit{
   totalPages!: number
   @ViewChild('drawer') drawer!: MatDrawer
   drawerIsOpen!: boolean
-  tableColumn = TableColumn;
-
-
-
-
-
   searchBannersForm = new FormGroup({
     "search": new FormControl<string>(''),
   })
