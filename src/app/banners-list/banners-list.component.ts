@@ -5,6 +5,7 @@ import {BannerModel} from "../types/banners/banner.model";
 import {FormControl, FormGroup} from "@angular/forms";
 import {BannersService} from "../services/banners/banners.service";
 import {MatDrawer} from "@angular/material/sidenav";
+import {distinctUntilChanged} from "rxjs";
 
 @Component({
   selector: 'app-banners-list',
@@ -22,7 +23,7 @@ export class BannersListComponent implements OnInit{
 
   banners!: BannerModel[]
   page!: number
-  pageSize = 5
+  pageSize = 2
   totalPages!: number
   @ViewChild('drawer') drawer!: MatDrawer
   drawerIsOpen!: boolean
@@ -39,6 +40,9 @@ export class BannersListComponent implements OnInit{
       }
     })
     this.route.queryParams
+      .pipe(
+        distinctUntilChanged((prev, current) => prev['drawerIsOpen'] !== current['drawerIsOpen'])
+      )
       .subscribe((route: Params) => {
         this.page = +route['page'];
         this.searchBannersForm.patchValue({'search': route['search']} )
