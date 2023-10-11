@@ -1,0 +1,43 @@
+<table mat-table [dataSource]="dataSource" >
+  <ng-container matColumnDef="Name">
+    <th mat-header-cell *matHeaderCellDef> Name </th>
+    <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+  </ng-container>
+  <ng-container matColumnDef="Active">
+    <th mat-header-cell *matHeaderCellDef> Active </th>
+    <td mat-cell *matCellDef="let element"> {{element.active}} </td>
+  </ng-container>
+  <ng-container matColumnDef="Zone">
+    <th mat-header-cell *matHeaderCellDef> Zone </th>
+    <td mat-cell *matCellDef="let element"> {{element.zoneId}} </td>
+  </ng-container>
+  <ng-container matColumnDef="StartDate">
+    <th mat-header-cell *matHeaderCellDef> Start Date </th>
+    <td mat-cell *matCellDef="let element"> {{element.startDate | date}} </td>
+  </ng-container>
+  <ng-container matColumnDef="EndDate">
+    <th mat-header-cell *matHeaderCellDef> End Date </th>
+    <td mat-cell *matCellDef="let element"> {{element.endDate | date}} </td>
+  </ng-container>
+  <ng-container matColumnDef="Labels">
+    <th mat-header-cell *matHeaderCellDef> Labels </th>
+    <td mat-cell *matCellDef="let element">
+      <span *ngFor="let label of element.labels">{{label}}</span>
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="Image">
+    <th mat-header-cell *matHeaderCellDef> Image </th>
+    <td mat-cell *matCellDef="let element">
+      <div class="my-5">
+        <img [src]="apiUrl + '/blob/' + element.fileId" alt="banner" class="min-h-[5rem] max-w-[5rem]">
+      </div>
+    </td>
+  </ng-container>
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr
+    mat-row *matRowDef="let row;
+    columns: displayedColumns;"
+    class="hover:bg-gray-200 hover:cursor-pointer hover:border-y-2 border-gray-300"
+    (click)="showEditBunnerForm(row)"
+  ></tr>
+</table>

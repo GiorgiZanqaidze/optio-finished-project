@@ -8,20 +8,13 @@ import {environment} from '../../../environments/environment'
 })
 export class BannersService {
 
-    private readonly ApiBaseUrl: string
 
   constructor(
     private http: HttpClient,
   ) {
-        this.ApiBaseUrl = environment.ApiUrl
   }
 
-  fetchBanners(searchInput: string | null | undefined, page: number) {
-    return this.http.post("/banners/find",
-      {
-        search:searchInput,
-        "pageSize": 4,
-        "pageIndex": page,
-      })
+  fetchBanners(search: string | null | undefined, pageIndex: number, pageSize: number, sortBy?: string | null | undefined, sortDirection?: string | null | undefined) {
+    return this.http.post("/banners/find",{search, pageIndex, pageSize, sortBy, sortDirection})
   }
 }
