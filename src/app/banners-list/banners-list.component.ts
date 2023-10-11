@@ -74,8 +74,6 @@ export class BannersListComponent implements OnInit{
       queryParamsHandling: 'merge',
     })
   }
-
-
   onPageChange(event: PageEvent) {
     const queryParams = {
       page: event.pageIndex,
