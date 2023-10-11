@@ -29,7 +29,7 @@ export class BannersListComponent implements OnInit, AfterViewInit{
   @ViewChild('drawer') drawer!: MatDrawer
   drawerIsOpen!: boolean
   tableColumn = TableColumn;
-  displayedColumns = ['Name', 'Image']
+
 
 
 
