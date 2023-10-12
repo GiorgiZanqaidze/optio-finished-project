@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute, Params, Router} from "@angular/router";
+import {ActivatedRoute, Params} from "@angular/router";
 import {PageEvent} from "@angular/material/paginator";
 import {BannerModel} from "../shared/types/banners/banner.model";
 import {FormControl, FormGroup} from "@angular/forms";
@@ -16,8 +16,7 @@ export class BannersListComponent implements OnInit{
   constructor(
     private route: ActivatedRoute,
     private bannersService: BannersService,
-  ) {
-  }
+  ) {}
 
   banners!: BannerModel[]
   page!: number
@@ -39,7 +38,7 @@ export class BannersListComponent implements OnInit{
     if (editFlag !== null) this.editFlag = JSON.parse(editFlag)
 
     this.bannersService.getBannerIdObservable().subscribe(res => {
-      this.drawer.toggle(true )
+      this.drawer.toggle(true ).catch(err => console.log(err))
     })
 
     this.route.queryParams
@@ -66,7 +65,7 @@ export class BannersListComponent implements OnInit{
       });
   }
 
-  drawerChange() {
+  drawerOpen() {
     localStorage.setItem('drawerIsOpen', JSON.stringify(this.drawer.opened))
   }
 

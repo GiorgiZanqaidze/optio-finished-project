@@ -19,8 +19,9 @@ export class BannerFormComponent implements OnInit{
     private bannerService: BannersService,
   ) {}
   toppingList = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato']
-
+  fileFormData = new FormData()
   imageName: string | null = null
+  bannerId = ""
 
   bannerForm = new FormGroup({
     "name": new FormControl<Input>(null, [Validators.required]),
@@ -36,14 +37,14 @@ export class BannerFormComponent implements OnInit{
     "labels": new FormControl<string[]>([])
   })
 
-  fileFormData = new FormData()
 
   submitBannerData() {
       this.formService.submitBlob(this.fileFormData).pipe(
           switchMap((blobResponse: any) => {
               const mergedSubmitData = {
                   ...this.bannerForm.value,
-                  fileId: blobResponse.data.id
+                  fileId: blobResponse.data.id,
+                  id: this.bannerId
               }
               return this.formService.submitBannerForm(mergedSubmitData);
           })
@@ -69,6 +70,7 @@ export class BannerFormComponent implements OnInit{
   }
 
   ngOnInit() {
+
     this.bannerService.getBannerIdObservable()
       .subscribe((data) => {
       this.bannerService.fetchBannerById(data.bannerId)
@@ -82,6 +84,9 @@ export class BannerFormComponent implements OnInit{
       sessionStorage.setItem('bannerFormData', JSON.stringify(formData));
     });
 
+    const bannerId = localStorage.getItem('bannerId')
+    if (bannerId) this.bannerId = bannerId
+
     const formData = sessionStorage.getItem('bannerFormData');
     if (formData) this.bannerForm.setValue(JSON.parse(formData));
 
@@ -89,7 +94,7 @@ export class BannerFormComponent implements OnInit{
     const fileName = localStorage.getItem('fileName')
     const fileType = localStorage.getItem('fileType')
 
-    if (fileUrl !== null && fileType !== null && fileName !== null) {
+    if (fileUrl && fileType && fileName) {
       const file = dataUrlToBlob(fileUrl, fileName, fileType)
       this.selectFile(file)
     }
