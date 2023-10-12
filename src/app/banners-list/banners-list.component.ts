@@ -78,9 +78,8 @@ export class BannersListComponent implements OnInit{
   }
 
   closeDrawer() {
-    localStorage.setItem('editFlag', JSON.stringify(false))
-    localStorage.removeItem('bannerId')
-    this.sessionStorageService.removeItem('bannerFormData')
+    localStorage.clear();
+    sessionStorage.clear()
   }
 
   searchBanners() {

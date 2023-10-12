@@ -7,7 +7,6 @@ import {SessionStorageService} from "../../services/SessionStorage/session-stora
 
 type Input = string | null
 
-
 @Component({
   selector: 'app-banner-form',
   templateUrl: './banner-form.component.html',
@@ -19,8 +18,7 @@ export class BannerFormComponent implements OnInit{
     private formService: FormsService,
     private bannerService: BannersService,
     private sessionStorageService: SessionStorageService
-  ) {
-  }
+  ) {}
   toppingList = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato']
 
   imageName: string | null = null
@@ -51,17 +49,35 @@ export class BannerFormComponent implements OnInit{
               return this.formService.submitBannerForm(mergedSubmitData);
           })
       ).subscribe(() => {
-          const queryParams = {drawerIsOpen: false, bannerId: null, editFlag: false}
-          this.bannerService.onRouteParamsChange(queryParams)
+        this.bannerForm.reset()
+        this.bannerForm.clearValidators()
+        sessionStorage.clear()
+        localStorage.clear()
       });
   }
 
-  onSelectedFile(event: any) {
-    const file:any = event.target.files[0]
-    this.imageName = event.target.files[0].name
+  private selectFile(file: any) {
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const dataUrl: any = e.target?.result;
+        if (dataUrl) {
+          localStorage.setItem('fileDataUrl', dataUrl.toString());
+          localStorage.setItem('fileName', file.name)
+          localStorage.setItem('fileType', file.type)
+        }
+      };
+      reader.readAsDataURL(file);
+    }
     this.fileFormData.set('blob', file);
+    this.imageName = file.name
     const fileField = this.bannerForm.get('fileId')
     fileField?.clearValidators()
+  }
+
+  onSelectedFile(event: any) {
+    const file:File = event.target.files[0]
+    this.selectFile(file)
   }
 
   ngOnInit() {
@@ -69,17 +85,41 @@ export class BannerFormComponent implements OnInit{
       .subscribe((data) => {
       this.bannerService.fetchBannerById(data.bannerId)
         .pipe(map((data: any) => {
-          console.log(data.data)
-              this.bannerForm.patchValue(data.data)
+          this.bannerForm.patchValue(data.data)
         }))
         .subscribe(res => console.log(res))
     })
+
     this.bannerForm.valueChanges.subscribe((formData) => {
       this.sessionStorageService.setItem('bannerFormData', JSON.stringify(formData));
     });
+
     const formData = this.sessionStorageService.getItem('bannerFormData');
-    if (formData) {
-      this.bannerForm.setValue(formData);
+    if (formData)  this.bannerForm.setValue(formData);
+    const fileUrl = localStorage.getItem('fileDataUrl')
+    const fileName = localStorage.getItem('fileName')
+    const fileType = localStorage.getItem('fileType')
+
+
+    if (fileUrl !== null) {
+      if (fileName !== null) {
+        if (fileType !== null) {
+          const file = this.dataUrlToBlob(fileUrl, fileName, fileType)
+          this.selectFile(file)
+        }
+      }
     }
+  }
+  private dataUrlToBlob(dataUrl: string, fileName: string, fileType: string) {
+    const parts = dataUrl.split(";base64,");
+    const contentType = parts[0].split(":")[1];
+    const byteCharacters = atob(parts[1]);
+    const byteArrays = [];
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteArrays.push(byteCharacters.charCodeAt(i));
+    }
+    const byteArray = new Uint8Array(byteArrays);
+    const blob =  new Blob([byteArray], { type: contentType });
+    return new File([blob], fileName, { type: fileType });
   }
 }
