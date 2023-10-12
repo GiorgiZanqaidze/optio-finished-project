@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import {FormArray, FormControl, FormGroup, Validators} from "@angular/forms";
 import {FormsService} from "../../services/forms/forms.service";
 import {switchMap} from "rxjs";
+import {BannersService} from "../../services/banners/banners.service";
 
 type Input = string | null
 
@@ -13,7 +14,10 @@ type Input = string | null
 })
 export class BannerFormComponent {
 
-    constructor(private formService: FormsService) {
+    constructor(
+      private formService: FormsService,
+      private bannerService: BannersService
+    ) {
     }
 
     toppingList = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato']
@@ -46,6 +50,8 @@ export class BannerFormComponent {
           })
       ).subscribe((bannerResponse) => {
           console.log('Second request response:', bannerResponse);
+          const queryParams = {drawerIsOpen: false, bannerId: null, editFlag: false}
+          this.bannerService.onRouteParamsChange(queryParams)
       });
   }
 
