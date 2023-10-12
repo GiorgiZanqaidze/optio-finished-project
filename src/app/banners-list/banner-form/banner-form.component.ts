@@ -3,7 +3,6 @@ import { FormControl, FormGroup, Validators} from "@angular/forms";
 import {FormsService} from "../../services/forms/forms.service";
 import {map, switchMap} from "rxjs";
 import {BannersService} from "../../services/banners/banners.service";
-import {SessionStorageService} from "../../services/SessionStorage/session-storage.service";
 import {dataUrlToBlob, fileReader} from '../../utilities/file-utils'
 
 type Input = string | null
@@ -18,7 +17,6 @@ export class BannerFormComponent implements OnInit{
   constructor(
     private formService: FormsService,
     private bannerService: BannersService,
-    private sessionStorageService: SessionStorageService
   ) {}
   toppingList = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato']
 
@@ -81,11 +79,11 @@ export class BannerFormComponent implements OnInit{
     })
 
     this.bannerForm.valueChanges.subscribe((formData) => {
-      this.sessionStorageService.setItem('bannerFormData', JSON.stringify(formData));
+      sessionStorage.setItem('bannerFormData', JSON.stringify(formData));
     });
 
-    const formData = this.sessionStorageService.getItem('bannerFormData');
-    if (formData)  this.bannerForm.setValue(formData);
+    const formData = sessionStorage.getItem('bannerFormData');
+    if (formData) this.bannerForm.setValue(JSON.parse(formData));
 
     const fileUrl = localStorage.getItem('fileDataUrl')
     const fileName = localStorage.getItem('fileName')

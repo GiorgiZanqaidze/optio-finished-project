@@ -5,7 +5,6 @@ import {BannerModel} from "../shared/types/banners/banner.model";
 import {FormControl, FormGroup} from "@angular/forms";
 import {BannersService} from "../services/banners/banners.service";
 import {MatDrawer} from "@angular/material/sidenav";
-import {SessionStorageService} from "../services/SessionStorage/session-storage.service";
 
 @Component({
   selector: 'app-banners-list',
