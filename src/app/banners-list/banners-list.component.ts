@@ -17,7 +17,6 @@ export class BannersListComponent implements OnInit{
   constructor(
     private route: ActivatedRoute,
     private bannersService: BannersService,
-    private sessionStorageService: SessionStorageService
   ) {
   }
 
@@ -95,7 +94,8 @@ export class BannersListComponent implements OnInit{
           this.page,
           this.pageSize,
           this.searchBannersForm.value.sortBy,
-          this.searchBannersForm.value.sortDirection)
+          this.searchBannersForm.value.sortDirection
+        )
         .subscribe((data: any) => {
           this.totalPages = data.data.total;
           this.banners = data.data.entities;

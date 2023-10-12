@@ -4,6 +4,7 @@ import {FormsService} from "../../services/forms/forms.service";
 import {map, switchMap} from "rxjs";
 import {BannersService} from "../../services/banners/banners.service";
 import {SessionStorageService} from "../../services/SessionStorage/session-storage.service";
+import {dataUrlToBlob, fileReader} from '../../utilities/file-utils'
 
 type Input = string | null
 
@@ -57,20 +58,9 @@ export class BannerFormComponent implements OnInit{
   }
 
   private selectFile(file: any) {
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const dataUrl: any = e.target?.result;
-        if (dataUrl) {
-          localStorage.setItem('fileDataUrl', dataUrl.toString());
-          localStorage.setItem('fileName', file.name)
-          localStorage.setItem('fileType', file.type)
-        }
-      };
-      reader.readAsDataURL(file);
-    }
-    this.fileFormData.set('blob', file);
-    this.imageName = file.name
+    const modifiedFile = fileReader(file)
+    this.fileFormData.set('blob', modifiedFile);
+    this.imageName = modifiedFile.name
     const fileField = this.bannerForm.get('fileId')
     fileField?.clearValidators()
   }
@@ -96,30 +86,14 @@ export class BannerFormComponent implements OnInit{
 
     const formData = this.sessionStorageService.getItem('bannerFormData');
     if (formData)  this.bannerForm.setValue(formData);
+
     const fileUrl = localStorage.getItem('fileDataUrl')
     const fileName = localStorage.getItem('fileName')
     const fileType = localStorage.getItem('fileType')
 
-
-    if (fileUrl !== null) {
-      if (fileName !== null) {
-        if (fileType !== null) {
-          const file = this.dataUrlToBlob(fileUrl, fileName, fileType)
-          this.selectFile(file)
-        }
-      }
+    if (fileUrl !== null && fileType !== null && fileName !== null) {
+      const file = dataUrlToBlob(fileUrl, fileName, fileType)
+      this.selectFile(file)
     }
-  }
-  private dataUrlToBlob(dataUrl: string, fileName: string, fileType: string) {
-    const parts = dataUrl.split(";base64,");
-    const contentType = parts[0].split(":")[1];
-    const byteCharacters = atob(parts[1]);
-    const byteArrays = [];
-    for (let i = 0; i < byteCharacters.length; i++) {
-      byteArrays.push(byteCharacters.charCodeAt(i));
-    }
-    const byteArray = new Uint8Array(byteArrays);
-    const blob =  new Blob([byteArray], { type: contentType });
-    return new File([blob], fileName, { type: fileType });
   }
 }
