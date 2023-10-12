@@ -32,8 +32,8 @@
         <mat-label>Channel</mat-label>
         <mat-select formControlName="channelId">
           <mat-option value="1"> option</mat-option>
-          <mat-option value="2">Second option</mat-option>
-          <mat-option value="2">Second option</mat-option>
+          <mat-option value="internet-bank">internet-bank</mat-option>
+          <mat-option value="3">Second option</mat-option>
         </mat-select>
       </mat-form-field>
       <mat-form-field>
@@ -45,8 +45,8 @@
       </mat-form-field>
       <label id="status-group">Status</label>
       <mat-radio-group formControlName="active" class="flex flex-col" aria-labelledby="active-group" aria-label="Select an option">
-        <mat-radio-button value="true">Active</mat-radio-button>
-        <mat-radio-button value="false">Inactive</mat-radio-button>
+        <mat-radio-button [value]="true">Active</mat-radio-button>
+        <mat-radio-button [value]="false">Inactive</mat-radio-button>
       </mat-radio-group>
       <mat-form-field>
         <mat-label>Enter a date range</mat-label>

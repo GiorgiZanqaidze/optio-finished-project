@@ -1,14 +1,14 @@
 import {Component, Input} from '@angular/core';
 import {BannerModel} from "../../shared/types/banners/banner.model";
 import {environment} from "../../../environments/environment";
-import {ActivatedRoute, Router} from "@angular/router";
+import {BannersService} from "../../services/banners/banners.service";
 
 @Component({
   selector: 'app-banner-table',
   templateUrl: './banner-table.component.html',
   styleUrls: ['./banner-table.component.css']
 })
-export class BannerTableComponent {
+export class BannerTableComponent{
 
   @Input() dataSource!: BannerModel[]
 
@@ -16,25 +16,14 @@ export class BannerTableComponent {
 
   public readonly apiUrl = environment.ApiUrl
 
-
-  constructor(private router: Router, private route: ActivatedRoute) {
+  constructor(
+    private bannersService: BannersService
+  ) {
   }
 
-  showEditBunnerForm(rowData: BannerModel) {
-    console.log(rowData.id)
-
-    const queryParams = {
-      editFlag: true,
-      bannerId: rowData.id,
-      drawerIsOpen: true
-    }
-
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: queryParams,
-      queryParamsHandling: 'merge',
-    })
-
+  showEditBannerForm(rowData: BannerModel) {
+    localStorage.setItem("editFlag", JSON.stringify(true))
+    localStorage.setItem("bannerId", JSON.stringify(rowData.id))
+    this.bannersService.setItem({editFlag: true, bannerId: rowData.id})
   }
-
 }
