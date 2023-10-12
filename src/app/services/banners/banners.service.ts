@@ -4,6 +4,7 @@ import {environment} from '../../../environments/environment'
 import {ActivatedRoute, Router} from "@angular/router";
 import {PageEvent} from "@angular/material/paginator";
 import {MatDrawer} from "@angular/material/sidenav";
+import {Observable, Subject} from "rxjs";
 
 
 @Injectable({
@@ -28,9 +29,7 @@ export class BannersService {
     return this.http.post("/banners/find",{search, pageIndex, pageSize, sortBy, sortDirection})
   }
 
-
-  onDrawerChange(drawerIsOpen: boolean) {
-    const queryParams = { drawerIsOpen: drawerIsOpen };
+  onRouteParamsChange(queryParams: any) {
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: queryParams,
@@ -38,11 +37,13 @@ export class BannersService {
     })
   }
 
-  onRouteParamsChange(queryParams: any) {
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: queryParams,
-      queryParamsHandling: 'merge',
-    })
+  private storageSubject = new Subject<string>();
+
+  setItem(data: any): void {
+    this.storageSubject.next(data);
+  }
+
+  getStorageObservable(): Observable<string> {
+    return this.storageSubject.asObservable();
   }
 }

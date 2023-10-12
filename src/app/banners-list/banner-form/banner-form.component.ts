@@ -14,30 +14,30 @@ type Input = string | null
 })
 export class BannerFormComponent {
 
-    constructor(
-      private formService: FormsService,
-      private bannerService: BannersService
-    ) {
-    }
+  constructor(
+    private formService: FormsService,
+    private bannerService: BannersService
+  ) {
+  }
+  toppingList = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato']
 
-    toppingList = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato']
-
-    imageName: string | null = null
+  imageName: string | null = null
 
   bannerForm = new FormGroup({
     "name": new FormControl<Input>(null, [Validators.required]),
-      "zoneId": new FormControl<Input>(null, [Validators.required]),
-      "active": new FormControl<Input>(null, [Validators.required]),
-      "startDate": new FormControl<Input>(null, [Validators.required]),
-      "endDate": new FormControl<Input>(null),
-      "fileId": new FormControl(null, [Validators.required]),
-      "priority": new FormControl<Input>('', [Validators.required, Validators.min(1)]),
-      "channelId": new FormControl<Input>(null, [Validators.required]),
-      "language": new FormControl<Input>(null, [Validators.required]),
-      "url": new FormControl<Input>(null, [Validators.required]),
-      "labels": new FormControl<string[]>([])
+    "zoneId": new FormControl<Input>(null, [Validators.required]),
+    "active": new FormControl<Input>(null, [Validators.required]),
+    "startDate": new FormControl<Input>(null, [Validators.required]),
+    "endDate": new FormControl<Input>(null),
+    "fileId": new FormControl(null, [Validators.required]),
+    "priority": new FormControl<Input>('', [Validators.required, Validators.min(1)]),
+    "channelId": new FormControl<Input>(null, [Validators.required]),
+    "language": new FormControl<Input>(null, [Validators.required]),
+    "url": new FormControl<Input>(null, [Validators.required]),
+    "labels": new FormControl<string[]>([])
   })
-    fileFormData = new FormData()
+
+  fileFormData = new FormData()
 
   submitBannerData() {
       this.formService.submitBlob(this.fileFormData).pipe(
@@ -57,11 +57,9 @@ export class BannerFormComponent {
 
   onSelectedFile(event: any) {
     const file:any = event.target.files[0]
-      this.imageName = event.target.files[0].name
-      this.fileFormData.set('blob', file);
+    this.imageName = event.target.files[0].name
+    this.fileFormData.set('blob', file);
     const fileField = this.bannerForm.get('fileId')
-      fileField?.clearValidators()
-
+    fileField?.clearValidators()
   }
-
 }

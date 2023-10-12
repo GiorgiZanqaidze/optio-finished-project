@@ -4,6 +4,7 @@ import {PageEvent} from "@angular/material/paginator";
 import {BannerModel} from "../shared/types/banners/banner.model";
 import {FormControl, FormGroup} from "@angular/forms";
 import {BannersService} from "../services/banners/banners.service";
+import {MatDrawer} from "@angular/material/sidenav";
 
 @Component({
   selector: 'app-banners-list',
@@ -13,7 +14,6 @@ import {BannersService} from "../services/banners/banners.service";
 export class BannersListComponent implements OnInit{
 
   constructor(
-    private router: Router,
     private route: ActivatedRoute,
     private bannersService: BannersService,
   ) {
@@ -23,8 +23,9 @@ export class BannersListComponent implements OnInit{
   page!: number
   pageSize = 2
   totalPages!: number
-  @ViewChild('drawer') drawer = this.bannersService.drawer
+  @ViewChild('drawer') drawer!: MatDrawer
   drawerIsOpen!: boolean
+  editFlag!: boolean
   searchBannersForm = new FormGroup({
     "search": new FormControl<string>(''),
     "sortDirection": new  FormControl<string>('asc'),
@@ -32,9 +33,17 @@ export class BannersListComponent implements OnInit{
   })
 
   ngOnInit() {
+    const drawerIsOpen = localStorage.getItem('drawerIsOpen')
+    const editFlag = localStorage.getItem('editFlag')
+    if (drawerIsOpen !== null) this.drawerIsOpen = JSON.parse(drawerIsOpen)
+    if (editFlag !== null) this.editFlag = JSON.parse(editFlag)
+
+    this.bannersService.getStorageObservable().subscribe(res => {
+      this.drawer.toggle(true )
+    })
+
     this.route.queryParams
       .subscribe((route: Params) => {
-        if ( this.drawerIsOpen === undefined || this.drawerIsOpen === JSON.parse(route['drawerIsOpen'])) {
           this.page = +route['page'];
           this.searchBannersForm.patchValue({'search': route['search']} )
           this.searchBannersForm.patchValue({'sortDirection': route['sortDirection']})
@@ -51,26 +60,21 @@ export class BannersListComponent implements OnInit{
             .subscribe((data: any) => {
               this.totalPages = data.data.total;
               this.banners = data.data.entities;
-              if (route['drawerIsOpen']) {
-                this.drawerIsOpen = JSON.parse(route['drawerIsOpen'])
-              }
             });
-        } else {
-          if (route['drawerIsOpen']) {
-            this.drawerIsOpen = JSON.parse(route['drawerIsOpen'])
-          }
-        }
       });
   }
 
   drawerChange() {
-    const queryParams = { drawerIsOpen: this.drawer.opened };
-    this.bannersService.onRouteParamsChange(queryParams)
+    localStorage.setItem('drawerIsOpen', JSON.stringify(this.drawer.opened))
   }
 
   onPageChange(event: PageEvent) {
     const queryParams = {page: event.pageIndex, pageSize: event.pageSize};
     this.bannersService.onRouteParamsChange(queryParams)
+  }
+
+  closeDrawer() {
+    localStorage.setItem('editFlag', JSON.stringify(false))
   }
 
 
@@ -80,12 +84,7 @@ export class BannersListComponent implements OnInit{
       sortDirection: this.searchBannersForm.value.sortDirection,
       sortBy: this.searchBannersForm.value.sortBy,
     };
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: queryParams,
-      queryParamsHandling: 'merge',
-    })
-
+    this.bannersService.onRouteParamsChange(queryParams)
     this.bannersService
         .fetchBanners(
           this.searchBannersForm.value.search,

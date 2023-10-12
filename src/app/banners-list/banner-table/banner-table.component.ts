@@ -22,11 +22,15 @@ export class BannerTableComponent{
   }
 
   showEditBannerForm(rowData: BannerModel) {
-    const queryParams = {
-      editFlag: true,
-      bannerId: rowData.id,
-      drawerIsOpen: true
-    }
-    this.bannersService.onRouteParamsChange(queryParams)
+    // const queryParams = {
+    //   editFlag: true,
+    //   bannerId: rowData.id,
+    //   drawerIsOpen: true
+    // }
+    // this.bannersService.onRouteParamsChange(queryParams)
+    localStorage.setItem('editFlag', JSON.stringify(true))
+    localStorage.setItem('drawerIsOpen', JSON.stringify(true))
+    localStorage.setItem('bannerId', JSON.stringify(rowData.id))
+    this.bannersService.setItem({kay: 'drawerIsOpen', value: true})
   }
 }
