@@ -39,7 +39,7 @@ export class BannersService {
     this.getBannerById.next(data);
   }
 
-  getStorageObservable(): Observable<{editFlag: boolean, bannerId: number}> {
+  getBannerIdObservable(): Observable<{editFlag: boolean, bannerId: number}> {
     return this.getBannerById.asObservable();
   }
 }

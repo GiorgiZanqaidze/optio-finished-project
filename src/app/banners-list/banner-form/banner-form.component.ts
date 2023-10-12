@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators} from "@angular/forms";
 import {FormsService} from "../../services/forms/forms.service";
 import {map, switchMap} from "rxjs";
 import {BannersService} from "../../services/banners/banners.service";
-import {BannerModel} from "../../shared/types/banners/banner.model";
+import {SessionStorageService} from "../../services/SessionStorage/session-storage.service";
 
 type Input = string | null
 
@@ -17,7 +17,8 @@ export class BannerFormComponent implements OnInit{
 
   constructor(
     private formService: FormsService,
-    private bannerService: BannersService
+    private bannerService: BannersService,
+    private sessionStorageService: SessionStorageService
   ) {
   }
   toppingList = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato']
@@ -49,8 +50,7 @@ export class BannerFormComponent implements OnInit{
               }
               return this.formService.submitBannerForm(mergedSubmitData);
           })
-      ).subscribe((bannerResponse) => {
-          console.log('Second request response:', bannerResponse);
+      ).subscribe(() => {
           const queryParams = {drawerIsOpen: false, bannerId: null, editFlag: false}
           this.bannerService.onRouteParamsChange(queryParams)
       });
@@ -65,14 +65,21 @@ export class BannerFormComponent implements OnInit{
   }
 
   ngOnInit() {
-
-    this.bannerService.getStorageObservable().subscribe((data) => {
+    this.bannerService.getBannerIdObservable()
+      .subscribe((data) => {
       this.bannerService.fetchBannerById(data.bannerId)
         .pipe(map((data: any) => {
-              this.bannerForm.patchValue({'name': data.data.name})
+          console.log(data.data)
+              this.bannerForm.patchValue(data.data)
         }))
         .subscribe(res => console.log(res))
     })
-
+    this.bannerForm.valueChanges.subscribe((formData) => {
+      this.sessionStorageService.setItem('bannerFormData', JSON.stringify(formData));
+    });
+    const formData = this.sessionStorageService.getItem('bannerFormData');
+    if (formData) {
+      this.bannerForm.setValue(formData);
+    }
   }
 }

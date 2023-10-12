@@ -5,6 +5,7 @@ import {BannerModel} from "../shared/types/banners/banner.model";
 import {FormControl, FormGroup} from "@angular/forms";
 import {BannersService} from "../services/banners/banners.service";
 import {MatDrawer} from "@angular/material/sidenav";
+import {SessionStorageService} from "../services/SessionStorage/session-storage.service";
 
 @Component({
   selector: 'app-banners-list',
@@ -16,6 +17,7 @@ export class BannersListComponent implements OnInit{
   constructor(
     private route: ActivatedRoute,
     private bannersService: BannersService,
+    private sessionStorageService: SessionStorageService
   ) {
   }
 
@@ -38,7 +40,7 @@ export class BannersListComponent implements OnInit{
     if (drawerIsOpen !== null) this.drawerIsOpen = JSON.parse(drawerIsOpen)
     if (editFlag !== null) this.editFlag = JSON.parse(editFlag)
 
-    this.bannersService.getStorageObservable().subscribe(res => {
+    this.bannersService.getBannerIdObservable().subscribe(res => {
       this.drawer.toggle(true )
     })
 
@@ -77,6 +79,8 @@ export class BannersListComponent implements OnInit{
 
   closeDrawer() {
     localStorage.setItem('editFlag', JSON.stringify(false))
+    localStorage.removeItem('bannerId')
+    this.sessionStorageService.removeItem('bannerFormData')
   }
 
   searchBanners() {
