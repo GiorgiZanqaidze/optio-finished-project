@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
-import {FormArray, FormControl, FormGroup, Validators} from "@angular/forms";
+import {Component, OnInit} from '@angular/core';
+import { FormControl, FormGroup, Validators} from "@angular/forms";
 import {FormsService} from "../../services/forms/forms.service";
-import {switchMap} from "rxjs";
+import {map, switchMap} from "rxjs";
 import {BannersService} from "../../services/banners/banners.service";
+import {BannerModel} from "../../shared/types/banners/banner.model";
 
 type Input = string | null
 
@@ -12,7 +13,7 @@ type Input = string | null
   templateUrl: './banner-form.component.html',
   styleUrls: ['./banner-form.component.css']
 })
-export class BannerFormComponent {
+export class BannerFormComponent implements OnInit{
 
   constructor(
     private formService: FormsService,
@@ -61,5 +62,17 @@ export class BannerFormComponent {
     this.fileFormData.set('blob', file);
     const fileField = this.bannerForm.get('fileId')
     fileField?.clearValidators()
+  }
+
+  ngOnInit() {
+
+    this.bannerService.getStorageObservable().subscribe((data) => {
+      this.bannerService.fetchBannerById(data.bannerId)
+        .pipe(map((data: any) => {
+              this.bannerForm.patchValue({'name': data.data.name})
+        }))
+        .subscribe(res => console.log(res))
+    })
+
   }
 }

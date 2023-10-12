@@ -45,10 +45,12 @@ export class BannersListComponent implements OnInit{
     this.route.queryParams
       .subscribe((route: Params) => {
           this.page = +route['page'];
-          this.searchBannersForm.patchValue({'search': route['search']} )
-          this.searchBannersForm.patchValue({'sortDirection': route['sortDirection']})
-          this.searchBannersForm.patchValue({'sortBy': route['sortBy']})
           this.pageSize= +route['pageSize']
+          this.searchBannersForm.patchValue({
+            'search': route['search'],
+            'sortDirection': route['sortDirection'],
+            'sortBy': route['sortBy']
+          })
           this.bannersService
             .fetchBanners(
               this.searchBannersForm.value.search,
@@ -76,7 +78,6 @@ export class BannersListComponent implements OnInit{
   closeDrawer() {
     localStorage.setItem('editFlag', JSON.stringify(false))
   }
-
 
   searchBanners() {
     const queryParams = {

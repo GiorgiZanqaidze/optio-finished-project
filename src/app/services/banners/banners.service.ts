@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {environment} from '../../../environments/environment'
 import {ActivatedRoute, Router} from "@angular/router";
-import {PageEvent} from "@angular/material/paginator";
-import {MatDrawer} from "@angular/material/sidenav";
 import {Observable, Subject} from "rxjs";
 
 
@@ -20,13 +17,12 @@ export class BannersService {
   ) {
   }
 
-  drawer!: MatDrawer
-  drawerIsOpen = false
-
-
-
   fetchBanners(search: string | null | undefined, pageIndex: number, pageSize: number, sortBy?: string | null | undefined, sortDirection?: string | null | undefined) {
     return this.http.post("/banners/find",{search, pageIndex, pageSize, sortBy, sortDirection})
+  }
+
+  fetchBannerById(id: number) {
+    return this.http.post("/banners/find-one",{id})
   }
 
   onRouteParamsChange(queryParams: any) {
@@ -37,13 +33,13 @@ export class BannersService {
     })
   }
 
-  private storageSubject = new Subject<string>();
+  private getBannerById = new Subject<{editFlag: boolean, bannerId: number}>();
 
-  setItem(data: any): void {
-    this.storageSubject.next(data);
+  setItem(data: {editFlag: boolean, bannerId: number}): void {
+    this.getBannerById.next(data);
   }
 
-  getStorageObservable(): Observable<string> {
-    return this.storageSubject.asObservable();
+  getStorageObservable(): Observable<{editFlag: boolean, bannerId: number}> {
+    return this.getBannerById.asObservable();
   }
 }

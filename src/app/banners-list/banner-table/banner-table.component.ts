@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {BannerModel} from "../../shared/types/banners/banner.model";
 import {environment} from "../../../environments/environment";
 import {BannersService} from "../../services/banners/banners.service";
@@ -22,15 +22,8 @@ export class BannerTableComponent{
   }
 
   showEditBannerForm(rowData: BannerModel) {
-    // const queryParams = {
-    //   editFlag: true,
-    //   bannerId: rowData.id,
-    //   drawerIsOpen: true
-    // }
-    // this.bannersService.onRouteParamsChange(queryParams)
-    localStorage.setItem('editFlag', JSON.stringify(true))
-    localStorage.setItem('drawerIsOpen', JSON.stringify(true))
-    localStorage.setItem('bannerId', JSON.stringify(rowData.id))
-    this.bannersService.setItem({kay: 'drawerIsOpen', value: true})
+    localStorage.setItem("editFlag", JSON.stringify(true))
+    localStorage.setItem("bannerId", JSON.stringify(rowData.id))
+    this.bannersService.setItem({editFlag: true, bannerId: rowData.id})
   }
 }
