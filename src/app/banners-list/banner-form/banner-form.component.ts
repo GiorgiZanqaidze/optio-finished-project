@@ -5,6 +5,7 @@ import {map, switchMap} from "rxjs";
 import {BannersService} from "../../services/banners/banners.service";
 import {dataUrlToBlob, fileReader} from '../../shared/utilities/file-utils'
 import {ReferenceDataModel} from "../../shared/types/reference-data.model";
+import {BannerModel} from "../../shared/types/banner.model";
 
 type Input = string | null
 
@@ -20,7 +21,7 @@ export class BannerFormComponent implements OnInit{
     private bannerService: BannersService,
   ) {}
   fileFormData = new FormData()
-  imageName: string | null = null
+  imageName!: string
   bannerId = ""
   channels!: ReferenceDataModel[]
   zones!: ReferenceDataModel[]
@@ -30,7 +31,7 @@ export class BannerFormComponent implements OnInit{
   bannerForm = new FormGroup({
     "name": new FormControl<Input>(null, [Validators.required]),
     "zoneId": new FormControl<Input>(null, [Validators.required]),
-    "active": new FormControl<Input>(null, [Validators.required]),
+    "active": new FormControl(null, [Validators.required]),
     "startDate": new FormControl<Input>(null, [Validators.required]),
     "endDate": new FormControl<Input>(null),
     "fileId": new FormControl(null, [Validators.required]),
@@ -43,21 +44,25 @@ export class BannerFormComponent implements OnInit{
 
 
   submitBannerData() {
-      this.formService.submitBlob(this.fileFormData).pipe(
-          switchMap((blobResponse: any) => {
-              const mergedSubmitData = {
-                  ...this.bannerForm.value,
-                  fileId: blobResponse.data.id,
-                  id: this.bannerId
-              }
-              return this.formService.submitBannerForm(mergedSubmitData);
-          })
-      ).subscribe(() => {
-        this.bannerForm.reset()
-        this.bannerForm.clearValidators()
-        sessionStorage.clear()
-        localStorage.clear()
-      });
+    this.formService.submitBlob(this.fileFormData).pipe(
+      switchMap((blobResponse: any) => {
+
+        const bannerId = localStorage.getItem('bannerId')
+        if (bannerId) this.bannerId = JSON.parse(bannerId)
+
+        const mergedSubmitData = {
+          ...this.bannerForm.value,
+          fileId: blobResponse.data.id,
+          id: this.bannerId
+        }
+        return this.formService.submitBannerForm(mergedSubmitData);
+      })
+    ).subscribe(() => {
+      this.bannerForm.reset()
+      this.bannerForm.clearValidators()
+      sessionStorage.clear()
+      localStorage.clear()
+    });
   }
 
   private selectFile(file: any) {
@@ -74,25 +79,36 @@ export class BannerFormComponent implements OnInit{
   }
 
   ngOnInit() {
-
     this.bannerService.getBannerIdObservable()
       .subscribe((data) => {
-      this.bannerService.fetchBannerById(data.bannerId)
-        .pipe(map((data: any) => {
-          this.bannerForm.patchValue(data.data)
-        }))
-        .subscribe(res => console.log(res))
-    })
+        this.bannerService.fetchBannerById(data.bannerId)
+          .pipe(map((data: any) => {
+            const formData = data.data as BannerModel
+            this.setFormData(formData)
+          }))
+          .subscribe(() => {
+            const fileField = this.bannerForm.get('fileId')
+            fileField?.clearValidators()
+            fileField?.updateValueAndValidity()
+          })
+      })
+    const formData = sessionStorage.getItem('bannerFormData');
+    if (formData) this.bannerForm.patchValue( JSON.parse(formData));
 
     this.bannerForm.valueChanges.subscribe((formData) => {
       sessionStorage.setItem('bannerFormData', JSON.stringify(formData));
     });
 
-    const bannerId = localStorage.getItem('bannerId')
-    if (bannerId) this.bannerId = bannerId
 
-    const formData = sessionStorage.getItem('bannerFormData');
-    if (formData) this.bannerForm.setValue(JSON.parse(formData));
+    const editFlag = localStorage.getItem('editFlag')
+    if (editFlag) {
+      const fileField = this.bannerForm.get('fileId')
+      fileField?.clearValidators()
+      fileField?.updateValueAndValidity()
+    }
+
+
+
 
     const fileUrl = localStorage.getItem('fileDataUrl')
     const fileName = localStorage.getItem('fileName')
@@ -110,4 +126,22 @@ export class BannerFormComponent implements OnInit{
       this.labels = referenceData.labels
     })
   }
+
+  private setFormData(formData: BannerModel) {
+    this.bannerForm.patchValue({
+      url: formData.url,
+      channelId: formData.channelId,
+      language: formData.language,
+      name: formData.name,
+      zoneId: formData.zoneId,
+      priority: formData.priority,
+      labels: formData.labels,
+      endDate: formData.endDate,
+      startDate: formData.startDate,
+      active: formData.active
+    })
+
+    this.imageName = JSON.stringify(formData.fileId)
+  }
+
 }

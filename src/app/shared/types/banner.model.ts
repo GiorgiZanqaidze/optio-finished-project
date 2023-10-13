@@ -1,11 +1,14 @@
 export interface BannerModel {
   id: number,
   name: string,
-  active: boolean,
+  active: null | undefined,
   startDate: string,
   endDate: string,
   labels: string[],
   zoneId: string,
   url: string,
-  fileId: number
+  fileId: number,
+  channelId: string,
+  language: string,
+  priority: string
 }
