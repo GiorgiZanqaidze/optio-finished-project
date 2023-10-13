@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators} from "@angular/forms";
 import {FormsService} from "../../services/forms/forms.service";
 import {map, switchMap} from "rxjs";
 import {BannersService} from "../../services/banners/banners.service";
-import {dataUrlToBlob, fileReader} from '../../utilities/file-utils'
+import {dataUrlToBlob, fileReader} from '../../shared/utilities/file-utils'
 
 type Input = string | null
 
@@ -22,6 +22,7 @@ export class BannerFormComponent implements OnInit{
   fileFormData = new FormData()
   imageName: string | null = null
   bannerId = ""
+  channels!: []
 
   bannerForm = new FormGroup({
     "name": new FormControl<Input>(null, [Validators.required]),
@@ -98,5 +99,7 @@ export class BannerFormComponent implements OnInit{
       const file = dataUrlToBlob(fileUrl, fileName, fileType)
       this.selectFile(file)
     }
+
+    this.formService.getChannels().subscribe(res => console.log(res))
   }
 }

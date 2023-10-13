@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute, Params} from "@angular/router";
+import {ActivatedRoute, Params, Router} from "@angular/router";
 import {PageEvent} from "@angular/material/paginator";
-import {BannerModel} from "../shared/types/banners/banner.model";
+import {BannerModel} from "../shared/types/banner.model";
 import {FormControl, FormGroup} from "@angular/forms";
 import {BannersService} from "../services/banners/banners.service";
 import {MatDrawer} from "@angular/material/sidenav";
@@ -16,6 +16,7 @@ export class BannersListComponent implements OnInit{
   constructor(
     private route: ActivatedRoute,
     private bannersService: BannersService,
+    private router: Router
   ) {}
 
   banners!: BannerModel[]
