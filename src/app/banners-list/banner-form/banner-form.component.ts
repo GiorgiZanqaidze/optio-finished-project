@@ -19,12 +19,13 @@ export class BannerFormComponent implements OnInit{
     private formService: FormsService,
     private bannerService: BannersService,
   ) {}
-  toppingList = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato']
   fileFormData = new FormData()
   imageName: string | null = null
   bannerId = ""
   channels!: ReferenceDataModel[]
   zones!: ReferenceDataModel[]
+  languages!: ReferenceDataModel[]
+  labels!: ReferenceDataModel[]
 
   bannerForm = new FormGroup({
     "name": new FormControl<Input>(null, [Validators.required]),
@@ -102,11 +103,11 @@ export class BannerFormComponent implements OnInit{
       this.selectFile(file)
     }
 
-    this.formService.getChannels().subscribe(channels => {
-      this.channels = channels
-    })
-    this.formService.getZones().subscribe(zones => {
-      this.zones = zones
+    this.formService.getReferenceData().subscribe((referenceData) => {
+      this.channels = referenceData.channels
+      this.zones = referenceData.zones
+      this.languages = referenceData.languages
+      this.labels = referenceData.labels
     })
   }
 }

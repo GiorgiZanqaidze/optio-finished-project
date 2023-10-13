@@ -36,8 +36,7 @@
       <mat-form-field>
         <mat-label>Language</mat-label>
         <mat-select formControlName="language">
-          <mat-option value="en">English</mat-option>
-          <mat-option value="ka">Georgian</mat-option>
+          <mat-option *ngFor="let language of languages" [value]="language.key">{{language.name}}</mat-option>
         </mat-select>
       </mat-form-field>
       <label id="status-group">Status</label>
@@ -56,9 +55,9 @@
         <mat-date-range-picker #picker></mat-date-range-picker>
       </mat-form-field>
       <mat-form-field>
-        <mat-label>Toppings</mat-label>
+        <mat-label>Labels</mat-label>
         <mat-select formControlName="labels" multiple>
-          <mat-option *ngFor="let topping of toppingList" [value]="topping">{{topping}}</mat-option>
+          <mat-option *ngFor="let label of labels" [value]="label.key">{{label.name}}</mat-option>
         </mat-select>
       </mat-form-field>
       <button class="bg-blue-300 md:text-xl rounded disabled:bg-amber-10 disabled:cursor-not-allowed" [disabled]="bannerForm.invalid"  mat-raised-button color="accent">Submit</button>
