@@ -20,8 +20,7 @@
       <mat-form-field>
         <mat-label>Zone</mat-label>
         <mat-select formControlName="zoneId">
-          <mat-option value="one">First option</mat-option>
-          <mat-option value="two">Second option</mat-option>
+          <mat-option *ngFor="let zone of zones" [value]="zone.key">{{zone.name}}</mat-option>
         </mat-select>
       </mat-form-field>
       <mat-form-field>
@@ -31,9 +30,7 @@
       <mat-form-field>
         <mat-label>Channel</mat-label>
         <mat-select formControlName="channelId">
-          <mat-option value="1"> option</mat-option>
-          <mat-option value="internet-bank">internet-bank</mat-option>
-          <mat-option value="3">Second option</mat-option>
+          <mat-option *ngFor="let channel of channels" [value]="channel.key">{{channel.name}}</mat-option>
         </mat-select>
       </mat-form-field>
       <mat-form-field>

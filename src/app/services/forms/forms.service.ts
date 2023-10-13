@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {environment} from '../../../environments/environment'
 import {map} from "rxjs";
-import {ChannelsInterface} from '../../shared/types/reference-data/C'
+import {ReferenceDataModel} from "../../shared/types/reference-data.model";
 @Injectable({
   providedIn: 'root'
 })
@@ -20,6 +20,19 @@ export class FormsService {
 
   getChannels() {
     return this.http.post('/reference-data/find', {typeId: environment.channels_type_id, includes:['key', 'name']})
-      .pipe(map((data: )))
+      .pipe(map((data: any) => {
+        const channels: ReferenceDataModel[] = data.data.entities
+        return channels
+      }))
   }
+
+  getZones() {
+    return this.http.post('/reference-data/find', {typeId: environment.zones_type_id, includes:['key', 'name']})
+      .pipe(map((data: any) => {
+        const channels: ReferenceDataModel[] = data.data.entities
+        return channels
+      }))
+  }
+
+
 }

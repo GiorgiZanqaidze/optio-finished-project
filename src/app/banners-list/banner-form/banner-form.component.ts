@@ -4,6 +4,7 @@ import {FormsService} from "../../services/forms/forms.service";
 import {map, switchMap} from "rxjs";
 import {BannersService} from "../../services/banners/banners.service";
 import {dataUrlToBlob, fileReader} from '../../shared/utilities/file-utils'
+import {ReferenceDataModel} from "../../shared/types/reference-data.model";
 
 type Input = string | null
 
@@ -22,7 +23,8 @@ export class BannerFormComponent implements OnInit{
   fileFormData = new FormData()
   imageName: string | null = null
   bannerId = ""
-  channels!: []
+  channels!: ReferenceDataModel[]
+  zones!: ReferenceDataModel[]
 
   bannerForm = new FormGroup({
     "name": new FormControl<Input>(null, [Validators.required]),
@@ -100,6 +102,11 @@ export class BannerFormComponent implements OnInit{
       this.selectFile(file)
     }
 
-    this.formService.getChannels().subscribe(res => console.log(res))
+    this.formService.getChannels().subscribe(channels => {
+      this.channels = channels
+    })
+    this.formService.getZones().subscribe(zones => {
+      this.zones = zones
+    })
   }
 }
