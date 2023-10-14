@@ -8,8 +8,8 @@
       <div class=" h-12 rounded-t border border-b-gray-300 bg-gray-100 mb-4">
         <label mat-mini-fab for="image"  class="flex items-center text-center text-md w-full h-full cursor-pointer hover:bg-gray-200">
           <mat-icon>attach_file</mat-icon>
-          <span *ngIf="!imageName">Upload Image </span>
-          <span *ngIf="imageName">{{imageName}}</span>
+          <span *ngIf="!formService.imageName">Upload Image </span>
+          <span *ngIf="formService.imageName">{{formService.imageName}}</span>
         </label>
         <input class="invisible" type="file" id="image" formControlName="fileId" (change)="onSelectedFile($event)">
       </div>
@@ -20,8 +20,7 @@
       <mat-form-field>
         <mat-label>Zone</mat-label>
         <mat-select formControlName="zoneId">
-          <mat-option value="one">First option</mat-option>
-          <mat-option value="two">Second option</mat-option>
+          <mat-option *ngFor="let zone of zones" [value]="zone.key">{{zone.name}}</mat-option>
         </mat-select>
       </mat-form-field>
       <mat-form-field>
@@ -31,16 +30,13 @@
       <mat-form-field>
         <mat-label>Channel</mat-label>
         <mat-select formControlName="channelId">
-          <mat-option value="1"> option</mat-option>
-          <mat-option value="internet-bank">internet-bank</mat-option>
-          <mat-option value="3">Second option</mat-option>
+          <mat-option *ngFor="let channel of channels" [value]="channel.key">{{channel.name}}</mat-option>
         </mat-select>
       </mat-form-field>
       <mat-form-field>
         <mat-label>Language</mat-label>
         <mat-select formControlName="language">
-          <mat-option value="en">English</mat-option>
-          <mat-option value="ka">Georgian</mat-option>
+          <mat-option *ngFor="let language of languages" [value]="language.key">{{language.name}}</mat-option>
         </mat-select>
       </mat-form-field>
       <label id="status-group">Status</label>
@@ -49,19 +45,23 @@
         <mat-radio-button [value]="false">Inactive</mat-radio-button>
       </mat-radio-group>
       <mat-form-field>
-        <mat-label>Enter a date range</mat-label>
-        <mat-date-range-input [rangePicker]="picker">
-          <input matStartDate formControlName="startDate" placeholder="Start date">
-          <input matEndDate formControlName="endDate" placeholder="End date">
-        </mat-date-range-input>
-        <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
-        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-date-range-picker #picker></mat-date-range-picker>
+        <mat-label>Start date</mat-label>
+        <input matInput [matDatepicker]="startDatePicker" formControlName="startDate">
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #startDatePicker></mat-datepicker>
       </mat-form-field>
       <mat-form-field>
-        <mat-label>Toppings</mat-label>
+        <mat-label>End date</mat-label>
+        <input matInput [matDatepicker]="endDatePicker" formControlName="endDate">
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #endDatePicker></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Labels</mat-label>
         <mat-select formControlName="labels" multiple>
-          <mat-option *ngFor="let topping of toppingList" [value]="topping">{{topping}}</mat-option>
+          <mat-option *ngFor="let label of labels" [value]="label.key">{{label.name}}</mat-option>
         </mat-select>
       </mat-form-field>
       <button class="bg-blue-300 md:text-xl rounded disabled:bg-amber-10 disabled:cursor-not-allowed" [disabled]="bannerForm.invalid"  mat-raised-button color="accent">Submit</button>

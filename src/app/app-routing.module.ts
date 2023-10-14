@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import {BannersListComponent} from "./banners-list/banners-list.component";
+import {BannerFormComponent} from "./banners-list/banner-form/banner-form.component";
 
 const routes: Routes = [
   {
@@ -10,7 +11,13 @@ const routes: Routes = [
   },
   {
     path: "banners",
-    component: BannersListComponent
+    component: BannersListComponent,
+    children: [
+      {
+        path: 'form',
+        component: BannerFormComponent
+      }
+    ]
   },
   {
     path: "**",

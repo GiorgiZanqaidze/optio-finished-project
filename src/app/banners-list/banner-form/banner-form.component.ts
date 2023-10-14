@@ -1,11 +1,11 @@
 import {Component, OnInit} from '@angular/core';
-import { FormControl, FormGroup, Validators} from "@angular/forms";
 import {FormsService} from "../../services/forms/forms.service";
-import {map, switchMap} from "rxjs";
+import {dataUrlToBlob} from '../../shared/utilities/file-utils'
+import {ReferenceDataModel} from "../../shared/types/reference-data.model";
+import {map} from "rxjs";
+import {BannerModel} from "../../shared/types/banner.model";
 import {BannersService} from "../../services/banners/banners.service";
-import {dataUrlToBlob, fileReader} from '../../utilities/file-utils'
-
-type Input = string | null
+import {ApiService} from "../../services/api/api.service";
 
 @Component({
   selector: 'app-banner-form',
@@ -15,80 +15,51 @@ type Input = string | null
 export class BannerFormComponent implements OnInit{
 
   constructor(
-    private formService: FormsService,
-    private bannerService: BannersService,
+    public formService: FormsService,
+    private bannersService: BannersService,
+    private apiService: ApiService
   ) {}
-  toppingList = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato']
-  fileFormData = new FormData()
-  imageName: string | null = null
   bannerId = ""
+  channels!: ReferenceDataModel[]
+  zones!: ReferenceDataModel[]
+  languages!: ReferenceDataModel[]
+  labels!: ReferenceDataModel[]
+  editFlag!: boolean
 
-  bannerForm = new FormGroup({
-    "name": new FormControl<Input>(null, [Validators.required]),
-    "zoneId": new FormControl<Input>(null, [Validators.required]),
-    "active": new FormControl<Input>(null, [Validators.required]),
-    "startDate": new FormControl<Input>(null, [Validators.required]),
-    "endDate": new FormControl<Input>(null),
-    "fileId": new FormControl(null, [Validators.required]),
-    "priority": new FormControl<Input>('', [Validators.required, Validators.min(1)]),
-    "channelId": new FormControl<Input>(null, [Validators.required]),
-    "language": new FormControl<Input>(null, [Validators.required]),
-    "url": new FormControl<Input>(null, [Validators.required]),
-    "labels": new FormControl<string[]>([])
-  })
+  bannerForm = this.formService.bannerForm
 
+  submitBannerData() { this.formService.onSubmitBannerData() }
 
-  submitBannerData() {
-      this.formService.submitBlob(this.fileFormData).pipe(
-          switchMap((blobResponse: any) => {
-              const mergedSubmitData = {
-                  ...this.bannerForm.value,
-                  fileId: blobResponse.data.id,
-                  id: this.bannerId
-              }
-              return this.formService.submitBannerForm(mergedSubmitData);
-          })
-      ).subscribe(() => {
-        this.bannerForm.reset()
-        this.bannerForm.clearValidators()
-        sessionStorage.clear()
-        localStorage.clear()
-      });
-  }
-
-  private selectFile(file: any) {
-    const modifiedFile = fileReader(file)
-    this.fileFormData.set('blob', modifiedFile);
-    this.imageName = modifiedFile.name
-    const fileField = this.bannerForm.get('fileId')
-    fileField?.clearValidators()
-  }
-
-  onSelectedFile(event: any) {
-    const file:File = event.target.files[0]
-    this.selectFile(file)
-  }
+  onSelectedFile(event: Event) { this.formService.onSelectedFile(event) }
 
   ngOnInit() {
-
-    this.bannerService.getBannerIdObservable()
+    this.formService.getBannerIdObservable()
       .subscribe((data) => {
-      this.bannerService.fetchBannerById(data.bannerId)
-        .pipe(map((data: any) => {
-          this.bannerForm.patchValue(data.data)
-        }))
-        .subscribe(res => console.log(res))
-    })
+        this.apiService.fetchBannerById(data.bannerId)
+          .pipe(map((data: any) => {
+            const formData = data.data as BannerModel
+            this.formService.setFormData(formData)
+          }))
+          .subscribe(() => {
+            const fileField = this.bannerForm.get('fileId')
+            fileField?.clearValidators()
+            fileField?.updateValueAndValidity()
+          })
+      })
 
-    this.bannerForm.valueChanges.subscribe((formData) => {
+    const formData = sessionStorage.getItem('bannerFormData');
+    if (formData) this.formService.setFormData(JSON.parse(formData));
+
+    this.formService.bannerForm.valueChanges.subscribe((formData) => {
       sessionStorage.setItem('bannerFormData', JSON.stringify(formData));
     });
 
-    const bannerId = localStorage.getItem('bannerId')
-    if (bannerId) this.bannerId = bannerId
-
-    const formData = sessionStorage.getItem('bannerFormData');
-    if (formData) this.bannerForm.setValue(JSON.parse(formData));
+    const editFlag = localStorage.getItem('editFlag')
+    if (editFlag) {
+      const fileField = this.formService.bannerForm.get('fileId')
+      fileField?.clearValidators()
+      fileField?.updateValueAndValidity()
+    }
 
     const fileUrl = localStorage.getItem('fileDataUrl')
     const fileName = localStorage.getItem('fileName')
@@ -96,7 +67,16 @@ export class BannerFormComponent implements OnInit{
 
     if (fileUrl && fileType && fileName) {
       const file = dataUrlToBlob(fileUrl, fileName, fileType)
-      this.selectFile(file)
+      this.formService.selectFile(file)
     }
+
+    this.formService.getReferenceData().subscribe((referenceData) => {
+      this.channels = referenceData.channels
+      this.zones = referenceData.zones
+      this.languages = referenceData.languages
+      this.labels = referenceData.labels
+    })
   }
+
+
 }

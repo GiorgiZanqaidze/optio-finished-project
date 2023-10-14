@@ -1,10 +1,9 @@
 import { Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Params} from "@angular/router";
 import {PageEvent} from "@angular/material/paginator";
-import {BannerModel} from "../shared/types/banners/banner.model";
-import {FormControl, FormGroup} from "@angular/forms";
 import {BannersService} from "../services/banners/banners.service";
 import {MatDrawer} from "@angular/material/sidenav";
+import {FormsService} from "../services/forms/forms.service";
 
 @Component({
   selector: 'app-banners-list',
@@ -15,88 +14,39 @@ export class BannersListComponent implements OnInit{
 
   constructor(
     private route: ActivatedRoute,
-    private bannersService: BannersService,
+    public bannersService: BannersService,
+    private formService: FormsService
   ) {}
 
-  banners!: BannerModel[]
-  page!: number
-  pageSize = 2
-  totalPages!: number
   @ViewChild('drawer') drawer!: MatDrawer
-  drawerIsOpen!: boolean
-  editFlag!: boolean
-  searchBannersForm = new FormGroup({
-    "search": new FormControl<string>(''),
-    "sortDirection": new  FormControl<string>('asc'),
-    "sortBy": new FormControl<string>('name.raw')
-  })
+  searchBannersForm = this.bannersService.searchBannersForm
 
   ngOnInit() {
     const drawerIsOpen = localStorage.getItem('drawerIsOpen')
-    const editFlag = localStorage.getItem('editFlag')
-    if (drawerIsOpen !== null) this.drawerIsOpen = JSON.parse(drawerIsOpen)
-    if (editFlag !== null) this.editFlag = JSON.parse(editFlag)
+    if (drawerIsOpen !== null) this.bannersService.setDrawerIsOpen(JSON.parse(drawerIsOpen))
 
-    this.bannersService.getBannerIdObservable().subscribe(res => {
+    this.formService.getBannerIdObservable().subscribe(() => {
       this.drawer.toggle(true ).catch(err => console.log(err))
     })
 
     this.route.queryParams
       .subscribe((route: Params) => {
-          this.page = +route['page'];
-          this.pageSize= +route['pageSize']
-          this.searchBannersForm.patchValue({
+          this.bannersService.setBannerPage(+route['page'])
+          this.bannersService.setBannerPageSize(+route['pageSize'])
+          this.bannersService.searchBannersForm.patchValue({
             'search': route['search'],
             'sortDirection': route['sortDirection'],
             'sortBy': route['sortBy']
           })
-          this.bannersService
-            .fetchBanners(
-              this.searchBannersForm.value.search,
-              this.page,
-              this.pageSize,
-              this.searchBannersForm.value.sortBy,
-              this.searchBannersForm.value.sortDirection
-            )
-            .subscribe((data: any) => {
-              this.totalPages = data.data.total;
-              this.banners = data.data.entities;
-            });
+          this.bannersService.onFetchBanners()
       });
   }
 
-  drawerOpen() {
-    localStorage.setItem('drawerIsOpen', JSON.stringify(this.drawer.opened))
-  }
+  drawerOpen() { this.bannersService.onDrawerOpen(this.drawer.opened) }
 
-  onPageChange(event: PageEvent) {
-    const queryParams = {page: event.pageIndex, pageSize: event.pageSize};
-    this.bannersService.onRouteParamsChange(queryParams)
-  }
+  pageChange(event: PageEvent) { this.bannersService.onPageChange(event) }
 
-  closeDrawer() {
-    localStorage.clear();
-    sessionStorage.clear()
-  }
+  drawerClose() { this.bannersService.onDrawerClose() }
 
-  searchBanners() {
-    const queryParams = {
-      search: this.searchBannersForm.value.search,
-      sortDirection: this.searchBannersForm.value.sortDirection,
-      sortBy: this.searchBannersForm.value.sortBy,
-    };
-    this.bannersService.onRouteParamsChange(queryParams)
-    this.bannersService
-        .fetchBanners(
-          this.searchBannersForm.value.search,
-          this.page,
-          this.pageSize,
-          this.searchBannersForm.value.sortBy,
-          this.searchBannersForm.value.sortDirection
-        )
-        .subscribe((data: any) => {
-          this.totalPages = data.data.total;
-          this.banners = data.data.entities;
-        });
-  }
+  bannersSearch() { this.bannersService.onBannersSearch() }
 }

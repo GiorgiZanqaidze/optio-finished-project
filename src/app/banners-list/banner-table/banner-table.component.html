@@ -3,9 +3,12 @@
     <th mat-header-cell *matHeaderCellDef> Name </th>
     <td mat-cell *matCellDef="let element"> {{element.name}} </td>
   </ng-container>
-  <ng-container matColumnDef="Active">
-    <th mat-header-cell *matHeaderCellDef> Active </th>
-    <td mat-cell *matCellDef="let element"> {{element.active}} </td>
+  <ng-container matColumnDef="Status">
+    <th mat-header-cell *matHeaderCellDef> Status </th>
+    <td mat-cell *matCellDef="let element">
+        <p *ngIf="element.active">Active</p>
+      <p *ngIf="!element.active">Inactive</p>
+    </td>
   </ng-container>
   <ng-container matColumnDef="Zone">
     <th mat-header-cell *matHeaderCellDef> Zone </th>

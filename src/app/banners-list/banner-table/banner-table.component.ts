@@ -1,7 +1,8 @@
 import {Component, Input} from '@angular/core';
-import {BannerModel} from "../../shared/types/banners/banner.model";
+import {BannerModel} from "../../shared/types/banner.model";
 import {environment} from "../../../environments/environment";
 import {BannersService} from "../../services/banners/banners.service";
+import {FormsService} from "../../services/forms/forms.service";
 
 @Component({
   selector: 'app-banner-table',
@@ -12,18 +13,17 @@ export class BannerTableComponent{
 
   @Input() dataSource!: BannerModel[]
 
-  displayedColumns = ['Name', "Active", "Zone", "StartDate", "EndDate", "Labels", 'Image']
+  displayedColumns = ['Name', "Status", "Zone", "StartDate", "EndDate", "Labels", 'Image']
 
   public readonly apiUrl = environment.ApiUrl
 
   constructor(
-    private bannersService: BannersService
+    private formService: FormsService
   ) {
   }
-
   showEditBannerForm(rowData: BannerModel) {
     localStorage.setItem("editFlag", JSON.stringify(true))
     localStorage.setItem("bannerId", JSON.stringify(rowData.id))
-    this.bannersService.setItem({editFlag: true, bannerId: rowData.id})
+    this.formService.setItem({editFlag: true, bannerId: rowData.id})
   }
 }
