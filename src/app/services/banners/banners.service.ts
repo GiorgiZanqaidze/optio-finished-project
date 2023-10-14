@@ -59,8 +59,6 @@ export class BannersService {
     this.bannersPage = newPage
   }
 
-
-
   onFetchBanners() {
     this.apiService.fetchBanners(
       this.searchBannersForm.value.search,
@@ -107,6 +105,5 @@ export class BannersService {
       this.setTotalPages(data.total)
       this.setBanners(data.banners)
     });
-
   }
 }
