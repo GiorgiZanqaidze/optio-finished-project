@@ -27,6 +27,7 @@ export class BannerFormComponent implements OnInit{
   zones!: ReferenceDataModel[]
   languages!: ReferenceDataModel[]
   labels!: ReferenceDataModel[]
+  editFlag!: boolean
 
   bannerForm = new FormGroup({
     "name": new FormControl<Input>(null, [Validators.required]),
@@ -80,6 +81,7 @@ export class BannerFormComponent implements OnInit{
   }
 
   ngOnInit() {
+
     this.bannerService.getBannerIdObservable()
       .subscribe((data) => {
         this.bannerService.fetchBannerById(data.bannerId)
