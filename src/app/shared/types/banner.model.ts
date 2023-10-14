@@ -7,7 +7,7 @@ export interface BannerModel {
   labels: string[],
   zoneId: string,
   url: string,
-  fileId: number,
+  fileId: string | null | undefined,
   channelId: string,
   language: string,
   priority: string

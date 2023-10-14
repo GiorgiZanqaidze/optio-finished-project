@@ -34,7 +34,7 @@ export class BannerFormComponent implements OnInit{
     "active": new FormControl(null, [Validators.required]),
     "startDate": new FormControl<Input>(null, [Validators.required]),
     "endDate": new FormControl<Input>(null),
-    "fileId": new FormControl(null, [Validators.required]),
+    "fileId": new FormControl<string | null | undefined>(null, [Validators.required]),
     "priority": new FormControl<Input>('', [Validators.required, Validators.min(1)]),
     "channelId": new FormControl<Input>(null, [Validators.required]),
     "language": new FormControl<Input>(null, [Validators.required]),
@@ -60,6 +60,7 @@ export class BannerFormComponent implements OnInit{
     ).subscribe(() => {
       this.bannerForm.reset()
       this.bannerForm.clearValidators()
+      this.bannerForm.updateValueAndValidity()
       sessionStorage.clear()
       localStorage.clear()
     });
@@ -92,13 +93,13 @@ export class BannerFormComponent implements OnInit{
             fileField?.updateValueAndValidity()
           })
       })
+
     const formData = sessionStorage.getItem('bannerFormData');
-    if (formData) this.bannerForm.patchValue( JSON.parse(formData));
+    if (formData) this.setFormData(JSON.parse(formData));
 
     this.bannerForm.valueChanges.subscribe((formData) => {
       sessionStorage.setItem('bannerFormData', JSON.stringify(formData));
     });
-
 
     const editFlag = localStorage.getItem('editFlag')
     if (editFlag) {
@@ -106,9 +107,6 @@ export class BannerFormComponent implements OnInit{
       fileField?.clearValidators()
       fileField?.updateValueAndValidity()
     }
-
-
-
 
     const fileUrl = localStorage.getItem('fileDataUrl')
     const fileName = localStorage.getItem('fileName')
@@ -138,7 +136,8 @@ export class BannerFormComponent implements OnInit{
       labels: formData.labels,
       endDate: formData.endDate,
       startDate: formData.startDate,
-      active: formData.active
+      active: formData.active,
+      fileId: formData.fileId
     })
 
     this.imageName = JSON.stringify(formData.fileId)

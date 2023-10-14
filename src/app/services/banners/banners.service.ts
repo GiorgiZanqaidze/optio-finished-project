@@ -17,6 +17,16 @@ export class BannersService {
   ) {
   }
 
+  bannersPage!: number
+  bannerPageSize!: number
+  setBannerPageSize(newPageSize: number) {
+    this.bannerPageSize = newPageSize
+  }
+
+  setBannerPage(newPage: number) {
+    this.bannersPage = newPage
+  }
+
   fetchBanners(search: string | null | undefined, pageIndex: number, pageSize: number, sortBy?: string | null | undefined, sortDirection?: string | null | undefined) {
     return this.http.post("/banners/find",{search, pageIndex, pageSize, sortBy, sortDirection})
   }
@@ -41,5 +51,10 @@ export class BannersService {
 
   getBannerIdObservable(): Observable<{editFlag: boolean, bannerId: number}> {
     return this.getBannerById.asObservable();
+  }
+
+  onCloseDrawer() {
+    localStorage.clear();
+    sessionStorage.clear()
   }
 }

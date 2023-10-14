@@ -12,7 +12,7 @@ export class BannerTableComponent{
 
   @Input() dataSource!: BannerModel[]
 
-  displayedColumns = ['Name', "Active", "Zone", "StartDate", "EndDate", "Labels", 'Image']
+  displayedColumns = ['Name', "Status", "Zone", "StartDate", "EndDate", "Labels", 'Image']
 
   public readonly apiUrl = environment.ApiUrl
 

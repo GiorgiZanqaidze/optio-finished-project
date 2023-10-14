@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute, Params, Router} from "@angular/router";
+import {ActivatedRoute, Params} from "@angular/router";
 import {PageEvent} from "@angular/material/paginator";
 import {BannerModel} from "../shared/types/banner.model";
 import {FormControl, FormGroup} from "@angular/forms";
@@ -15,13 +15,10 @@ export class BannersListComponent implements OnInit{
 
   constructor(
     private route: ActivatedRoute,
-    private bannersService: BannersService,
-    private router: Router
+    public bannersService: BannersService,
   ) {}
 
   banners!: BannerModel[]
-  page!: number
-  pageSize = 2
   totalPages!: number
   @ViewChild('drawer') drawer!: MatDrawer
   drawerIsOpen!: boolean
@@ -38,14 +35,14 @@ export class BannersListComponent implements OnInit{
     if (drawerIsOpen !== null) this.drawerIsOpen = JSON.parse(drawerIsOpen)
     if (editFlag !== null) this.editFlag = JSON.parse(editFlag)
 
-    this.bannersService.getBannerIdObservable().subscribe(res => {
+    this.bannersService.getBannerIdObservable().subscribe(() => {
       this.drawer.toggle(true ).catch(err => console.log(err))
     })
 
     this.route.queryParams
       .subscribe((route: Params) => {
-          this.page = +route['page'];
-          this.pageSize= +route['pageSize']
+        this.bannersService.setBannerPage(+route['page'])
+        this.bannersService.setBannerPageSize(+route['pageSize'])
           this.searchBannersForm.patchValue({
             'search': route['search'],
             'sortDirection': route['sortDirection'],
@@ -54,13 +51,13 @@ export class BannersListComponent implements OnInit{
           this.bannersService
             .fetchBanners(
               this.searchBannersForm.value.search,
-              this.page,
-              this.pageSize,
+              this.bannersService.bannersPage,
+              this.bannersService.bannerPageSize,
               this.searchBannersForm.value.sortBy,
               this.searchBannersForm.value.sortDirection
             )
             .subscribe((data: any) => {
-              this.totalPages = data.data.total;
+              this.totalPages = data.data.total as number;
               this.banners = data.data.entities;
             });
       });
@@ -75,10 +72,7 @@ export class BannersListComponent implements OnInit{
     this.bannersService.onRouteParamsChange(queryParams)
   }
 
-  closeDrawer() {
-    localStorage.clear();
-    sessionStorage.clear()
-  }
+  closeDrawer() {this.bannersService.onCloseDrawer()}
 
   searchBanners() {
     const queryParams = {
@@ -90,8 +84,8 @@ export class BannersListComponent implements OnInit{
     this.bannersService
         .fetchBanners(
           this.searchBannersForm.value.search,
-          this.page,
-          this.pageSize,
+          this.bannersService.bannersPage,
+          this.bannersService.bannerPageSize,
           this.searchBannersForm.value.sortBy,
           this.searchBannersForm.value.sortDirection
         )

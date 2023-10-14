@@ -38,10 +38,11 @@
           <app-banner-table [dataSource]="banners" ></app-banner-table>
           <mat-paginator
             [pageSizeOptions]="[2, 10, 20]"
-            [pageSize]="pageSize"
+            [pageSize]="bannersService.bannerPageSize"
             showFirstLastButtons
-            [pageIndex]="page"
-            [length]="totalPages" (page)="onPageChange($event)"
+            [pageIndex]="bannersService.bannersPage"
+            [length]="totalPages"
+            (page)="onPageChange($event)"
           >
           </mat-paginator>
         </div>
