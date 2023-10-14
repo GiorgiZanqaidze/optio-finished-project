@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {BannersService} from "../../services/banners/banners.service";
 
 @Component({
   selector: 'app-banners-filter-sort',
@@ -7,4 +8,10 @@ import { Component } from '@angular/core';
 })
 export class BannersFilterSortComponent {
 
+  constructor(private bannersService: BannersService) {
+  }
+
+  searchBannersForm = this.bannersService.searchBannersForm
+
+  bannersSearch() { this.bannersService.onBannersSearch() }
 }

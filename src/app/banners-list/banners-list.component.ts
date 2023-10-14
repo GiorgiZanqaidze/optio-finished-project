@@ -1,6 +1,4 @@
 import { Component, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute, Params} from "@angular/router";
-import {PageEvent} from "@angular/material/paginator";
 import {BannersService} from "../services/banners/banners.service";
 import {MatDrawer} from "@angular/material/sidenav";
 import {FormsService} from "../services/forms/forms.service";
@@ -13,13 +11,11 @@ import {FormsService} from "../services/forms/forms.service";
 export class BannersListComponent implements OnInit{
 
   constructor(
-    private route: ActivatedRoute,
     public bannersService: BannersService,
     private formService: FormsService
   ) {}
 
   @ViewChild('drawer') drawer!: MatDrawer
-  searchBannersForm = this.bannersService.searchBannersForm
 
   ngOnInit() {
     const drawerIsOpen = localStorage.getItem('drawerIsOpen')
@@ -28,25 +24,10 @@ export class BannersListComponent implements OnInit{
     this.formService.getBannerIdObservable().subscribe(() => {
       this.drawer.toggle(true ).catch(err => console.log(err))
     })
-
-    this.route.queryParams
-      .subscribe((route: Params) => {
-          this.bannersService.setBannerPage(+route['page'])
-          this.bannersService.setBannerPageSize(+route['pageSize'])
-          this.bannersService.searchBannersForm.patchValue({
-            'search': route['search'],
-            'sortDirection': route['sortDirection'],
-            'sortBy': route['sortBy']
-          })
-          this.bannersService.onFetchBanners()
-      });
   }
 
   drawerOpen() { this.bannersService.onDrawerOpen(this.drawer.opened) }
 
-  pageChange(event: PageEvent) { this.bannersService.onPageChange(event) }
-
   drawerClose() { this.bannersService.onDrawerClose() }
 
-  bannersSearch() { this.bannersService.onBannersSearch() }
 }
