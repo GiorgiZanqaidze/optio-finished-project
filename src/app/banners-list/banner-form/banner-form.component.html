@@ -8,8 +8,8 @@
       <div class=" h-12 rounded-t border border-b-gray-300 bg-gray-100 mb-4">
         <label mat-mini-fab for="image"  class="flex items-center text-center text-md w-full h-full cursor-pointer hover:bg-gray-200">
           <mat-icon>attach_file</mat-icon>
-          <span *ngIf="!imageName">Upload Image </span>
-          <span *ngIf="imageName">{{imageName}}</span>
+          <span *ngIf="!formService.imageName">Upload Image </span>
+          <span *ngIf="formService.imageName">{{formService.imageName}}</span>
         </label>
         <input class="invisible" type="file" id="image" formControlName="fileId" (change)="onSelectedFile($event)">
       </div>

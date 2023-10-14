@@ -44,7 +44,7 @@ export class BannersListComponent implements OnInit{
 
   pageChange(event: PageEvent) { this.bannersService.onPageChange(event) }
 
-  drawerClose() { this.bannersService.onDrawerClone() }
+  drawerClose() { this.bannersService.onDrawerClose() }
 
   bannersSearch() { this.bannersService.onBannersSearch() }
 }

@@ -20,7 +20,6 @@ export class BannerTableComponent{
     private bannersService: BannersService
   ) {
   }
-
   showEditBannerForm(rowData: BannerModel) {
     localStorage.setItem("editFlag", JSON.stringify(true))
     localStorage.setItem("bannerId", JSON.stringify(rowData.id))

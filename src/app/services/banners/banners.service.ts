@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {ActivatedRoute, Router} from "@angular/router";
-import {map, Observable, Subject} from "rxjs";
+import { Observable, Subject} from "rxjs";
 import {FormControl, FormGroup} from "@angular/forms";
 import {BannerModel} from "../../shared/types/banner.model";
 import {PageEvent} from "@angular/material/paginator";
@@ -38,8 +38,6 @@ export class BannersService {
   onDrawerOpen(drawer: boolean) {
     localStorage.setItem('drawerIsOpen', JSON.stringify(drawer))
   }
-
-
 
   searchBannersForm = new FormGroup({
     "search": new FormControl<string>(''),
@@ -100,7 +98,7 @@ export class BannersService {
     return this.getBannerById.asObservable();
   }
 
-  onDrawerClone() {
+  onDrawerClose() {
     localStorage.clear();
     sessionStorage.clear()
   }
