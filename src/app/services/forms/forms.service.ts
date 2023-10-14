@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {environment} from '../../../environments/environment'
-import {forkJoin, map, Observable, switchMap} from "rxjs";
+import {forkJoin, Observable, Subject, switchMap} from "rxjs";
 import {ReferenceDataModel} from "../../shared/types/reference-data.model";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {BannerModel} from "../../shared/types/banner.model";
 import {fileReader} from "../../shared/utilities/file-utils";
-import {BannersService} from "../banners/banners.service";
+import {ApiService} from "../api/api.service";
 
 type Input = string | null
 
@@ -15,7 +13,7 @@ type Input = string | null
 })
 export class FormsService {
 
-  constructor(private http: HttpClient, private bannersService: BannersService) { }
+  constructor(private apiService: ApiService) { }
 
   bannerForm = new FormGroup({
     "name": new FormControl<Input>(null, [Validators.required]),
@@ -30,6 +28,16 @@ export class FormsService {
     "url": new FormControl<Input>(null, [Validators.required]),
     "labels": new FormControl<string[]>([])
   })
+
+  private getBannerById = new Subject<{editFlag: boolean, bannerId: number}>();
+
+  setItem(data: {editFlag: boolean, bannerId: number}): void {
+    this.getBannerById.next(data);
+  }
+
+  getBannerIdObservable(): Observable<{editFlag: boolean, bannerId: number}> {
+    return this.getBannerById.asObservable();
+  }
 
   imageName!: string
   fileFormData = new FormData()
@@ -55,7 +63,7 @@ export class FormsService {
   bannerId = ""
 
   onSubmitBannerData() {
-    this.submitBlob(this.fileFormData).pipe(
+    this.apiService.submitBlob(this.fileFormData).pipe(
       switchMap((blobResponse: any) => {
 
         const bannerId = localStorage.getItem('bannerId')
@@ -66,7 +74,7 @@ export class FormsService {
           fileId: blobResponse.data.id,
           id: this.bannerId
         }
-        return this.submitBannerForm(mergedSubmitData);
+        return this.apiService.submitBannerForm(mergedSubmitData);
       })
     ).subscribe(() => {
       this.bannerForm.reset()
@@ -90,80 +98,12 @@ export class FormsService {
     this.selectFile(file)
   }
 
-  submitBlob(formData: any) {
-    return this.http.post('/blob/upload', formData)
-  }
-
-  submitBannerForm(formData:any) {
-    return this.http.post('/banners/save', formData)
-  }
-
-  getChannels() {
-    return this.http
-      .post('/reference-data/find', {
-        typeId: environment.channels_type_id,
-        includes: ['key', 'name'],
-      })
-      .pipe(
-        map((data: any) => data.data.entities as ReferenceDataModel[])
-      );
-  }
-
-  getZones() {
-    return this.http
-      .post('/reference-data/find', {
-        typeId: environment.zones_type_id,
-        includes: ['key', 'name'],
-      })
-      .pipe(
-        map((data: any) => data.data.entities as ReferenceDataModel[])
-      );
-  }
-
-  getLabels() {
-    return this.http
-      .post('/reference-data/find', {
-        typeId: environment.labels_type_id,
-        includes: ['key', 'name'],
-      })
-      .pipe(
-        map((data: any) => data.data.entities as ReferenceDataModel[])
-      );
-  }
-
-  getLanguages() {
-    return this.http
-      .post('/reference-data/find', {
-        typeId: environment.languages_type_id,
-        includes: ['key', 'name'],
-      })
-      .pipe(
-        map((data: any) => data.data.entities as ReferenceDataModel[])
-      );
-  }
-
   getReferenceData(): Observable<{ channels: ReferenceDataModel[], zones: ReferenceDataModel[], labels: ReferenceDataModel[], languages: ReferenceDataModel[] }> {
     return forkJoin({
-      channels: this.getChannels(),
-      zones: this.getZones(),
-      labels: this.getLabels(),
-      languages: this.getLanguages()
+      channels: this.apiService.getChannels(),
+      zones: this.apiService.getZones(),
+      labels: this.apiService.getLabels(),
+      languages: this.apiService.getLanguages()
     });
-  }
-
-  bannerEditObservable() {
-    this.bannersService.getBannerIdObservable()
-      .subscribe((data) => {
-        this.bannersService.fetchBannerById(data.bannerId)
-          .pipe(map((data: any) => {
-            const formData = data.data as BannerModel
-            this.setFormData(formData)
-          }))
-          .subscribe(() => {
-            const fileField = this.bannerForm.get('fileId')
-            fileField?.clearValidators()
-            fileField?.updateValueAndValidity()
-          })
-      })
   }
 }

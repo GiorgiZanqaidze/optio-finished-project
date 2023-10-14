@@ -2,6 +2,10 @@ import {Component, OnInit} from '@angular/core';
 import {FormsService} from "../../services/forms/forms.service";
 import {dataUrlToBlob} from '../../shared/utilities/file-utils'
 import {ReferenceDataModel} from "../../shared/types/reference-data.model";
+import {map} from "rxjs";
+import {BannerModel} from "../../shared/types/banner.model";
+import {BannersService} from "../../services/banners/banners.service";
+import {ApiService} from "../../services/api/api.service";
 
 @Component({
   selector: 'app-banner-form',
@@ -12,6 +16,8 @@ export class BannerFormComponent implements OnInit{
 
   constructor(
     public formService: FormsService,
+    private bannersService: BannersService,
+    private apiService: ApiService
   ) {}
   bannerId = ""
   channels!: ReferenceDataModel[]
@@ -27,7 +33,19 @@ export class BannerFormComponent implements OnInit{
   onSelectedFile(event: Event) { this.formService.onSelectedFile(event) }
 
   ngOnInit() {
-    this.formService.bannerEditObservable()
+    this.formService.getBannerIdObservable()
+      .subscribe((data) => {
+        this.apiService.fetchBannerById(data.bannerId)
+          .pipe(map((data: any) => {
+            const formData = data.data as BannerModel
+            this.formService.setFormData(formData)
+          }))
+          .subscribe(() => {
+            const fileField = this.bannerForm.get('fileId')
+            fileField?.clearValidators()
+            fileField?.updateValueAndValidity()
+          })
+      })
 
     const formData = sessionStorage.getItem('bannerFormData');
     if (formData) this.formService.setFormData(JSON.parse(formData));

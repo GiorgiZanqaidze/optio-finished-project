@@ -3,6 +3,7 @@ import {ActivatedRoute, Params} from "@angular/router";
 import {PageEvent} from "@angular/material/paginator";
 import {BannersService} from "../services/banners/banners.service";
 import {MatDrawer} from "@angular/material/sidenav";
+import {FormsService} from "../services/forms/forms.service";
 
 @Component({
   selector: 'app-banners-list',
@@ -14,6 +15,7 @@ export class BannersListComponent implements OnInit{
   constructor(
     private route: ActivatedRoute,
     public bannersService: BannersService,
+    private formService: FormsService
   ) {}
 
   @ViewChild('drawer') drawer!: MatDrawer
@@ -23,7 +25,7 @@ export class BannersListComponent implements OnInit{
     const drawerIsOpen = localStorage.getItem('drawerIsOpen')
     if (drawerIsOpen !== null) this.bannersService.setDrawerIsOpen(JSON.parse(drawerIsOpen))
 
-    this.bannersService.getBannerIdObservable().subscribe(() => {
+    this.formService.getBannerIdObservable().subscribe(() => {
       this.drawer.toggle(true ).catch(err => console.log(err))
     })
 

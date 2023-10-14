@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from "@angular/common/http";
 import {ActivatedRoute, Router} from "@angular/router";
-import { Observable, Subject} from "rxjs";
 import {FormControl, FormGroup} from "@angular/forms";
 import {BannerModel} from "../../shared/types/banner.model";
 import {PageEvent} from "@angular/material/paginator";
+import {FormsService} from "../forms/forms.service";
+import {ApiService} from "../api/api.service";
 
 
 @Injectable({
@@ -14,9 +14,10 @@ export class BannersService {
 
 
   constructor(
-    private http: HttpClient,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private formService: FormsService,
+    private apiService: ApiService
   ) {
   }
 
@@ -58,12 +59,10 @@ export class BannersService {
     this.bannersPage = newPage
   }
 
-  private fetchBanners(search: string | null | undefined, pageIndex: number, pageSize: number, sortBy?: string | null | undefined, sortDirection?: string | null | undefined) {
-    return this.http.post("/banners/find",{search, pageIndex, pageSize, sortBy, sortDirection})
-  }
+
 
   onFetchBanners() {
-    this.fetchBanners(
+    this.apiService.fetchBanners(
       this.searchBannersForm.value.search,
       this.bannersPage,
       this.bannerPageSize,
@@ -76,9 +75,6 @@ export class BannersService {
       });
   }
 
-  fetchBannerById(id: number) {
-    return this.http.post("/banners/find-one",{id})
-  }
 
   onRouteParamsChange(queryParams: any) {
     this.router.navigate([], {
@@ -88,19 +84,10 @@ export class BannersService {
     }).catch(err => console.log(err))
   }
 
-  private getBannerById = new Subject<{editFlag: boolean, bannerId: number}>();
-
-  setItem(data: {editFlag: boolean, bannerId: number}): void {
-    this.getBannerById.next(data);
-  }
-
-  getBannerIdObservable(): Observable<{editFlag: boolean, bannerId: number}> {
-    return this.getBannerById.asObservable();
-  }
-
   onDrawerClose() {
     localStorage.clear();
     sessionStorage.clear()
+    this.formService.bannerForm.reset()
   }
 
   onBannersSearch() {
@@ -110,7 +97,7 @@ export class BannersService {
       sortBy: this.searchBannersForm.value.sortBy,
     };
     this.onRouteParamsChange(queryParams)
-    return this.fetchBanners(
+    return this.apiService.fetchBanners(
         this.searchBannersForm.value.search,
         this.bannersPage,
         this.bannerPageSize,
