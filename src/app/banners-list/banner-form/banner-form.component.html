@@ -50,13 +50,13 @@
       <mat-form-field>
         <mat-label *ngIf="bannerForm.controls.fileId.value">Selected Image:</mat-label>
         <input type="text" formControlName="fileId" id="fileId" class="invisible"  matInput>
-        <img *ngIf="formService.editFileId; else onlyFileId" [src]="apiUrl + '/blob/' + bannerForm.controls.fileId.value" alt="banner" width="150" height="150" class="block mx-auto">
+        <img *ngIf="formService.editFileId; else onlyFileId" [src]="apiUrl + '/blob/' + bannerForm.controls.fileId.value" alt="banner"  class="block mx-auto max-h-[20rem]">
         <ng-template #onlyFileId>
           <span >{{bannerForm.controls.fileId.value}}</span>
         </ng-template>
         <label for="image" class="h-10 w-full cursor-pointer flex items-center gap-2 bg-gray-300 transition-all hover:bg-gray-400 mt-2 pl-5">
           <mat-icon>image</mat-icon>
-          <span>Choose Image</span>
+          <span>Choose Image*</span>
         </label>
       </mat-form-field>
       <mat-form-field>
@@ -79,7 +79,7 @@
           <mat-option *ngFor="let label of labels" [value]="label.key">{{label.name}}</mat-option>
         </mat-select>
       </mat-form-field>
-      <button class="bg-blue-300 md:text-xl rounded disabled:bg-amber-10 disabled:cursor-not-allowed" [disabled]="bannerForm.invalid"  mat-raised-button color="primary">Submit</button>
+      <button class="bg-blue-300 md:text-xl rounded disabled:bg-amber-10 disabled:cursor-not-allowed" [disabled]="bannerForm.invalid || !bannerForm.touched"  mat-raised-button color="primary">Submit</button>
     </div>
   </form>
 </div>

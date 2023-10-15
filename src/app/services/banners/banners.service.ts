@@ -91,12 +91,16 @@ export class BannersService {
     sessionStorage.clear()
   }
 
+  routerChangeFlag = false
+
   onBannersSearch() {
     const queryParams = {
       search: this.searchBannersForm.value.search,
       sortDirection: this.searchBannersForm.value.sortDirection,
       sortBy: this.searchBannersForm.value.sortBy,
+      routerChangeFlag: !this.routerChangeFlag
     };
+    this.routerChangeFlag = !this.routerChangeFlag
     this.onRouteParamsChange(queryParams)
     return this.apiService.fetchBanners(
         this.searchBannersForm.value.search,
