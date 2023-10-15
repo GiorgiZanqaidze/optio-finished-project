@@ -22,7 +22,9 @@ export class BannersListComponent implements OnInit{
     if (drawerIsOpen !== null) this.bannersService.setDrawerIsOpen(JSON.parse(drawerIsOpen))
 
     this.formService.getBannerIdObservable().subscribe(() => {
-      this.drawer.toggle(true ).catch(err => console.log(err))
+      this.drawer.toggle(true ).then(() => {
+        this.formService.showDeleteButton = true
+      }).catch(err => console.log(err))
     })
   }
 

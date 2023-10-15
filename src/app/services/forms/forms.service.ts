@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {forkJoin, Observable, Subject, switchMap} from "rxjs";
+import {forkJoin, map, Observable, Subject, switchMap} from "rxjs";
 import {ReferenceDataModel} from "../../shared/types/reference-data.model";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {BannerModel} from "../../shared/types/banner.model";
@@ -21,7 +21,7 @@ export class FormsService {
     "active": new FormControl(null, [Validators.required]),
     "startDate": new FormControl<Input>(null, [Validators.required]),
     "endDate": new FormControl<Input>(null),
-    "fileId": new FormControl<string | null | undefined>(null, [Validators.required]),
+    "fileId": new FormControl<string | number | null>(null,  [Validators.required]),
     "priority": new FormControl<Input>('', [Validators.required, Validators.min(1)]),
     "channelId": new FormControl<Input>(null, [Validators.required]),
     "language": new FormControl<Input>(null, [Validators.required]),
@@ -42,6 +42,7 @@ export class FormsService {
   imageName!: string
   fileFormData = new FormData()
   showDeleteButton = false
+  editFileId!: null
 
   setFormData(formData: BannerModel) {
     this.bannerForm.patchValue({
@@ -58,32 +59,44 @@ export class FormsService {
       fileId: formData.fileId
     })
 
-    this.imageName = JSON.stringify(formData.fileId)
+    this.bannerForm.patchValue({fileId: formData.fileId})
   }
 
-  bannerId = ""
+  bannerId!: string | null
 
   onSubmitBannerData() {
-    this.apiService.submitBlob(this.fileFormData).pipe(
-      switchMap((blobResponse: any) => {
+    const bannerId = localStorage.getItem('bannerId')
+    if (bannerId) this.bannerId = JSON.parse(bannerId)
+    if (!this.editFileId) {
+      this.apiService.submitBlob(this.fileFormData).pipe(
+        switchMap((blobResponse: any) => {
+          const mergedSubmitData = {
+            ...this.bannerForm.value,
+            fileId: blobResponse.data.id,
+            id: this.bannerId
+          };
+          return this.apiService.submitBannerForm(mergedSubmitData);
+        })
+      ).subscribe(() => {
+        this.handleFormSubmissionSuccess();
+      });
+    } else {
+      const submitData = {
+        ...this.bannerForm.value,
+        fileId: this.editFileId,
+        id: this.bannerId
+      };
+      this.apiService.submitBannerForm(submitData).subscribe(() => {
+        this.handleFormSubmissionSuccess();
+      });
+    }
+  }
 
-        const bannerId = localStorage.getItem('bannerId')
-        if (bannerId) this.bannerId = JSON.parse(bannerId)
-
-        const mergedSubmitData = {
-          ...this.bannerForm.value,
-          fileId: blobResponse.data.id,
-          id: this.bannerId
-        }
-        return this.apiService.submitBannerForm(mergedSubmitData);
-      })
-    ).subscribe(() => {
-      this.bannerForm.reset()
-      this.bannerForm.clearValidators()
-      this.bannerForm.updateValueAndValidity()
-      sessionStorage.clear()
-      localStorage.clear()
-    });
+  private handleFormSubmissionSuccess() {
+    this.bannerForm.reset();
+    this.showDeleteButton = false;
+    sessionStorage.clear();
+    localStorage.clear();
   }
 
   selectFile(file: any) {
@@ -91,7 +104,7 @@ export class FormsService {
     this.fileFormData.set('blob', modifiedFile);
     this.imageName = modifiedFile.name
     const fileField = this.bannerForm.get('fileId')
-    fileField?.clearValidators()
+    fileField?.setValue(modifiedFile.name)
   }
 
   onSelectedFile(event: any) {

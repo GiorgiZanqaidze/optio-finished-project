@@ -1,6 +1,7 @@
 <div class="min-w-full">
   <div class="flex justify-end mx-10 my-2" *ngIf="formService.showDeleteButton">
-    <button mat-fab color="accent" aria-label="Example icon button with a delete icon">
+    <button mat-raised-button color="accent">
+      delete
       <mat-icon>delete</mat-icon>
     </button>
   </div>
@@ -9,15 +10,25 @@
       <mat-form-field>
         <mat-label>Name</mat-label>
         <input type="text" formControlName="name" id="name" matInput>
+
       </mat-form-field>
-      <div class=" h-12 rounded-t border border-b-gray-300 bg-gray-100 mb-4">
-        <label mat-mini-fab for="image"  class="flex items-center text-center text-md w-full h-full cursor-pointer hover:bg-gray-200">
-          <mat-icon>attach_file</mat-icon>
-          <span *ngIf="!formService.imageName">Upload Image </span>
-          <span *ngIf="formService.imageName">{{formService.imageName}}</span>
-        </label>
-        <input class="invisible" type="file" id="image" formControlName="fileId" (change)="onSelectedFile($event)">
-      </div>
+        <div class="w-full">
+          <mat-button-toggle class="w-full">
+            <label for="image" class="h-full w-full cursor-pointer flex items-center gap-2 bg-red-100">
+              <mat-icon>image</mat-icon>
+              Select Image
+            </label>
+          </mat-button-toggle>
+          <input class="invisible" type="file" id="image" (change)="onSelectedFile($event)">
+        </div>
+        <mat-form-field>
+          <mat-label>Selected Image:</mat-label>
+          <input type="text" formControlName="fileId" id="fileId" class="invisible"  matInput>
+          <img *ngIf="formService.editFileId; else onlyFileId" [src]="apiUrl + '/blob/' + bannerForm.controls.fileId.value" alt="banner" width="150" height="150">
+          <ng-template #onlyFileId>
+            <span >{{bannerForm.controls.fileId.value}}</span>
+          </ng-template>
+        </mat-form-field>
       <mat-form-field>
         <mat-label>Priority</mat-label>
         <input type="number" formControlName="priority" id="priority" matInput>
@@ -30,7 +41,7 @@
       </mat-form-field>
       <mat-form-field>
         <mat-label>Url</mat-label>
-        <input type="text" formControlName="url" id="url" matInput>
+        <input type="url" formControlName="url" id="url" matInput>
       </mat-form-field>
       <mat-form-field>
         <mat-label>Channel</mat-label>
@@ -69,7 +80,7 @@
           <mat-option *ngFor="let label of labels" [value]="label.key">{{label.name}}</mat-option>
         </mat-select>
       </mat-form-field>
-      <button class="bg-blue-300 md:text-xl rounded disabled:bg-amber-10 disabled:cursor-not-allowed" [disabled]="bannerForm.invalid"  mat-raised-button color="accent">Submit</button>
+      <button class="bg-blue-300 md:text-xl rounded disabled:bg-amber-10 disabled:cursor-not-allowed" [disabled]="bannerForm.invalid"  mat-raised-button color="primary">Submit</button>
     </div>
   </form>
 </div>

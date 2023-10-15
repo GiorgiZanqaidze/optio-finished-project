@@ -23,7 +23,7 @@ export class BannersService {
   }
 
   bannersPage!: number
-  bannerPageSize!: number
+  bannerPageSize = 10
   totalPages!: number
   banners!: BannerModel[]
   drawerIsOpen!: boolean
@@ -86,6 +86,7 @@ export class BannersService {
   onDrawerClose() {
     this.formService.bannerForm.reset()
     this.formService.imageName = ''
+    this.formService.showDeleteButton = false
     localStorage.clear();
     sessionStorage.clear()
   }

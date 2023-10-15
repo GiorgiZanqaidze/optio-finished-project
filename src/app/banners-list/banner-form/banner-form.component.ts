@@ -5,6 +5,7 @@ import {ReferenceDataModel} from "../../shared/types/reference-data.model";
 import {map} from "rxjs";
 import {BannerModel} from "../../shared/types/banner.model";
 import {ApiService} from "../../services/api/api.service";
+import {environment} from "../../../environments/environment";
 
 @Component({
   selector: 'app-banner-form',
@@ -26,6 +27,8 @@ export class BannerFormComponent implements OnInit{
 
   bannerForm = this.formService.bannerForm
 
+  public readonly apiUrl = environment.ApiUrl
+
   submitBannerData() { this.formService.onSubmitBannerData() }
 
   onSelectedFile(event: Event) { this.formService.onSelectedFile(event) }
@@ -38,6 +41,9 @@ export class BannerFormComponent implements OnInit{
             const formData = data.data as BannerModel
             sessionStorage.setItem('bannerFormData', JSON.stringify(formData));
             this.formService.setFormData(formData)
+            const editFileId = data.data.fileId
+            this.formService.editFileId = editFileId
+            sessionStorage.setItem('editFileId', JSON.stringify(editFileId))
           }))
           .subscribe(() => {
             const fileField = this.bannerForm.get('fileId')
@@ -52,13 +58,24 @@ export class BannerFormComponent implements OnInit{
 
     this.formService.bannerForm.valueChanges.subscribe((formData) => {
       sessionStorage.setItem('bannerFormData', JSON.stringify(formData));
-    });
+    })
+
+    const editFileId = sessionStorage.getItem('editFileId');
+    if (editFileId) this.formService.editFileId = JSON.parse(editFileId);
+
+    this.formService.bannerForm.controls.fileId.valueChanges.subscribe((value) => {
+      if (value !== this.formService.editFileId) {
+        this.formService.editFileId = null
+        sessionStorage.removeItem('editFileId')
+      }
+    })
 
     const editFlag = localStorage.getItem('editFlag')
-    if (editFlag) {
+    if (editFlag && JSON.parse(editFlag)) {
       const fileField = this.formService.bannerForm.get('fileId')
       fileField?.clearValidators()
       fileField?.updateValueAndValidity()
+      this.formService.showDeleteButton = true
     }
 
     const fileUrl = localStorage.getItem('fileDataUrl')
@@ -77,6 +94,4 @@ export class BannerFormComponent implements OnInit{
       this.labels = referenceData.labels
     })
   }
-
-
 }
