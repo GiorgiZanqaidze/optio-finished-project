@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import {forkJoin, Observable, Subject, switchMap} from "rxjs";
+import {Injectable, ViewChild} from '@angular/core';
+import {BehaviorSubject, forkJoin, Observable, Subject, switchMap} from "rxjs";
 import {ReferenceDataModel} from "../../shared/types/reference-data.model";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {BannerModel} from "../../shared/types/banner.model";
@@ -120,4 +120,15 @@ export class FormsService {
       languages: this.apiService.getLanguages()
     });
   }
+
+  private drawerOpenSubject = new BehaviorSubject<boolean>(false);
+
+  setDrawerOpen(open: boolean): void {
+    this.drawerOpenSubject.next(open);
+  }
+
+  getDrawerOpen(): Observable<boolean> {
+    return this.drawerOpenSubject.asObservable();
+  }
+
 }

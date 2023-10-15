@@ -28,7 +28,7 @@ export class BannersListComponent implements OnInit{
     })
   }
 
-  drawerOpen() { this.bannersService.onDrawerOpen(this.drawer.opened) }
+  drawerOpen() { this.bannersService.setDrawerIsOpen(this.drawer.opened) }
 
   drawerClose() { this.bannersService.onDrawerClose() }
 

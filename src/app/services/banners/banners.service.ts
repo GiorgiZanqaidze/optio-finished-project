@@ -29,6 +29,7 @@ export class BannersService {
   drawerIsOpen!: boolean
 
   setDrawerIsOpen(drawer: boolean) {
+    localStorage.setItem('drawerIsOpen', JSON.stringify(drawer))
     this.drawerIsOpen = drawer
   }
 
@@ -37,9 +38,7 @@ export class BannersService {
     this.onRouteParamsChange(queryParams)
   }
 
-  onDrawerOpen(drawer: boolean) {
-    localStorage.setItem('drawerIsOpen', JSON.stringify(drawer))
-  }
+
 
   searchBannersForm = new FormGroup({
     "search": new FormControl<string>(''),

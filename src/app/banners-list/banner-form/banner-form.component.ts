@@ -6,6 +6,7 @@ import {map} from "rxjs";
 import {BannerModel} from "../../shared/types/banner.model";
 import {ApiService} from "../../services/api/api.service";
 import {environment} from "../../../environments/environment";
+import {BannersService} from "../../services/banners/banners.service";
 
 @Component({
   selector: 'app-banner-form',
@@ -16,7 +17,8 @@ export class BannerFormComponent implements OnInit{
 
   constructor(
     public formService: FormsService,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private bannerService: BannersService
   ) {}
   bannerId = ""
   channels!: ReferenceDataModel[]
@@ -32,10 +34,6 @@ export class BannerFormComponent implements OnInit{
   submitBannerData() { this.formService.onSubmitBannerData() }
 
   onSelectedFile(event: Event) { this.formService.onSelectedFile(event) }
-
-  onButtonClick(event: Event): void {
-    event.preventDefault();
-  }
 
   ngOnInit() {
     this.formService.getBannerIdObservable()
@@ -98,4 +96,5 @@ export class BannerFormComponent implements OnInit{
       this.labels = referenceData.labels
     })
   }
+
 }

@@ -79,7 +79,7 @@
           <mat-option *ngFor="let label of labels" [value]="label.key">{{label.name}}</mat-option>
         </mat-select>
       </mat-form-field>
-      <button class="bg-blue-300 md:text-xl rounded disabled:bg-amber-10 disabled:cursor-not-allowed" [disabled]="bannerForm.invalid || !bannerForm.touched"  mat-raised-button color="primary">Submit</button>
+      <button class="bg-blue-300 md:text-xl rounded disabled:bg-amber-10 disabled:cursor-not-allowed" [disabled]="bannerForm.invalid"  mat-raised-button color="primary">Submit</button>
     </div>
   </form>
 </div>
