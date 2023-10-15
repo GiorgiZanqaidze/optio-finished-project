@@ -125,7 +125,6 @@ export class BannersService {
 
   addOrEditBanner(newBanner: BannerModel) {
     const editFlag = localStorage.getItem('editFlag')
-    console.log(editFlag)
     if (editFlag && JSON.parse(editFlag)) {
       this.banners = this.banners.map((banner) => {
         if (newBanner.id == banner.id) {
