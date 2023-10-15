@@ -69,4 +69,8 @@ export class ApiService {
         map((data: any) => data.data.entities as ReferenceDataModel[])
       );
   }
+
+  deleteBanner(id: string) {
+    return this.http.post('/banners/remove', {id: id})
+  }
 }

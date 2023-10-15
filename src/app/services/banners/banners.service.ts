@@ -5,7 +5,6 @@ import {BannerModel} from "../../shared/types/banner.model";
 import {PageEvent} from "@angular/material/paginator";
 import {FormsService} from "../forms/forms.service";
 import {ApiService} from "../api/api.service";
-import {MatDrawer} from "@angular/material/sidenav";
 
 
 @Injectable({
@@ -22,8 +21,8 @@ export class BannersService {
   ) {
   }
 
-  bannersPage!: number
-  bannerPageSize = 10
+  bannersPage = 0
+  bannerPageSize = 3
   totalPages!: number
   banners!: BannerModel[]
   drawerIsOpen!: boolean
@@ -99,7 +98,6 @@ export class BannersService {
       sortBy: this.searchBannersForm.value.sortBy,
       routerChangeFlag: !this.routerChangeFlag
     };
-    this.routerChangeFlag = !this.routerChangeFlag
     this.onRouteParamsChange(queryParams)
     return this.apiService.fetchBanners(
         this.searchBannersForm.value.search,
@@ -110,6 +108,36 @@ export class BannersService {
     ).subscribe((data: any) => {
       this.setTotalPages(data.total)
       this.setBanners(data.banners)
+      this.routerChangeFlag = !this.routerChangeFlag
     });
+  }
+
+  private filterBanners(id: string | number) {
+    this.banners = this.banners.filter(banner => id != banner.id)
+  }
+
+  deleteBanner(id: string) {
+    this.apiService.deleteBanner(id).subscribe(() => {
+      this.filterBanners(id)
+      this.drawerIsOpen = false
+    })
+  }
+
+  addOrEditBanner(newBanner: BannerModel) {
+    const editFlag = localStorage.getItem('editFlag')
+    console.log(editFlag)
+    if (editFlag && JSON.parse(editFlag)) {
+      this.banners = this.banners.map((banner) => {
+        if (newBanner.id == banner.id) {
+          return newBanner
+        } else {
+          return banner
+        }
+      })
+    } else {
+      const cloneBanners = this.banners.slice()
+      cloneBanners.unshift(newBanner)
+      this.banners = cloneBanners
+    }
   }
 }

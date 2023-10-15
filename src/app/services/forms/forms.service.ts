@@ -1,5 +1,5 @@
-import {Injectable, ViewChild} from '@angular/core';
-import {BehaviorSubject, forkJoin, Observable, Subject, switchMap} from "rxjs";
+import {Injectable} from '@angular/core';
+import {forkJoin, Observable, Subject, switchMap} from "rxjs";
 import {ReferenceDataModel} from "../../shared/types/reference-data.model";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {BannerModel} from "../../shared/types/banner.model";
@@ -68,7 +68,7 @@ export class FormsService {
     const bannerId = localStorage.getItem('bannerId')
     if (bannerId) this.bannerId = JSON.parse(bannerId)
     if (!this.editFileId) {
-      this.apiService.submitBlob(this.fileFormData).pipe(
+      return this.apiService.submitBlob(this.fileFormData).pipe(
         switchMap((blobResponse: any) => {
           const mergedSubmitData = {
             ...this.bannerForm.value,
@@ -77,18 +77,14 @@ export class FormsService {
           };
           return this.apiService.submitBannerForm(mergedSubmitData);
         })
-      ).subscribe(() => {
-        this.handleFormSubmissionSuccess();
-      });
+      )
     } else {
       const submitData = {
         ...this.bannerForm.value,
         fileId: this.editFileId,
         id: this.bannerId
       };
-      this.apiService.submitBannerForm(submitData).subscribe(() => {
-        this.handleFormSubmissionSuccess();
-      });
+      return this.apiService.submitBannerForm(submitData)
     }
   }
 
@@ -121,14 +117,5 @@ export class FormsService {
     });
   }
 
-  private drawerOpenSubject = new BehaviorSubject<boolean>(false);
-
-  setDrawerOpen(open: boolean): void {
-    this.drawerOpenSubject.next(open);
-  }
-
-  getDrawerOpen(): Observable<boolean> {
-    return this.drawerOpenSubject.asObservable();
-  }
 
 }

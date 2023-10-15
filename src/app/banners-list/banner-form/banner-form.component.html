@@ -1,7 +1,7 @@
 <div class="min-w-full">
   <div class="flex justify-between mx-10 my-2" >
-    <button mat-raised-button color="primary"><mat-icon>backspace</mat-icon> Back</button>
-    <button mat-raised-button color="accent" *ngIf="formService.showDeleteButton">
+    <button (click)="bannerService.setDrawerIsOpen(false)" mat-raised-button color="primary"><mat-icon>backspace</mat-icon> Back</button>
+    <button (click)="deleteBanner()" mat-raised-button color="accent" *ngIf="formService.showDeleteButton">
       delete
       <mat-icon>delete</mat-icon>
     </button>
