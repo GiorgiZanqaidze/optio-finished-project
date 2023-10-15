@@ -33,8 +33,8 @@
   <ng-container matColumnDef="Image">
     <th mat-header-cell *matHeaderCellDef> Image </th>
     <td mat-cell *matCellDef="let element">
-      <div class="my-5">
-        <img [src]="apiUrl + '/blob/' + element.fileId" alt="banner" width="150" height="150">
+      <div class="my-5 min-w-[9rem] min-h-[9rem] max-w-[9rem] max-h-[9rem] flex items-center">
+        <img [src]="apiUrl + '/blob/' + element.fileId" alt="banner" class="w-full">
       </div>
     </td>
   </ng-container>
@@ -47,12 +47,16 @@
   ></tr>
 </table>
 <br>
-<mat-paginator
-  [pageSizeOptions]="[5, 10, 20]"
-  [pageSize]="bannersService.bannerPageSize"
-  showFirstLastButtons
-  [pageIndex]="bannersService.bannersPage"
-  [length]="bannersService.totalPages"
-  (page)="pageChange($event)"
->
-</mat-paginator>
+<div class="fixed bottom-10 right-1/2 translate-x-1/2 border-y-blue-600 border-2 bg-white p-2">
+  <mat-paginator
+    color="primary"
+    [pageSizeOptions]="[5, 10, 20]"
+    [pageSize]="bannersService.bannerPageSize"
+    showFirstLastButtons
+    [pageIndex]="bannersService.bannersPage"
+    [length]="bannersService.totalPages"
+    (page)="pageChange($event)"
+  >
+  </mat-paginator>
+</div>
+

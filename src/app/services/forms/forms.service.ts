@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {forkJoin, map, Observable, Subject, switchMap} from "rxjs";
+import {forkJoin, Observable, Subject, switchMap} from "rxjs";
 import {ReferenceDataModel} from "../../shared/types/reference-data.model";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {BannerModel} from "../../shared/types/banner.model";

@@ -1,6 +1,7 @@
 <div class="min-w-full">
-  <div class="flex justify-end mx-10 my-2" *ngIf="formService.showDeleteButton">
-    <button mat-raised-button color="accent">
+  <div class="flex justify-between mx-10 my-2" >
+    <button mat-raised-button color="primary"><mat-icon>backspace</mat-icon> Back</button>
+    <button mat-raised-button color="accent" *ngIf="formService.showDeleteButton">
       delete
       <mat-icon>delete</mat-icon>
     </button>
@@ -10,25 +11,8 @@
       <mat-form-field>
         <mat-label>Name</mat-label>
         <input type="text" formControlName="name" id="name" matInput>
-
       </mat-form-field>
-        <div class="w-full">
-          <mat-button-toggle class="w-full">
-            <label for="image" class="h-full w-full cursor-pointer flex items-center gap-2 bg-red-100">
-              <mat-icon>image</mat-icon>
-              Select Image
-            </label>
-          </mat-button-toggle>
-          <input class="invisible" type="file" id="image" (change)="onSelectedFile($event)">
-        </div>
-        <mat-form-field>
-          <mat-label>Selected Image:</mat-label>
-          <input type="text" formControlName="fileId" id="fileId" class="invisible"  matInput>
-          <img *ngIf="formService.editFileId; else onlyFileId" [src]="apiUrl + '/blob/' + bannerForm.controls.fileId.value" alt="banner" width="150" height="150">
-          <ng-template #onlyFileId>
-            <span >{{bannerForm.controls.fileId.value}}</span>
-          </ng-template>
-        </mat-form-field>
+
       <mat-form-field>
         <mat-label>Priority</mat-label>
         <input type="number" formControlName="priority" id="priority" matInput>
@@ -60,6 +44,21 @@
         <mat-radio-button [value]="true">Active</mat-radio-button>
         <mat-radio-button [value]="false">Inactive</mat-radio-button>
       </mat-radio-group>
+      <div class="invisible">
+        <input  accept="image/*" type="file" id="image" (change)="onSelectedFile($event)">
+      </div>
+      <mat-form-field>
+        <mat-label *ngIf="bannerForm.controls.fileId.value">Selected Image:</mat-label>
+        <input type="text" formControlName="fileId" id="fileId" class="invisible"  matInput>
+        <img *ngIf="formService.editFileId; else onlyFileId" [src]="apiUrl + '/blob/' + bannerForm.controls.fileId.value" alt="banner" width="150" height="150" class="block mx-auto">
+        <ng-template #onlyFileId>
+          <span >{{bannerForm.controls.fileId.value}}</span>
+        </ng-template>
+        <label for="image" class="h-10 w-full cursor-pointer flex items-center gap-2 bg-gray-300 transition-all hover:bg-gray-400 mt-2 pl-5">
+          <mat-icon>image</mat-icon>
+          <span>Choose Image</span>
+        </label>
+      </mat-form-field>
       <mat-form-field>
         <mat-label>Start date</mat-label>
         <input matInput [matDatepicker]="startDatePicker" formControlName="startDate">

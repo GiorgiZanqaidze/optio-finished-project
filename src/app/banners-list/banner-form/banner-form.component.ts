@@ -33,6 +33,10 @@ export class BannerFormComponent implements OnInit{
 
   onSelectedFile(event: Event) { this.formService.onSelectedFile(event) }
 
+  onButtonClick(event: Event): void {
+    event.preventDefault();
+  }
+
   ngOnInit() {
     this.formService.getBannerIdObservable()
       .subscribe((data) => {
