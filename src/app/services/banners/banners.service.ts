@@ -21,13 +21,14 @@ export class BannersService {
   ) {
   }
 
-  bannersPage!: number
-  bannerPageSize!: number
+  bannersPage = 0
+  bannerPageSize = 3
   totalPages!: number
   banners!: BannerModel[]
   drawerIsOpen!: boolean
 
   setDrawerIsOpen(drawer: boolean) {
+    localStorage.setItem('drawerIsOpen', JSON.stringify(drawer))
     this.drawerIsOpen = drawer
   }
 
@@ -36,9 +37,7 @@ export class BannersService {
     this.onRouteParamsChange(queryParams)
   }
 
-  onDrawerOpen(drawer: boolean) {
-    localStorage.setItem('drawerIsOpen', JSON.stringify(drawer))
-  }
+
 
   searchBannersForm = new FormGroup({
     "search": new FormControl<string>(''),
@@ -58,8 +57,6 @@ export class BannersService {
   setBannerPage(newPage: number) {
     this.bannersPage = newPage
   }
-
-
 
   onFetchBanners() {
     this.apiService.fetchBanners(
@@ -85,16 +82,21 @@ export class BannersService {
   }
 
   onDrawerClose() {
+    this.formService.bannerForm.reset()
+    this.formService.imageName = ''
+    this.formService.showDeleteButton = false
     localStorage.clear();
     sessionStorage.clear()
-    this.formService.bannerForm.reset()
   }
+
+  routerChangeFlag = false
 
   onBannersSearch() {
     const queryParams = {
       search: this.searchBannersForm.value.search,
       sortDirection: this.searchBannersForm.value.sortDirection,
       sortBy: this.searchBannersForm.value.sortBy,
+      routerChangeFlag: !this.routerChangeFlag
     };
     this.onRouteParamsChange(queryParams)
     return this.apiService.fetchBanners(
@@ -106,7 +108,35 @@ export class BannersService {
     ).subscribe((data: any) => {
       this.setTotalPages(data.total)
       this.setBanners(data.banners)
+      this.routerChangeFlag = !this.routerChangeFlag
     });
+  }
 
+  private filterBanners(id: string | number) {
+    this.banners = this.banners.filter(banner => id != banner.id)
+  }
+
+  deleteBanner(id: string) {
+    this.apiService.deleteBanner(id).subscribe(() => {
+      this.filterBanners(id)
+      this.drawerIsOpen = false
+    })
+  }
+
+  addOrEditBanner(newBanner: BannerModel) {
+    const editFlag = localStorage.getItem('editFlag')
+    if (editFlag && JSON.parse(editFlag)) {
+      this.banners = this.banners.map((banner) => {
+        if (newBanner.id == banner.id) {
+          return newBanner
+        } else {
+          return banner
+        }
+      })
+    } else {
+      const cloneBanners = this.banners.slice()
+      cloneBanners.unshift(newBanner)
+      this.banners = cloneBanners
+    }
   }
 }

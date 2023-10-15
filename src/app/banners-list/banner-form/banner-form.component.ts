@@ -2,10 +2,11 @@ import {Component, OnInit} from '@angular/core';
 import {FormsService} from "../../services/forms/forms.service";
 import {dataUrlToBlob} from '../../shared/utilities/file-utils'
 import {ReferenceDataModel} from "../../shared/types/reference-data.model";
-import {map} from "rxjs";
+import {map, Observable} from "rxjs";
 import {BannerModel} from "../../shared/types/banner.model";
-import {BannersService} from "../../services/banners/banners.service";
 import {ApiService} from "../../services/api/api.service";
+import {environment} from "../../../environments/environment";
+import {BannersService} from "../../services/banners/banners.service";
 
 @Component({
   selector: 'app-banner-form',
@@ -16,8 +17,8 @@ export class BannerFormComponent implements OnInit{
 
   constructor(
     public formService: FormsService,
-    private bannersService: BannersService,
-    private apiService: ApiService
+    private apiService: ApiService,
+    public bannerService: BannersService
   ) {}
   bannerId = ""
   channels!: ReferenceDataModel[]
@@ -28,7 +29,19 @@ export class BannerFormComponent implements OnInit{
 
   bannerForm = this.formService.bannerForm
 
-  submitBannerData() { this.formService.onSubmitBannerData() }
+  public readonly apiUrl = environment.ApiUrl
+
+  submitBannerData() {
+    this.formService.onSubmitBannerData().subscribe((res: any) =>  {
+      this.bannerForm.reset();
+      this.formService.showDeleteButton = false;
+      this.bannerService.addOrEditBanner(res.data)
+      this.bannerService.drawerIsOpen = false
+      console.log(res)
+      sessionStorage.clear();
+      localStorage.clear();
+    })
+  }
 
   onSelectedFile(event: Event) { this.formService.onSelectedFile(event) }
 
@@ -38,28 +51,37 @@ export class BannerFormComponent implements OnInit{
         this.apiService.fetchBannerById(data.bannerId)
           .pipe(map((data: any) => {
             const formData = data.data as BannerModel
+            sessionStorage.setItem('bannerFormData', JSON.stringify(formData));
             this.formService.setFormData(formData)
+            const editFileId = data.data.fileId
+            this.formService.editFileId = editFileId
+            sessionStorage.setItem('editFileId', JSON.stringify(editFileId))
           }))
           .subscribe(() => {
-            const fileField = this.bannerForm.get('fileId')
-            fileField?.clearValidators()
-            fileField?.updateValueAndValidity()
+
           })
       })
+
 
     const formData = sessionStorage.getItem('bannerFormData');
     if (formData) this.formService.setFormData(JSON.parse(formData));
 
     this.formService.bannerForm.valueChanges.subscribe((formData) => {
       sessionStorage.setItem('bannerFormData', JSON.stringify(formData));
-    });
+    })
+
+    const editFileId = sessionStorage.getItem('editFileId');
+    if (editFileId) this.formService.editFileId = JSON.parse(editFileId);
+
+    this.formService.bannerForm.controls.fileId.valueChanges.subscribe((value) => {
+      if (value !== this.formService.editFileId) {
+        this.formService.editFileId = null
+        sessionStorage.removeItem('editFileId')
+      }
+    })
 
     const editFlag = localStorage.getItem('editFlag')
-    if (editFlag) {
-      const fileField = this.formService.bannerForm.get('fileId')
-      fileField?.clearValidators()
-      fileField?.updateValueAndValidity()
-    }
+    if (editFlag && JSON.parse(editFlag)) { this.formService.showDeleteButton = true }
 
     const fileUrl = localStorage.getItem('fileDataUrl')
     const fileName = localStorage.getItem('fileName')
@@ -78,5 +100,11 @@ export class BannerFormComponent implements OnInit{
     })
   }
 
+  deleteBanner() {
+    const bannerId = localStorage.getItem('bannerId')
+    if (bannerId) {
+      this.bannerService.deleteBanner(JSON.parse(bannerId))
+    }
+  }
 
 }
