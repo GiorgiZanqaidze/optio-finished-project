@@ -4,7 +4,6 @@ import {dataUrlToBlob} from '../../shared/utilities/file-utils'
 import {ReferenceDataModel} from "../../shared/types/reference-data.model";
 import {map} from "rxjs";
 import {BannerModel} from "../../shared/types/banner.model";
-import {BannersService} from "../../services/banners/banners.service";
 import {ApiService} from "../../services/api/api.service";
 
 @Component({
@@ -16,7 +15,6 @@ export class BannerFormComponent implements OnInit{
 
   constructor(
     public formService: FormsService,
-    private bannersService: BannersService,
     private apiService: ApiService
   ) {}
   bannerId = ""
@@ -38,6 +36,7 @@ export class BannerFormComponent implements OnInit{
         this.apiService.fetchBannerById(data.bannerId)
           .pipe(map((data: any) => {
             const formData = data.data as BannerModel
+            sessionStorage.setItem('bannerFormData', JSON.stringify(formData));
             this.formService.setFormData(formData)
           }))
           .subscribe(() => {
@@ -46,6 +45,7 @@ export class BannerFormComponent implements OnInit{
             fileField?.updateValueAndValidity()
           })
       })
+
 
     const formData = sessionStorage.getItem('bannerFormData');
     if (formData) this.formService.setFormData(JSON.parse(formData));

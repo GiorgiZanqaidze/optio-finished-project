@@ -5,6 +5,7 @@ import {BannerModel} from "../../shared/types/banner.model";
 import {PageEvent} from "@angular/material/paginator";
 import {FormsService} from "../forms/forms.service";
 import {ApiService} from "../api/api.service";
+import {MatDrawer} from "@angular/material/sidenav";
 
 
 @Injectable({
@@ -83,9 +84,10 @@ export class BannersService {
   }
 
   onDrawerClose() {
+    this.formService.bannerForm.reset()
+    this.formService.imageName = ''
     localStorage.clear();
     sessionStorage.clear()
-    this.formService.bannerForm.reset()
   }
 
   onBannersSearch() {

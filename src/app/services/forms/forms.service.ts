@@ -41,6 +41,7 @@ export class FormsService {
 
   imageName!: string
   fileFormData = new FormData()
+  showDeleteButton = false
 
   setFormData(formData: BannerModel) {
     this.bannerForm.patchValue({
