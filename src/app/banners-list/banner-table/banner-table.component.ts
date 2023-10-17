@@ -14,7 +14,6 @@ import {
   totalPages
 } from "../../store/banners/banners.selector";
 import {showEditForm} from "../../store/banners/banners.actions";
-import {drawerOpen} from "../../store/drawer/drawer.action";
 
 @Component({
   selector: 'app-banner-table',
@@ -36,6 +35,7 @@ export class BannerTableComponent{
   bannersPageSize$!: Observable<number>
 
   constructor(
+    private formService: FormsService,
     public bannersService: BannersService,
     private drawerStore: Store<{drawer: boolean}>,
     private bannersStore: Store<{banners: BannersStore}>
@@ -49,7 +49,8 @@ export class BannerTableComponent{
   pageChange(event: PageEvent) { this.bannersService.onPageChange(event) }
 
   showEditBannerForm(rowData: BannerModel) {
-    this.bannersStore.dispatch(drawerOpen({drawerState: true}))
-    this.bannersStore.dispatch(showEditForm({editFlag: true, bannerId: rowData.id}))
+    localStorage.setItem("editFlag", JSON.stringify(true))
+    localStorage.setItem("bannerId", JSON.stringify(rowData.id))
+    this.formService.setItem({editFlag: true, bannerId: rowData.id})
   }
 }

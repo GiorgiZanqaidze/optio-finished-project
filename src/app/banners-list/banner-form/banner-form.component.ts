@@ -11,7 +11,6 @@ import {Store} from "@ngrx/store";
 import {drawerClose, drawerOpen} from "../../store/drawer/drawer.action";
 import {BannersStore} from "../../store/banners/banners.reducer";
 import {deleteBanner} from "../../store/banners/banners.actions";
-import {showEditForm} from "../../store/banners/banners.selector";
 
 @Component({
   selector: 'app-banner-form',
@@ -55,10 +54,11 @@ export class BannerFormComponent implements OnInit{
   onSelectedFile(event: Event) { this.formService.onSelectedFile(event) }
 
   ngOnInit() {
-    this.bannersStore.select(showEditForm)
+    this.formService.getBannerIdObservable()
       .subscribe((data) => {
         this.apiService.fetchBannerById(data.bannerId)
           .pipe(map((data: any) => {
+            this.drawerStore.dispatch(drawerOpen({drawerState: true}))
 
             const formData = data.data as BannerModel
             sessionStorage.setItem('bannerFormData', JSON.stringify(formData));

@@ -33,7 +33,6 @@ export class BannersEffects {
 
         return this.apiService.fetchBanners(search || "", page || 0, pageSize || 3, sortBy, sortDirection).pipe(
           map((bannersData: any) => {
-            console.log(bannersData.data)
             return setBannersData({bannersData: bannersData.data})
           }),
           catchError((error) => {

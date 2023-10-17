@@ -29,6 +29,15 @@ export class FormsService {
     "labels": new FormControl<string[]>([])
   })
 
+  private getBannerById = new Subject<{editFlag: boolean, bannerId: number}>();
+
+  setItem(data: {editFlag: boolean, bannerId: number}): void {
+    this.getBannerById.next(data);
+  }
+
+  getBannerIdObservable(): Observable<{editFlag: boolean, bannerId: number}> {
+    return this.getBannerById.asObservable();
+  }
 
   imageName!: string
   fileFormData = new FormData()
