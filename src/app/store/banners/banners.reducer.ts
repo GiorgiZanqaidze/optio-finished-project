@@ -1,6 +1,6 @@
 import {createReducer, on} from "@ngrx/store";
 import {
-  bannersPageChange,
+  bannersPageChange, deleteBanner, filterBannersData,
   setBannersData,
   setBannersSearchAndSortForm
 } from "./banners.actions";
@@ -44,5 +44,11 @@ export const bannersReducer = createReducer(
       ...state,
       searchAndSortBannerForm: modifiedForm
     }
+  }),
+  on(deleteBanner, (state, action) => {
+    const filteredBanners = state.bannersData.filter((banner) => {
+      return action.bannerId !== banner.id
+    })
+    return {...state, bannersData: filteredBanners}
   })
 )

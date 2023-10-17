@@ -9,6 +9,8 @@ import {environment} from "../../../environments/environment";
 import {BannersService} from "../../services/banners/banners.service";
 import {Store} from "@ngrx/store";
 import {drawerClose} from "../../store/drawer/drawer.action";
+import {BannersStore} from "../../store/banners/banners.reducer";
+import {deleteBanner} from "../../store/banners/banners.actions";
 
 @Component({
   selector: 'app-banner-form',
@@ -21,7 +23,8 @@ export class BannerFormComponent implements OnInit{
     public formService: FormsService,
     private apiService: ApiService,
     public bannerService: BannersService,
-    private store: Store<{drawer: boolean}>,
+    private drawerStore: Store<{drawer: boolean}>,
+    private bannersStore: Store<{banners: BannersStore}>
   ) {
 
   }
@@ -41,7 +44,7 @@ export class BannerFormComponent implements OnInit{
       this.bannerForm.reset();
       this.formService.showDeleteButton = false;
       this.bannerService.addOrEditBanner(res.data)
-      this.store.dispatch(drawerClose({drawerState: false}))
+      this.drawerStore.dispatch(drawerClose({drawerState: false}))
       console.log(res)
       sessionStorage.clear();
       localStorage.clear();
@@ -105,13 +108,8 @@ export class BannerFormComponent implements OnInit{
     })
   }
 
-  deleteBanner() {
-    const bannerId = localStorage.getItem('bannerId')
-    if (bannerId) {
-      this.bannerService.deleteBanner(JSON.parse(bannerId))
-    }
-  }
+  deleteBanner() { this.bannersStore.dispatch(deleteBanner({bannerId: this.bannerId})) }
 
-  closeDrawer() { this.store.dispatch(drawerClose({drawerState: false})) }
+  closeDrawer() { this.drawerStore.dispatch(drawerClose({drawerState: false})) }
 
 }

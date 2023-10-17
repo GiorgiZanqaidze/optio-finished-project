@@ -70,7 +70,7 @@ export class ApiService {
       );
   }
 
-  deleteBanner(id: string) {
+  deleteBanner(id: string | number) {
     return this.http.post('/banners/remove', {id: id})
   }
 }

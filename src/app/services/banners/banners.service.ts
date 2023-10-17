@@ -9,6 +9,7 @@ import {Store} from "@ngrx/store";
 import {drawerClose} from "../../store/drawer/drawer.action";
 import {BannersStore} from "../../store/banners/banners.reducer";
 import {searchAndSortBannerForm} from "../../store/banners/banners.selector";
+import {deleteBanner} from "../../store/banners/banners.actions";
 
 
 @Injectable({
@@ -53,16 +54,8 @@ export class BannersService {
     sessionStorage.clear()
   }
 
-
-  private filterBanners(id: string | number) {
-    this.banners = this.banners.filter(banner => id != banner.id)
-  }
-
-  deleteBanner(id: string) {
-    this.apiService.deleteBanner(id).subscribe(() => {
-      this.filterBanners(id)
-      this.drawerStore.dispatch(drawerClose({drawerState: false}))
-    })
+  deleteBanner(id: string | number) {
+    this.bannersStore.dispatch(deleteBanner({bannerId: id}))
   }
 
   addOrEditBanner(newBanner: BannerModel) {

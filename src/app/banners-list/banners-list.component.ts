@@ -29,7 +29,6 @@ export class BannersListComponent implements OnInit{
     const drawerIsOpen = localStorage.getItem('drawerIsOpen')
     if (drawerIsOpen !== null) this.store.dispatch(drawerOpen({drawerState: JSON.parse(drawerIsOpen)}))
 
-
     this.formService.getBannerIdObservable().subscribe(() => {
       this.store.dispatch(drawerOpen({drawerState: true}))
     })
