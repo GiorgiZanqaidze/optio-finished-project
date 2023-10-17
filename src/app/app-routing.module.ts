@@ -12,12 +12,6 @@ const routes: Routes = [
   {
     path: "banners",
     component: BannersListComponent,
-    children: [
-      {
-        path: 'form',
-        component: BannerFormComponent
-      }
-    ]
   },
   {
     path: "**",
