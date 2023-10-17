@@ -2,7 +2,7 @@ import {createReducer, on} from "@ngrx/store";
 import {
   bannersPageChange, deleteBanner, filterBannersData,
   setBannersData,
-  setBannersSearchAndSortForm
+  setBannersSearchAndSortForm, showEditForm
 } from "./banners.actions";
 import {BannerModel} from "../../shared/types/banner.model";
 
@@ -11,7 +11,8 @@ export interface BannersStore {
   bannersPageSize: number
   bannersData: BannerModel[],
   totalPages: number
-  searchAndSortBannerForm: {search: string, sortDirection: string, sortBy: string}
+  searchAndSortBannerForm: {search: string, sortDirection: string, sortBy: string},
+  showBannerEditForm: {editFlag: boolean, bannerId: number}
 }
 
 const initialState: BannersStore = {
@@ -19,7 +20,8 @@ const initialState: BannersStore = {
   bannersPageSize: 0,
   bannersData: [],
   totalPages: 0,
-  searchAndSortBannerForm: {search: "", sortDirection: "", sortBy: ""}
+  searchAndSortBannerForm: {search: "", sortDirection: "", sortBy: ""},
+  showBannerEditForm: {editFlag: false, bannerId: 0}
 }
 
 export const bannersReducer = createReducer(
@@ -50,5 +52,14 @@ export const bannersReducer = createReducer(
       return action.bannerId !== banner.id
     })
     return {...state, bannersData: filteredBanners}
+  }),
+  on(showEditForm, (state, {editFlag, bannerId}) => {
+    localStorage.setItem("editFlag", JSON.stringify(editFlag))
+    localStorage.setItem("bannerId", JSON.stringify(bannerId))
+    return {
+      ...state,
+      showBannerEditForm: {editFlag, bannerId}
+    }
   })
+
 )

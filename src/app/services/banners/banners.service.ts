@@ -28,7 +28,6 @@ export class BannersService {
   banners!: BannerModel[]
   drawerIsOpen!: boolean
 
-
   onPageChange(event: PageEvent) {
     const queryParams = {page: event.pageIndex, pageSize: event.pageSize};
     this.onRouteParamsChange(queryParams)
@@ -48,10 +47,6 @@ export class BannersService {
     this.formService.showDeleteButton = false
     localStorage.clear();
     sessionStorage.clear()
-  }
-
-  deleteBanner(id: string | number) {
-    this.bannersStore.dispatch(deleteBanner({bannerId: id}))
   }
 
   addOrEditBanner(newBanner: BannerModel) {

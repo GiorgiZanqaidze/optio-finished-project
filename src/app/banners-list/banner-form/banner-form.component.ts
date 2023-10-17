@@ -8,9 +8,10 @@ import {ApiService} from "../../services/api/api.service";
 import {environment} from "../../../environments/environment";
 import {BannersService} from "../../services/banners/banners.service";
 import {Store} from "@ngrx/store";
-import {drawerClose} from "../../store/drawer/drawer.action";
+import {drawerClose, drawerOpen} from "../../store/drawer/drawer.action";
 import {BannersStore} from "../../store/banners/banners.reducer";
 import {deleteBanner} from "../../store/banners/banners.actions";
+import {showEditForm} from "../../store/banners/banners.selector";
 
 @Component({
   selector: 'app-banner-form',
@@ -54,10 +55,11 @@ export class BannerFormComponent implements OnInit{
   onSelectedFile(event: Event) { this.formService.onSelectedFile(event) }
 
   ngOnInit() {
-    this.formService.getBannerIdObservable()
+    this.bannersStore.select(showEditForm)
       .subscribe((data) => {
         this.apiService.fetchBannerById(data.bannerId)
           .pipe(map((data: any) => {
+
             const formData = data.data as BannerModel
             sessionStorage.setItem('bannerFormData', JSON.stringify(formData));
             this.formService.setFormData(formData)
