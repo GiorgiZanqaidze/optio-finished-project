@@ -30,7 +30,7 @@ export const bannersReducer = createReducer(
   on(setBannersData, (state, action) => {
     return {
       ...state,
-      bannersData: action.bannersData.entities,
+      bannersData: action.bannersData.entities as BannerModel[],
       totalPages: action.bannersData.total
     }
   }),

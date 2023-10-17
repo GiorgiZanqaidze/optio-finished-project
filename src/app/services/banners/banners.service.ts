@@ -25,13 +25,6 @@ export class BannersService {
     private drawerStore: Store<{drawer: boolean}>,
     private bannersStore: Store<{banners: BannersStore}>
   ) {
-    this.bannersStore.select(searchAndSortBannerForm).subscribe((formValues) => {
-      this.searchBannersForm.patchValue({
-        search: formValues.search,
-        sortDirection: formValues.sortDirection,
-        sortBy: formValues.sortBy,
-      });
-    });
 
   }
 
@@ -43,14 +36,6 @@ export class BannersService {
     const queryParams = {page: event.pageIndex, pageSize: event.pageSize};
     this.onRouteParamsChange(queryParams)
   }
-
-  searchBannersForm = new FormGroup({
-    "search": new FormControl<string>(''),
-    "sortDirection": new  FormControl<string>('asc'),
-    "sortBy": new FormControl<string>('name.raw')
-  })
-
-
   onRouteParamsChange(queryParams: any) {
     this.router.navigate([], {
       relativeTo: this.route,
@@ -68,15 +53,6 @@ export class BannersService {
     sessionStorage.clear()
   }
 
-
-  onBannersSearch() {
-    const queryParams = {
-      search: this.searchBannersForm.value.search,
-      sortDirection: this.searchBannersForm.value.sortDirection,
-      sortBy: this.searchBannersForm.value.sortBy,
-    };
-    this.onRouteParamsChange(queryParams)
-  }
 
   private filterBanners(id: string | number) {
     this.banners = this.banners.filter(banner => id != banner.id)
