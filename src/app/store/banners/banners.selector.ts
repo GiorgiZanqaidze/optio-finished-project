@@ -23,6 +23,10 @@ export const bannersPageSize = createSelector(
   (state) => state.bannersPageSize
 )
 
+export const searchAndSortBannerForm = createSelector(
+  selectBannersState,
+  (state) => state.searchAndSortBannerForm
+)
 
 
 

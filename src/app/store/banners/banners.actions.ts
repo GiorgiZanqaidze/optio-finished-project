@@ -11,3 +11,8 @@ export const setBannersData = createAction(
   props<{bannersData: {total: number, entities: BannerModel[], searchAfter: string[]}}>()
 )
 
+export const setBannersSearchAndSortForm = createAction(
+  "[Banners] search and sort",
+  props<{search: string, sortBy: string, sortDirection: string}>()
+)
+

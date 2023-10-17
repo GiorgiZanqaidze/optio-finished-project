@@ -7,6 +7,8 @@ import {FormsService} from "../forms/forms.service";
 import {ApiService} from "../api/api.service";
 import {Store} from "@ngrx/store";
 import {drawerClose} from "../../store/drawer/drawer.action";
+import {BannersStore} from "../../store/banners/banners.reducer";
+import {searchAndSortBannerForm} from "../../store/banners/banners.selector";
 
 
 @Injectable({
@@ -20,13 +22,19 @@ export class BannersService {
     private route: ActivatedRoute,
     private formService: FormsService,
     private apiService: ApiService,
-    private drawerStore: Store<{drawer: boolean}>
+    private drawerStore: Store<{drawer: boolean}>,
+    private bannersStore: Store<{banners: BannersStore}>
   ) {
+    this.bannersStore.select(searchAndSortBannerForm).subscribe((formValues) => {
+      this.searchBannersForm.patchValue({
+        search: formValues.search,
+        sortDirection: formValues.sortDirection,
+        sortBy: formValues.sortBy,
+      });
+    });
+
   }
 
-  bannersPage = 0
-  bannerPageSize = 3
-  totalPages!: number
   banners!: BannerModel[]
   drawerIsOpen!: boolean
 
@@ -36,40 +44,11 @@ export class BannersService {
     this.onRouteParamsChange(queryParams)
   }
 
-
-
   searchBannersForm = new FormGroup({
     "search": new FormControl<string>(''),
     "sortDirection": new  FormControl<string>('asc'),
     "sortBy": new FormControl<string>('name.raw')
   })
-
-  setBanners(banners: BannerModel[]) {
-    this.banners = banners
-  }
-  setTotalPages(totalPages: number) {
-    this.totalPages = totalPages
-  }
-  setBannerPageSize(newPageSize: number) {
-    this.bannerPageSize = newPageSize
-  }
-  setBannerPage(newPage: number) {
-    this.bannersPage = newPage
-  }
-
-  onFetchBanners() {
-    this.apiService.fetchBanners(
-      this.searchBannersForm.value.search,
-      this.bannersPage,
-      this.bannerPageSize,
-      this.searchBannersForm.value.sortBy,
-      this.searchBannersForm.value.sortDirection
-    )
-      .subscribe((data: any) => {
-        this.setTotalPages(data.data.total)
-        this.setBanners(data.data.entities)
-      });
-  }
 
 
   onRouteParamsChange(queryParams: any) {
@@ -89,14 +68,12 @@ export class BannersService {
     sessionStorage.clear()
   }
 
-  routerChangeFlag = false
 
   onBannersSearch() {
     const queryParams = {
       search: this.searchBannersForm.value.search,
       sortDirection: this.searchBannersForm.value.sortDirection,
       sortBy: this.searchBannersForm.value.sortBy,
-      routerChangeFlag: !this.routerChangeFlag
     };
     this.onRouteParamsChange(queryParams)
   }
