@@ -20,7 +20,7 @@ export class BannersService {
     private route: ActivatedRoute,
     private formService: FormsService,
     private apiService: ApiService,
-    private store: Store<{drawer: boolean}>
+    private drawerStore: Store<{drawer: boolean}>
   ) {
   }
 
@@ -81,7 +81,7 @@ export class BannersService {
   }
 
   onDrawerClose() {
-    this.store.dispatch(drawerClose({drawerState: false}))
+    this.drawerStore.dispatch(drawerClose({drawerState: false}))
     this.formService.bannerForm.reset()
     this.formService.imageName = ''
     this.formService.showDeleteButton = false
@@ -108,7 +108,7 @@ export class BannersService {
   deleteBanner(id: string) {
     this.apiService.deleteBanner(id).subscribe(() => {
       this.filterBanners(id)
-      this.drawerIsOpen = false
+      this.drawerStore.dispatch(drawerClose({drawerState: false}))
     })
   }
 

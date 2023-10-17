@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {FormsService} from "../../services/forms/forms.service";
 import {dataUrlToBlob} from '../../shared/utilities/file-utils'
 import {ReferenceDataModel} from "../../shared/types/reference-data.model";
-import {map, Observable} from "rxjs";
+import {map} from "rxjs";
 import {BannerModel} from "../../shared/types/banner.model";
 import {ApiService} from "../../services/api/api.service";
 import {environment} from "../../../environments/environment";
@@ -21,8 +21,10 @@ export class BannerFormComponent implements OnInit{
     public formService: FormsService,
     private apiService: ApiService,
     public bannerService: BannersService,
-    private store: Store<{drawer: boolean}>
-  ) {}
+    private store: Store<{drawer: boolean}>,
+  ) {
+
+  }
   bannerId = ""
   channels!: ReferenceDataModel[]
   zones!: ReferenceDataModel[]
@@ -58,10 +60,10 @@ export class BannerFormComponent implements OnInit{
             this.formService.setFormData(formData)
             const editFileId = data.data.fileId
             this.formService.editFileId = editFileId
+            this.formService.showDeleteButton = true
             sessionStorage.setItem('editFileId', JSON.stringify(editFileId))
           }))
           .subscribe(() => {
-
           })
       })
 
