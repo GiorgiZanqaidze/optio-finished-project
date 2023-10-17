@@ -28,6 +28,7 @@ import { BannerTableComponent } from './banners-list/banner-table/banner-table.c
 import { BannersFilterSortComponent } from './banners-list/banners-filter-sort/banners-filter-sort.component';
 import {MatButtonModule} from "@angular/material/button";
 import {drawerReducer} from "./store/drawer/drawer.reducer";
+import {bannersReducer} from "./store/banners/banners.reducer";
 
 @NgModule({
   declarations: [
@@ -58,7 +59,8 @@ import {drawerReducer} from "./store/drawer/drawer.reducer";
     MatTableModule,
     MatButtonModule,
     StoreModule.forRoot({
-      drawer: drawerReducer
+      drawer: drawerReducer,
+      banners: bannersReducer
     }),
     EffectsModule.forRoot([])
   ],

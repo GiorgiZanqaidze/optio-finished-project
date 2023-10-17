@@ -39,7 +39,7 @@ export class BannerFormComponent implements OnInit{
       this.bannerForm.reset();
       this.formService.showDeleteButton = false;
       this.bannerService.addOrEditBanner(res.data)
-      this.bannerService.drawerIsOpen = false
+      this.store.dispatch(drawerClose({drawerState: false}))
       console.log(res)
       sessionStorage.clear();
       localStorage.clear();
@@ -110,8 +110,6 @@ export class BannerFormComponent implements OnInit{
     }
   }
 
-  closeDrawer() {
-      this.store.dispatch(drawerClose({drawerState: false}))
-  }
+  closeDrawer() { this.store.dispatch(drawerClose({drawerState: false})) }
 
 }

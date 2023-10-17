@@ -1,6 +1,8 @@
-// import {createAction} from "@ngrx/store";
-//
-//
-// export const getBanners = createAction(
-//   "[Banners] get Banners"
-// )
+import {createAction, props} from "@ngrx/store";
+
+
+
+export const bannersPageChange = createAction(
+  '[Banners] changePageSize',
+  props<{page: number}>()
+)
