@@ -108,7 +108,10 @@ export class BannerFormComponent implements OnInit{
     })
   }
 
-  deleteBanner() { this.bannersStore.dispatch(deleteBanner({bannerId: this.bannerId})) }
+  deleteBanner() {
+    const bannerId = localStorage.getItem("bannerId")
+    if (bannerId) this.bannersStore.dispatch(deleteBanner({bannerId: JSON.parse(bannerId)}))
+  }
 
   closeDrawer() { this.drawerStore.dispatch(drawerClose({drawerState: false})) }
 

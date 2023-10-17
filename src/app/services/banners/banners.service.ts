@@ -16,8 +16,6 @@ import {deleteBanner} from "../../store/banners/banners.actions";
   providedIn: 'root'
 })
 export class BannersService {
-
-
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -25,9 +23,7 @@ export class BannersService {
     private apiService: ApiService,
     private drawerStore: Store<{drawer: boolean}>,
     private bannersStore: Store<{banners: BannersStore}>
-  ) {
-
-  }
+  ) {}
 
   banners!: BannerModel[]
   drawerIsOpen!: boolean
