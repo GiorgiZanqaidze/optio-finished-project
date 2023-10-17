@@ -7,6 +7,8 @@ import {BannerModel} from "../../shared/types/banner.model";
 import {ApiService} from "../../services/api/api.service";
 import {environment} from "../../../environments/environment";
 import {BannersService} from "../../services/banners/banners.service";
+import {Store} from "@ngrx/store";
+import {drawerClose} from "../../store/drawer/drawer.action";
 
 @Component({
   selector: 'app-banner-form',
@@ -18,7 +20,8 @@ export class BannerFormComponent implements OnInit{
   constructor(
     public formService: FormsService,
     private apiService: ApiService,
-    public bannerService: BannersService
+    public bannerService: BannersService,
+    private store: Store<{drawer: boolean}>
   ) {}
   bannerId = ""
   channels!: ReferenceDataModel[]
@@ -105,6 +108,10 @@ export class BannerFormComponent implements OnInit{
     if (bannerId) {
       this.bannerService.deleteBanner(JSON.parse(bannerId))
     }
+  }
+
+  closeDrawer() {
+      this.store.dispatch(drawerClose({drawerState: false}))
   }
 
 }

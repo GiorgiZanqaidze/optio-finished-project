@@ -5,6 +5,8 @@ import {BannerModel} from "../../shared/types/banner.model";
 import {PageEvent} from "@angular/material/paginator";
 import {FormsService} from "../forms/forms.service";
 import {ApiService} from "../api/api.service";
+import {Store} from "@ngrx/store";
+import {drawerClose} from "../../store/drawer/drawer.action";
 
 
 @Injectable({
@@ -17,7 +19,8 @@ export class BannersService {
     private router: Router,
     private route: ActivatedRoute,
     private formService: FormsService,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private store: Store<{drawer: boolean}>
   ) {
   }
 
@@ -27,10 +30,6 @@ export class BannersService {
   banners!: BannerModel[]
   drawerIsOpen!: boolean
 
-  setDrawerIsOpen(drawer: boolean) {
-    localStorage.setItem('drawerIsOpen', JSON.stringify(drawer))
-    this.drawerIsOpen = drawer
-  }
 
   onPageChange(event: PageEvent) {
     const queryParams = {page: event.pageIndex, pageSize: event.pageSize};
@@ -82,6 +81,7 @@ export class BannersService {
   }
 
   onDrawerClose() {
+    this.store.dispatch(drawerClose({drawerState: false}))
     this.formService.bannerForm.reset()
     this.formService.imageName = ''
     this.formService.showDeleteButton = false
@@ -99,17 +99,6 @@ export class BannersService {
       routerChangeFlag: !this.routerChangeFlag
     };
     this.onRouteParamsChange(queryParams)
-    return this.apiService.fetchBanners(
-        this.searchBannersForm.value.search,
-        this.bannersPage,
-        this.bannerPageSize,
-        this.searchBannersForm.value.sortBy,
-        this.searchBannersForm.value.sortDirection
-    ).subscribe((data: any) => {
-      this.setTotalPages(data.total)
-      this.setBanners(data.banners)
-      this.routerChangeFlag = !this.routerChangeFlag
-    });
   }
 
   private filterBanners(id: string | number) {

@@ -5,6 +5,8 @@ import {BannersService} from "../../services/banners/banners.service";
 import {FormsService} from "../../services/forms/forms.service";
 import {PageEvent} from "@angular/material/paginator";
 import {ActivatedRoute, Params} from "@angular/router";
+import {Store} from "@ngrx/store";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'app-banner-table',
@@ -19,11 +21,15 @@ export class BannerTableComponent implements OnInit{
 
   public readonly apiUrl = environment.ApiUrl
 
+  drawer$!: Observable<boolean>
+
   constructor(
     private formService: FormsService,
     public bannersService: BannersService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private store: Store<{drawer: boolean}>
   ) {
+    this.drawer$ = store.select('drawer')
   }
   pageChange(event: PageEvent) { this.bannersService.onPageChange(event) }
 
@@ -38,6 +44,7 @@ export class BannerTableComponent implements OnInit{
       .subscribe((route: Params) => {
         this.bannersService.setBannerPage(+route['page'])
         this.bannersService.setBannerPageSize(+route['pageSize'])
+
         this.bannersService.searchBannersForm.patchValue({
           'search': route['search'],
           'sortDirection': route['sortDirection'],
