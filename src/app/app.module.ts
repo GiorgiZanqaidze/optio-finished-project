@@ -29,6 +29,8 @@ import { BannersFilterSortComponent } from './banners-list/banners-filter-sort/b
 import {MatButtonModule} from "@angular/material/button";
 import {drawerReducer} from "./store/drawer/drawer.reducer";
 import {bannersReducer} from "./store/banners/banners.reducer";
+import {BannersEffects} from "./store/banners/banners.effects";
+import {StoreRouterConnectingModule} from "@ngrx/router-store";
 
 
 
@@ -64,7 +66,10 @@ import {bannersReducer} from "./store/banners/banners.reducer";
       drawer: drawerReducer,
       banners: bannersReducer
     }),
-    EffectsModule.forRoot([])
+    EffectsModule.forRoot([
+      BannersEffects
+    ]),
+    StoreRouterConnectingModule.forRoot()
   ],
   providers: [
       {

@@ -8,6 +8,17 @@ export const bannersPage = createSelector(
   (state) => state.bannersPage
 );
 
+export const bannersData = createSelector(
+  selectBannersState,
+  (state) => state.bannersData
+)
+
+export const totalPages = createSelector(
+  selectBannersState,
+  (state) => state.totalPages
+)
+
+
 
 
 

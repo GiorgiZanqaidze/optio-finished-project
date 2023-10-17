@@ -1,4 +1,4 @@
-<table mat-table [dataSource]="dataSource">
+<table mat-table [dataSource]="(bannersData$ | async) ?? []">
   <ng-container matColumnDef="Name">
     <th mat-header-cell *matHeaderCellDef> Name </th>
     <td mat-cell *matCellDef="let element"> {{element.name}} </td>
@@ -53,8 +53,8 @@
     [pageSizeOptions]="[3, 5, 10]"
     [pageSize]="bannersService.bannerPageSize"
     showFirstLastButtons
-    [pageIndex]="bannersService.bannersPage"
-    [length]="bannersService.totalPages"
+    [pageIndex]="(bannersPage$ | async) ?? 0"
+    [length]="(totalPages$ | async) ?? 0"
     (page)="pageChange($event)"
   >
   </mat-paginator>
