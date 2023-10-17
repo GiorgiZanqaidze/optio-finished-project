@@ -22,7 +22,7 @@ export class BannersEffects {
       ofType(ROUTER_NAVIGATED),
       exhaustMap((action: any) => {
         const {search, pageSize, page, sortBy, sortDirection} = action.payload.routerState.root.queryParams;
-        this.bannersStore.dispatch(bannersPageChange({ page: +page || 0 }));
+        this.bannersStore.dispatch(bannersPageChange({ page: +page || 0, pageSize: +pageSize || 3 }));
         return this.apiService.fetchBanners(search || "", page || 0, pageSize || 3, sortBy, sortDirection).pipe(
           map((bannersData: any) => {
             console.log(bannersData.data)

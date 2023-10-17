@@ -3,7 +3,7 @@ import {BannerModel} from "../../shared/types/banner.model";
 
 export const bannersPageChange = createAction(
   '[Banners] changePageSize',
-  props<{page: number}>()
+  props<{page: number, pageSize: number}>()
 )
 
 export const setBannersData = createAction(

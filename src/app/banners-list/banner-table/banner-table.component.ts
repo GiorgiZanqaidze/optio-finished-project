@@ -7,7 +7,7 @@ import {PageEvent} from "@angular/material/paginator";
 import {Store} from "@ngrx/store";
 import {Observable} from "rxjs";
 import {BannersStore} from "../../store/banners/banners.reducer";
-import {bannersData, bannersPage, totalPages} from "../../store/banners/banners.selector";
+import {bannersData, bannersPage, bannersPageSize, totalPages} from "../../store/banners/banners.selector";
 
 @Component({
   selector: 'app-banner-table',
@@ -26,6 +26,7 @@ export class BannerTableComponent{
   bannersData$!: Observable<BannerModel[]>
   totalPages$!: Observable<number>
   bannersPage$!: Observable<number>
+  bannersPageSize$!: Observable<number>
 
   constructor(
     private formService: FormsService,
@@ -37,6 +38,7 @@ export class BannerTableComponent{
     this.bannersData$ = bannersStore.select(bannersData)
     this.totalPages$ = bannersStore.select(totalPages)
     this.bannersPage$ = bannersStore.select(bannersPage)
+    this.bannersPageSize$ = bannersStore.select(bannersPageSize)
   }
   pageChange(event: PageEvent) { this.bannersService.onPageChange(event) }
 

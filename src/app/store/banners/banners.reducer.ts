@@ -20,7 +20,7 @@ const initialState: BannersStore = {
 export const bannersReducer = createReducer(
   initialState,
   on(bannersPageChange, (state, action) => {
-    return ({...state, bannersPage: action.page})
+    return ({...state, bannersPage: action.page, bannersPageSize: action.pageSize})
   }),
   on(setBannersData, (state, action) => {
     return {

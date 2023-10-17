@@ -51,7 +51,7 @@
   <mat-paginator
     color="primary"
     [pageSizeOptions]="[3, 5, 10]"
-    [pageSize]="bannersService.bannerPageSize"
+    [pageSize]="(bannersPageSize$ | async) ?? 3"
     showFirstLastButtons
     [pageIndex]="(bannersPage$ | async) ?? 0"
     [length]="(totalPages$ | async) ?? 0"

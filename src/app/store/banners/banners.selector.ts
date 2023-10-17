@@ -18,6 +18,11 @@ export const totalPages = createSelector(
   (state) => state.totalPages
 )
 
+export const bannersPageSize = createSelector(
+  selectBannersState,
+  (state) => state.bannersPageSize
+)
+
 
 
 
