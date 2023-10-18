@@ -4,7 +4,7 @@ import {EMPTY, of} from 'rxjs';
 import { map, exhaustMap, catchError } from 'rxjs/operators';
 import {ROUTER_NAVIGATED} from "@ngrx/router-store";
 import {ApiService} from "../../services/api/api.service";
-import {bannersPageChange, deleteBannerError, setBannersData, setBannersSearchAndSortForm} from "./banners.actions";
+import {bannersPageChange, setBannersData, setBannersSearchAndSortForm} from "./banners.actions";
 import {BannersStore} from "./banners.reducer";
 import {Store} from "@ngrx/store";
 
@@ -53,10 +53,16 @@ export class BannersEffects {
             this.drawerStore.dispatch(drawerClose({drawerState: false}))
             return BannerActions.deleteBanner({bannerId: action.bannerId})
           }),
-          catchError((error) => of(BannerActions.deleteBannerError({ error }))) // Create an error action
+          catchError((error) => {
+            console.error('Error in DeleteBanner', error);
+            return EMPTY;
+          })
         )
       )
     )
   );
+
+
+
 }
 

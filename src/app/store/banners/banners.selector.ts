@@ -27,11 +27,3 @@ export const searchAndSortBannerForm = createSelector(
   selectBannersState,
   (state) => state.searchAndSortBannerForm
 )
-
-export const showEditForm = createSelector(
-  selectBannersState,
-  (state) => state.showBannerEditForm
-)
-
-
-

@@ -26,13 +26,7 @@ export const deleteBanner = createAction(
   props<{ bannerId: number | string}>()
 );
 
-export const deleteBannerError = createAction(
-  '[Banners] Delete Banner Error',
-  props<{ error: any }>()
-);
-
-export const showEditForm = createAction(
-  '[Banners] Edit Banner Form',
-  props<{editFlag: boolean, bannerId: number}>()
+export const submitBannersData = createAction(
+  "[Banners] Submit Form"
 )
 

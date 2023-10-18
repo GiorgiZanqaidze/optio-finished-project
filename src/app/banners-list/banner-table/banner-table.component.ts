@@ -13,7 +13,6 @@ import {
   bannersPageSize,
   totalPages
 } from "../../store/banners/banners.selector";
-import {showEditForm} from "../../store/banners/banners.actions";
 
 @Component({
   selector: 'app-banner-table',

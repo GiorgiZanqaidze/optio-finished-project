@@ -6,7 +6,6 @@ import {Store} from "@ngrx/store";
 import {Observable} from "rxjs";
 import {drawerOpen} from "../store/drawer/drawer.action";
 import {BannersStore} from "../store/banners/banners.reducer";
-import {showEditForm} from "../store/banners/banners.selector";
 
 @Component({
   selector: 'app-banners-list',
