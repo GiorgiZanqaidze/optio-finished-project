@@ -17,7 +17,7 @@ export class FormsService {
   constructor(
     private apiService: ApiService,
     private drawerStore: Store<{drawer: boolean}>
-  ) { }
+  ) {}
 
   bannerForm = new FormGroup({
     "name": new FormControl<Input>(null, [Validators.required]),
@@ -62,7 +62,6 @@ export class FormsService {
   fileFormData = new FormData()
   showDeleteButton = false
   editFileId!: null
-
   bannerId!: string | null
 
   onSubmitBannerData() {

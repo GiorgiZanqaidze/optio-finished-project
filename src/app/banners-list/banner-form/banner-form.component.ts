@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {FormsService} from "../../services/forms/forms.service";
 import {dataUrlToBlob} from '../../shared/utilities/file-utils'
 import {ReferenceDataModel} from "../../shared/types/reference-data.model";
-import {map} from "rxjs";
+import {tap} from "rxjs";
 import {BannerModel} from "../../shared/types/banner.model";
 import {ApiService} from "../../services/api/api.service";
 import {environment} from "../../../environments/environment";
@@ -51,8 +51,6 @@ export class BannerFormComponent implements OnInit{
         this.bannersStore.dispatch(addOrEditBanner({newBanner: banner.data}))
         this.formService.onDrawerClose()
         this.formService.showDeleteButton = false;
-        console.log(banner)
-        console.log(banner.data)
     })
   }
 
@@ -62,7 +60,7 @@ export class BannerFormComponent implements OnInit{
     this.formService.getBannerIdObservable()
       .subscribe((data) => {
         this.apiService.fetchBannerById(data.bannerId)
-          .pipe(map((data: any) => {
+          .pipe(tap((data: any) => {
             const formData = data.data as BannerModel
             sessionStorage.setItem('bannerFormData', JSON.stringify(formData));
             this.formService.bannerForm.patchValue(formData)
