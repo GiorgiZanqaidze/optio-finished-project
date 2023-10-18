@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {BannersService} from "../../services/banners/banners.service";
 import {FormControl, FormGroup} from "@angular/forms";
 import {BannersStore} from "../../store/banners/banners.reducer";

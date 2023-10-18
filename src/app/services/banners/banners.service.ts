@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute, Params, Router} from "@angular/router";
 
 
 @Injectable({
@@ -11,7 +11,7 @@ export class BannersService {
     private route: ActivatedRoute,
   ) {}
 
-  onRouteParamsChange(queryParams: any) {
+  onRouteParamsChange(queryParams: Params) {
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: queryParams,
