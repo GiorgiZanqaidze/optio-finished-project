@@ -1,17 +1,25 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {BannerModel} from "../../shared/types/banner.model";
 import {environment} from "../../../environments/environment";
 import {BannersService} from "../../services/banners/banners.service";
 import {FormsService} from "../../services/forms/forms.service";
 import {PageEvent} from "@angular/material/paginator";
-import {ActivatedRoute, Params} from "@angular/router";
+import {Store} from "@ngrx/store";
+import {Observable} from "rxjs";
+import {BannersStore} from "../../store/banners/banners.reducer";
+import {
+  bannersData,
+  bannersPage,
+  bannersPageSize,
+  totalPages
+} from "../../store/banners/banners.selector";
 
 @Component({
   selector: 'app-banner-table',
   templateUrl: './banner-table.component.html',
   styleUrls: ['./banner-table.component.css']
 })
-export class BannerTableComponent implements OnInit{
+export class BannerTableComponent{
 
   @Input() dataSource!: BannerModel[]
 
@@ -19,31 +27,32 @@ export class BannerTableComponent implements OnInit{
 
   public readonly apiUrl = environment.ApiUrl
 
+  drawer$!: Observable<boolean>
+  bannersData$!: Observable<BannerModel[]>
+  totalPages$!: Observable<number>
+  bannersPage$!: Observable<number>
+  bannersPageSize$!: Observable<number>
+
   constructor(
     private formService: FormsService,
     public bannersService: BannersService,
-    private route: ActivatedRoute
+    private drawerStore: Store<{drawer: boolean}>,
+    private bannersStore: Store<{banners: BannersStore}>
   ) {
+    this.drawer$ = drawerStore.select('drawer')
+    this.bannersData$ = bannersStore.select(bannersData)
+    this.totalPages$ = bannersStore.select(totalPages)
+    this.bannersPage$ = bannersStore.select(bannersPage)
+    this.bannersPageSize$ = bannersStore.select(bannersPageSize)
   }
-  pageChange(event: PageEvent) { this.bannersService.onPageChange(event) }
+  pageChange(event: PageEvent) {
+    const queryParams = {page: event.pageIndex, pageSize: event.pageSize};
+    this.bannersService.onRouteParamsChange(queryParams)
+  }
 
   showEditBannerForm(rowData: BannerModel) {
     localStorage.setItem("editFlag", JSON.stringify(true))
     localStorage.setItem("bannerId", JSON.stringify(rowData.id))
     this.formService.setItem({editFlag: true, bannerId: rowData.id})
-  }
-
-  ngOnInit() {
-    this.route.queryParams
-      .subscribe((route: Params) => {
-        this.bannersService.setBannerPage(+route['page'])
-        this.bannersService.setBannerPageSize(+route['pageSize'])
-        this.bannersService.searchBannersForm.patchValue({
-          'search': route['search'],
-          'sortDirection': route['sortDirection'],
-          'sortBy': route['sortBy']
-        })
-        this.bannersService.onFetchBanners()
-      });
   }
 }

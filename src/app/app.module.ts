@@ -27,6 +27,14 @@ import {MatTableModule} from "@angular/material/table";
 import { BannerTableComponent } from './banners-list/banner-table/banner-table.component';
 import { BannersFilterSortComponent } from './banners-list/banners-filter-sort/banners-filter-sort.component';
 import {MatButtonModule} from "@angular/material/button";
+import {drawerReducer} from "./store/drawer/drawer.reducer";
+import {bannersReducer} from "./store/banners/banners.reducer";
+import {BannersEffects} from "./store/banners/banners.effects";
+import {StoreRouterConnectingModule} from "@ngrx/router-store";
+import {formReducer} from "./store/form/form.reducer";
+import {FormEffects} from "./store/form/form.effects";
+
+
 
 @NgModule({
   declarations: [
@@ -47,8 +55,6 @@ import {MatButtonModule} from "@angular/material/button";
     MatInputModule,
     FormsModule,
     ReactiveFormsModule,
-    StoreModule.forRoot({}),
-    EffectsModule.forRoot([]),
     MatSidenavModule,
     MatSelectModule,
     MatButtonToggleModule,
@@ -57,7 +63,17 @@ import {MatButtonModule} from "@angular/material/button";
     MatNativeDateModule,
     MatIconModule,
     MatTableModule,
-    MatButtonModule
+    MatButtonModule,
+    StoreModule.forRoot({
+      drawer: drawerReducer,
+      banners: bannersReducer,
+      form: formReducer
+    }),
+    EffectsModule.forRoot([
+      BannersEffects,
+      FormEffects
+    ]),
+    StoreRouterConnectingModule.forRoot()
   ],
   providers: [
       {

@@ -1,6 +1,9 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component} from '@angular/core';
 import {BannersService} from "../../services/banners/banners.service";
-import {NgForm} from "@angular/forms";
+import {FormControl, FormGroup} from "@angular/forms";
+import {BannersStore} from "../../store/banners/banners.reducer";
+import {Store} from "@ngrx/store";
+import {searchAndSortBannerForm} from "../../store/banners/banners.selector";
 
 @Component({
   selector: 'app-banners-filter-sort',
@@ -9,13 +12,20 @@ import {NgForm} from "@angular/forms";
 })
 export class BannersFilterSortComponent{
 
-  constructor(private bannersService: BannersService) {
+  constructor(
+    private bannersStore: Store<{banners: BannersStore}>,
+    private bannersService: BannersService
+  ) {
+      this.bannersStore.select(searchAndSortBannerForm).subscribe((form) => {
+        this.searchBannersForm.patchValue(form)
+      })
   }
 
-  searchBannersForm = this.bannersService.searchBannersForm
+  searchBannersForm = new FormGroup({
+    "search": new FormControl<string>(''),
+    "sortDirection": new  FormControl<string>('asc'),
+    "sortBy": new FormControl<string>('name.raw')
+  })
 
-
-  bannersSearch() {
-    this.bannersService.onBannersSearch()
-  }
+  bannersSearch() { this.bannersService.onRouteParamsChange(this.searchBannersForm.value) }
 }

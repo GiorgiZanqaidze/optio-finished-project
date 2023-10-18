@@ -11,7 +11,7 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  fetchBanners(search: string | null | undefined, pageIndex: number, pageSize: number, sortBy?: string | null | undefined, sortDirection?: string | null | undefined) {
+  fetchBanners(search?: string | null | undefined, pageIndex?: number, pageSize?: number, sortBy?: string | null | undefined, sortDirection?: string | null | undefined) {
     return this.http.post("/banners/find",{search, pageIndex, pageSize, sortBy, sortDirection})
   }
 
@@ -70,7 +70,7 @@ export class ApiService {
       );
   }
 
-  deleteBanner(id: string) {
+  deleteBanner(id: string | number) {
     return this.http.post('/banners/remove', {id: id})
   }
 }

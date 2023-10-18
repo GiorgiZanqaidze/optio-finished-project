@@ -2,9 +2,10 @@ import {Injectable} from '@angular/core';
 import {forkJoin, Observable, Subject, switchMap} from "rxjs";
 import {ReferenceDataModel} from "../../shared/types/reference-data.model";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {BannerModel} from "../../shared/types/banner.model";
 import {fileReader} from "../../shared/utilities/file-utils";
 import {ApiService} from "../api/api.service";
+import {drawerClose} from "../../store/drawer/drawer.action";
+import {Store} from "@ngrx/store";
 
 type Input = string | null
 
@@ -13,7 +14,10 @@ type Input = string | null
 })
 export class FormsService {
 
-  constructor(private apiService: ApiService) { }
+  constructor(
+    private apiService: ApiService,
+    private drawerStore: Store<{drawer: boolean}>
+  ) {}
 
   bannerForm = new FormGroup({
     "name": new FormControl<Input>(null, [Validators.required]),
@@ -22,7 +26,7 @@ export class FormsService {
     "startDate": new FormControl<Input>(null, [Validators.required]),
     "endDate": new FormControl<Input>(null),
     "fileId": new FormControl<string | number | null>(null,  [Validators.required]),
-    "priority": new FormControl<Input>('', [Validators.required, Validators.min(1)]),
+    "priority": new FormControl<Input>('', [Validators.required, Validators.min(0)]),
     "channelId": new FormControl<Input>(null, [Validators.required]),
     "language": new FormControl<Input>(null, [Validators.required]),
     "url": new FormControl<Input>(null, [Validators.required]),
@@ -39,29 +43,25 @@ export class FormsService {
     return this.getBannerById.asObservable();
   }
 
+  onDrawerClose() {
+    this.drawerStore.dispatch(drawerClose({drawerState: false}))
+    this.bannerForm.reset()
+
+    for (const controlName of Object.keys(this.bannerForm.controls)) {
+      const control = this.bannerForm.get(controlName);
+      control?.setErrors(null);
+    }
+
+    this.imageName = ''
+    this.showDeleteButton = false
+    localStorage.clear();
+    sessionStorage.clear()
+  }
+
   imageName!: string
   fileFormData = new FormData()
   showDeleteButton = false
   editFileId!: null
-
-  setFormData(formData: BannerModel) {
-    this.bannerForm.patchValue({
-      url: formData.url,
-      channelId: formData.channelId,
-      language: formData.language,
-      name: formData.name,
-      zoneId: formData.zoneId,
-      priority: formData.priority,
-      labels: formData.labels,
-      endDate: formData.endDate,
-      startDate: formData.startDate,
-      active: formData.active,
-      fileId: formData.fileId
-    })
-
-    this.bannerForm.patchValue({fileId: formData.fileId})
-  }
-
   bannerId!: string | null
 
   onSubmitBannerData() {
@@ -88,13 +88,6 @@ export class FormsService {
     }
   }
 
-  private handleFormSubmissionSuccess() {
-    this.bannerForm.reset();
-    this.showDeleteButton = false;
-    sessionStorage.clear();
-    localStorage.clear();
-  }
-
   selectFile(file: any) {
     const modifiedFile = fileReader(file)
     this.fileFormData.set('blob', modifiedFile);
@@ -116,6 +109,4 @@ export class FormsService {
       languages: this.apiService.getLanguages()
     });
   }
-
-
 }

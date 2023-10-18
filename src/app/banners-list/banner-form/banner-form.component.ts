@@ -2,11 +2,18 @@ import {Component, OnInit} from '@angular/core';
 import {FormsService} from "../../services/forms/forms.service";
 import {dataUrlToBlob} from '../../shared/utilities/file-utils'
 import {ReferenceDataModel} from "../../shared/types/reference-data.model";
-import {map, Observable} from "rxjs";
+import {tap} from "rxjs";
 import {BannerModel} from "../../shared/types/banner.model";
 import {ApiService} from "../../services/api/api.service";
 import {environment} from "../../../environments/environment";
 import {BannersService} from "../../services/banners/banners.service";
+import {Store} from "@ngrx/store";
+import {drawerClose, drawerOpen} from "../../store/drawer/drawer.action";
+import {BannersStore} from "../../store/banners/banners.reducer";
+import {addOrEditBanner, deleteBanner} from "../../store/banners/banners.actions";
+import {FormStore} from "../../store/form/form.reducer";
+import {setFormData} from "../../store/form/form.actions";
+import {bannerFormData} from "../../store/form/form.selectors";
 
 @Component({
   selector: 'app-banner-form',
@@ -14,12 +21,18 @@ import {BannersService} from "../../services/banners/banners.service";
   styleUrls: ['./banner-form.component.css']
 })
 export class BannerFormComponent implements OnInit{
-
   constructor(
     public formService: FormsService,
     private apiService: ApiService,
-    public bannerService: BannersService
-  ) {}
+    public bannerService: BannersService,
+    private drawerStore: Store<{drawer: boolean}>,
+    private bannersStore: Store<{banners: BannersStore}>,
+    private formStore: Store<{form: FormStore}>
+  ) {
+    this.formStore.select(bannerFormData).subscribe((form) => {
+      this.formService.bannerForm.patchValue(form)
+    })
+  }
   bannerId = ""
   channels!: ReferenceDataModel[]
   zones!: ReferenceDataModel[]
@@ -29,17 +42,15 @@ export class BannerFormComponent implements OnInit{
 
   bannerForm = this.formService.bannerForm
 
+
   public readonly apiUrl = environment.ApiUrl
 
   submitBannerData() {
-    this.formService.onSubmitBannerData().subscribe((res: any) =>  {
-      this.bannerForm.reset();
-      this.formService.showDeleteButton = false;
-      this.bannerService.addOrEditBanner(res.data)
-      this.bannerService.drawerIsOpen = false
-      console.log(res)
-      sessionStorage.clear();
-      localStorage.clear();
+    this.formService.onSubmitBannerData()
+      .subscribe((banner: any) =>  {
+        this.bannersStore.dispatch(addOrEditBanner({newBanner: banner.data}))
+        this.formService.onDrawerClose()
+        this.formService.showDeleteButton = false;
     })
   }
 
@@ -49,22 +60,23 @@ export class BannerFormComponent implements OnInit{
     this.formService.getBannerIdObservable()
       .subscribe((data) => {
         this.apiService.fetchBannerById(data.bannerId)
-          .pipe(map((data: any) => {
+          .pipe(tap((data: any) => {
             const formData = data.data as BannerModel
             sessionStorage.setItem('bannerFormData', JSON.stringify(formData));
-            this.formService.setFormData(formData)
+            this.formService.bannerForm.patchValue(formData)
             const editFileId = data.data.fileId
             this.formService.editFileId = editFileId
+            this.formService.showDeleteButton = true
             sessionStorage.setItem('editFileId', JSON.stringify(editFileId))
           }))
           .subscribe(() => {
-
+            this.drawerStore.dispatch(drawerOpen({drawerState: true}))
           })
       })
 
 
     const formData = sessionStorage.getItem('bannerFormData');
-    if (formData) this.formService.setFormData(JSON.parse(formData));
+    this.formStore.dispatch(setFormData({formData: JSON.parse(formData as string)}))
 
     this.formService.bannerForm.valueChanges.subscribe((formData) => {
       sessionStorage.setItem('bannerFormData', JSON.stringify(formData));
@@ -101,10 +113,10 @@ export class BannerFormComponent implements OnInit{
   }
 
   deleteBanner() {
-    const bannerId = localStorage.getItem('bannerId')
-    if (bannerId) {
-      this.bannerService.deleteBanner(JSON.parse(bannerId))
-    }
+    const bannerId = localStorage.getItem("bannerId")
+    if (bannerId) this.bannersStore.dispatch(deleteBanner({bannerId: JSON.parse(bannerId)}))
   }
+
+  closeDrawer() { this.drawerStore.dispatch(drawerClose({drawerState: false})) }
 
 }
