@@ -31,6 +31,8 @@ import {drawerReducer} from "./store/drawer/drawer.reducer";
 import {bannersReducer} from "./store/banners/banners.reducer";
 import {BannersEffects} from "./store/banners/banners.effects";
 import {StoreRouterConnectingModule} from "@ngrx/router-store";
+import {formReducer} from "./store/form/form.reducer";
+import {FormEffects} from "./store/form/form.effects";
 
 
 
@@ -64,10 +66,12 @@ import {StoreRouterConnectingModule} from "@ngrx/router-store";
     MatButtonModule,
     StoreModule.forRoot({
       drawer: drawerReducer,
-      banners: bannersReducer
+      banners: bannersReducer,
+      form: formReducer
     }),
     EffectsModule.forRoot([
-      BannersEffects
+      BannersEffects,
+      FormEffects
     ]),
     StoreRouterConnectingModule.forRoot()
   ],

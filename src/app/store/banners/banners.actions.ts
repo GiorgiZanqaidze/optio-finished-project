@@ -30,3 +30,8 @@ export const submitBannersData = createAction(
   "[Banners] Submit Form"
 )
 
+export const addOrEditBanner = createAction(
+  "[Banner] Add Or Edit",
+  props<{newBanner: BannerModel}>()
+)
+

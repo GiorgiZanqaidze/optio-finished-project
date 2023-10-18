@@ -45,7 +45,10 @@ export class BannerTableComponent{
     this.bannersPage$ = bannersStore.select(bannersPage)
     this.bannersPageSize$ = bannersStore.select(bannersPageSize)
   }
-  pageChange(event: PageEvent) { this.bannersService.onPageChange(event) }
+  pageChange(event: PageEvent) {
+    const queryParams = {page: event.pageIndex, pageSize: event.pageSize};
+    this.bannersService.onRouteParamsChange(queryParams)
+  }
 
   showEditBannerForm(rowData: BannerModel) {
     localStorage.setItem("editFlag", JSON.stringify(true))

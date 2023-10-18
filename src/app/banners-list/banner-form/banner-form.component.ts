@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {FormsService} from "../../services/forms/forms.service";
 import {dataUrlToBlob} from '../../shared/utilities/file-utils'
 import {ReferenceDataModel} from "../../shared/types/reference-data.model";
-import {map} from "rxjs";
+import {map, Observable} from "rxjs";
 import {BannerModel} from "../../shared/types/banner.model";
 import {ApiService} from "../../services/api/api.service";
 import {environment} from "../../../environments/environment";
@@ -10,7 +10,10 @@ import {BannersService} from "../../services/banners/banners.service";
 import {Store} from "@ngrx/store";
 import {drawerClose, drawerOpen} from "../../store/drawer/drawer.action";
 import {BannersStore} from "../../store/banners/banners.reducer";
-import {deleteBanner} from "../../store/banners/banners.actions";
+import {addOrEditBanner, deleteBanner} from "../../store/banners/banners.actions";
+import {FormStore} from "../../store/form/form.reducer";
+import {setFormData} from "../../store/form/form.actions";
+import {bannerFormData} from "../../store/form/form.selectors";
 
 @Component({
   selector: 'app-banner-form',
@@ -18,15 +21,17 @@ import {deleteBanner} from "../../store/banners/banners.actions";
   styleUrls: ['./banner-form.component.css']
 })
 export class BannerFormComponent implements OnInit{
-
   constructor(
     public formService: FormsService,
     private apiService: ApiService,
     public bannerService: BannersService,
     private drawerStore: Store<{drawer: boolean}>,
-    private bannersStore: Store<{banners: BannersStore}>
+    private bannersStore: Store<{banners: BannersStore}>,
+    private formStore: Store<{form: FormStore}>
   ) {
-
+    this.formStore.select(bannerFormData).subscribe((form) => {
+      this.formService.bannerForm.patchValue(form)
+    })
   }
   bannerId = ""
   channels!: ReferenceDataModel[]
@@ -37,17 +42,18 @@ export class BannerFormComponent implements OnInit{
 
   bannerForm = this.formService.bannerForm
 
+
   public readonly apiUrl = environment.ApiUrl
 
   submitBannerData() {
-    this.formService.onSubmitBannerData().subscribe((res: any) =>  {
-      this.bannerForm.reset();
-      this.formService.showDeleteButton = false;
-      this.bannerService.addOrEditBanner(res.data)
-      this.drawerStore.dispatch(drawerClose({drawerState: false}))
-      console.log(res)
-      sessionStorage.clear();
-      localStorage.clear();
+    this.formService.onSubmitBannerData()
+      .subscribe((banner: any) =>  {
+        this.formService.onDrawerClose()
+        this.formService.showDeleteButton = false;
+        console.log(banner)
+        // this.bannerService.addOrEditBanner(banner.data)
+        console.log(banner.data)
+        this.bannersStore.dispatch(addOrEditBanner({newBanner: banner.data}))
     })
   }
 
@@ -58,22 +64,22 @@ export class BannerFormComponent implements OnInit{
       .subscribe((data) => {
         this.apiService.fetchBannerById(data.bannerId)
           .pipe(map((data: any) => {
-            this.drawerStore.dispatch(drawerOpen({drawerState: true}))
             const formData = data.data as BannerModel
             sessionStorage.setItem('bannerFormData', JSON.stringify(formData));
-            this.formService.setFormData(formData)
+            this.formService.bannerForm.patchValue(formData)
             const editFileId = data.data.fileId
             this.formService.editFileId = editFileId
             this.formService.showDeleteButton = true
             sessionStorage.setItem('editFileId', JSON.stringify(editFileId))
           }))
           .subscribe(() => {
+            this.drawerStore.dispatch(drawerOpen({drawerState: true}))
           })
       })
 
 
     const formData = sessionStorage.getItem('bannerFormData');
-    if (formData) this.formService.setFormData(JSON.parse(formData));
+    this.formStore.dispatch(setFormData({formData: JSON.parse(formData as string)}))
 
     this.formService.bannerForm.valueChanges.subscribe((formData) => {
       sessionStorage.setItem('bannerFormData', JSON.stringify(formData));

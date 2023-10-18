@@ -23,8 +23,6 @@ export class BannersListComponent implements OnInit{
     private bannersStore: Store<{banners: BannersStore}>
   ) {
     this.drawer$ = store.select('drawer')
-
-
   }
 
   @ViewChild('drawer') drawer!: MatDrawer
@@ -36,6 +34,6 @@ export class BannersListComponent implements OnInit{
 
   drawerOpen() { this.store.dispatch(drawerOpen({drawerState: this.drawer.opened})) }
 
-  drawerClose() { this.bannersService.onDrawerClose() }
+  drawerClose() { this.formService.onDrawerClose() }
 
 }

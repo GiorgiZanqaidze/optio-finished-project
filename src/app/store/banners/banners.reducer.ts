@@ -1,5 +1,6 @@
 import {createReducer, on} from "@ngrx/store";
 import {
+  addOrEditBanner,
   bannersPageChange, deleteBanner,
   setBannersData,
   setBannersSearchAndSortForm, submitBannersData,
@@ -60,5 +61,24 @@ export const bannersReducer = createReducer(
 
   on(submitBannersData, (state, action) =>{
     return state
+  }),
+
+  on(addOrEditBanner, (state, {newBanner}) => {
+    const editFlag = localStorage.getItem('editFlag')
+    let newState
+    if (editFlag && JSON.parse(editFlag)) {
+      newState = state.bannersData.map((banner) => {
+        if (newBanner.id == banner.id) {
+          return newBanner
+        } else {
+          return banner
+        }
+      })
+    } else {
+      const cloneBanners = state.bannersData.slice()
+      cloneBanners.unshift(newBanner)
+      newState = cloneBanners
+    }
+    return {...state, bannersData: newState}
   })
 )
