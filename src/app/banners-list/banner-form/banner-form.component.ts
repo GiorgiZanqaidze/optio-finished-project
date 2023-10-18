@@ -59,7 +59,6 @@ export class BannerFormComponent implements OnInit{
         this.apiService.fetchBannerById(data.bannerId)
           .pipe(map((data: any) => {
             this.drawerStore.dispatch(drawerOpen({drawerState: true}))
-
             const formData = data.data as BannerModel
             sessionStorage.setItem('bannerFormData', JSON.stringify(formData));
             this.formService.setFormData(formData)
