@@ -66,6 +66,7 @@ export const bannersReducer = createReducer(
   on(addOrEditBanner, (state, {newBanner}) => {
     const editFlag = localStorage.getItem('editFlag')
     let newState
+    console.log(editFlag)
     if (editFlag && JSON.parse(editFlag)) {
       newState = state.bannersData.map((banner) => {
         if (newBanner.id == banner.id) {
@@ -74,11 +75,13 @@ export const bannersReducer = createReducer(
           return banner
         }
       })
+      return {...state, bannersData: newState}
     } else {
       const cloneBanners = state.bannersData.slice()
       cloneBanners.unshift(newBanner)
+      cloneBanners.pop()
       newState = cloneBanners
+      return {...state, bannersData: newState, totalPages: state.totalPages + 1}
     }
-    return {...state, bannersData: newState}
   })
 )

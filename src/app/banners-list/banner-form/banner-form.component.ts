@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {FormsService} from "../../services/forms/forms.service";
 import {dataUrlToBlob} from '../../shared/utilities/file-utils'
 import {ReferenceDataModel} from "../../shared/types/reference-data.model";
-import {map, Observable} from "rxjs";
+import {map} from "rxjs";
 import {BannerModel} from "../../shared/types/banner.model";
 import {ApiService} from "../../services/api/api.service";
 import {environment} from "../../../environments/environment";
@@ -48,12 +48,11 @@ export class BannerFormComponent implements OnInit{
   submitBannerData() {
     this.formService.onSubmitBannerData()
       .subscribe((banner: any) =>  {
+        this.bannersStore.dispatch(addOrEditBanner({newBanner: banner.data}))
         this.formService.onDrawerClose()
         this.formService.showDeleteButton = false;
         console.log(banner)
-        // this.bannerService.addOrEditBanner(banner.data)
         console.log(banner.data)
-        this.bannersStore.dispatch(addOrEditBanner({newBanner: banner.data}))
     })
   }
 
