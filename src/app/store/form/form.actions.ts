@@ -1,6 +1,5 @@
 import {createAction, props} from "@ngrx/store";
 import {BannerModel} from "../../shared/types/banner.model";
-import {BannerForm} from "./form.reducer";
 
 export const submitFormData = createAction(
   "[Form] Submit Data",
@@ -13,5 +12,7 @@ export const setFormData = createAction(
   props<{formData: any}>()
 )
 
-
-
+export const selectFile = createAction(
+  "[Form] Select Image File",
+  props<{file: File}>()
+)

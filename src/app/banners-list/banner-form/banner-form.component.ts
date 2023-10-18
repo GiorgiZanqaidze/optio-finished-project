@@ -12,8 +12,8 @@ import {drawerClose, drawerOpen} from "../../store/drawer/drawer.action";
 import {BannersStore} from "../../store/banners/banners.reducer";
 import {addOrEditBanner, deleteBanner} from "../../store/banners/banners.actions";
 import {FormStore} from "../../store/form/form.reducer";
-import {setFormData} from "../../store/form/form.actions";
-import {bannerFormData} from "../../store/form/form.selectors";
+import {selectFile, setFormData} from "../../store/form/form.actions";
+import {bannerFormData, fileFormData} from "../../store/form/form.selectors";
 
 @Component({
   selector: 'app-banner-form',
@@ -31,6 +31,9 @@ export class BannerFormComponent implements OnInit{
   ) {
     this.formStore.select(bannerFormData).subscribe((form) => {
       this.formService.bannerForm.patchValue(form)
+    })
+    this.formStore.select(fileFormData).subscribe(data => {
+      this.formService.fileFormData = data
     })
   }
   bannerId = ""
@@ -54,7 +57,11 @@ export class BannerFormComponent implements OnInit{
     })
   }
 
-  onSelectedFile(event: Event) { this.formService.onSelectedFile(event) }
+  onSelectedFile(event: Event) {
+    const file = (event.target as HTMLInputElement)?.files?.[0];
+    // if (file) this.formService.selectFile(file)
+    if (file) this.formStore.dispatch(selectFile({file: file}))
+  }
 
   ngOnInit() {
     this.formService.getBannerIdObservable()
@@ -73,6 +80,8 @@ export class BannerFormComponent implements OnInit{
             this.drawerStore.dispatch(drawerOpen({drawerState: true}))
           })
       })
+
+
 
 
     const formData = sessionStorage.getItem('bannerFormData');
@@ -101,7 +110,7 @@ export class BannerFormComponent implements OnInit{
 
     if (fileUrl && fileType && fileName) {
       const file = dataUrlToBlob(fileUrl, fileName, fileType)
-      this.formService.selectFile(file)
+      if (file) this.formStore.dispatch(selectFile({file: file}))
     }
 
     this.formService.getReferenceData().subscribe((referenceData) => {

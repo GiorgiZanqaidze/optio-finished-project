@@ -8,3 +8,8 @@ export const bannerFormData = createSelector(
   selectFormState,
   (state) => state.bannerFormData
 );
+
+export const fileFormData = createSelector(
+  selectFormState,
+  (state) => state.fileFormData
+);

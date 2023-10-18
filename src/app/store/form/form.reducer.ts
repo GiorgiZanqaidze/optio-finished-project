@@ -1,48 +1,41 @@
 import {createReducer, on} from "@ngrx/store";
 import {BannerModel} from "../../shared/types/banner.model";
-import {setFormData} from "./form.actions";
-import {FormControl, Validators} from "@angular/forms";
-
-export interface BannerForm {
-  name: null | string,
-  zoneId: null | string | number,
-  active: null | boolean,
-  startDate: null | string,
-  endDate: null | string,
-  fileId: null | number | string,
-  priority: null | number | string,
-  channelId: null | number | string,
-  language: null | string,
-  url: null | string,
-  labels: null | string[]
-}
+import {selectFile, setFormData} from "./form.actions";
+import {fileReader} from "../../shared/utilities/file-utils";
 
 export interface FormStore {
-  bannerFormData: BannerModel
+  bannerFormData: BannerModel,
+  fileFormData: FormData
 }
 
-
-const initialState = {
+const initialState: FormStore = {
   bannerFormData: {
-    name: null,
-    zoneId: null,
+    id: 0,
+    name: "",
+    zoneId: "",
     active: null,
-    startDate: null,
+    startDate: "",
     endDate: null,
     fileId: null,
-    priority: null,
-    channelId: null,
-    language: null,
-    url: null,
-    labels: null
-  }
+    priority: "",
+    channelId: "",
+    language: "",
+    url: "",
+    labels: []
+  },
+  fileFormData: new FormData()
 }
-
 
 export const formReducer = createReducer(
   initialState,
   on(setFormData, (state, {formData}) => {
     return {...state, bannerFormData: formData}
   }),
-
+  on(selectFile, (state, {file}) => {
+    const modifiedFile = fileReader(file)
+    const fileForm = new FormData();
+    fileForm.set('blob', modifiedFile)
+    const modifiedFormData = {...state.bannerFormData, fileId: modifiedFile.name }
+    return {...state, bannerFormData: modifiedFormData, fileFormData: fileForm }
+  }),
 )
