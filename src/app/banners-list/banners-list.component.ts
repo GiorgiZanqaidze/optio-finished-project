@@ -10,7 +10,6 @@ import {FormStore} from "../store/form/form.reducer";
 @Component({
   selector: 'app-banners-list',
   templateUrl: './banners-list.component.html',
-  styleUrls: ['./banners-list.component.css'],
 })
 export class BannersListComponent implements OnInit{
 

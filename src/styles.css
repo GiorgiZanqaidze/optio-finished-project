@@ -18,5 +18,5 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .scroll::-webkit-scrollbar-thumb, body::-webkit-scrollbar {
     border-radius: 100px;
-    background-color: #898787;
+    background-color: rgba(45, 48, 167, 0.84);
 }
