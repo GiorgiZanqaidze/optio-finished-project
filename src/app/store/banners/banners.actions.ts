@@ -16,22 +16,12 @@ export const setBannersSearchAndSortForm = createAction(
   props<{search: string, sortBy: string, sortDirection: string}>()
 )
 
-export const filterBannersData = createAction(
-  "[Banners] filter Banners Data",
-  props<{id: number | null}>()
-)
-
 export const deleteBanner = createAction(
   '[Banners] Delete Banner',
   props<{ bannerId: number | string}>()
 );
 
-export const submitBannersData = createAction(
-  "[Banners] Submit Form"
-)
-
 export const addOrEditBanner = createAction(
   "[Banner] Add Or Edit",
   props<{newBanner: BannerModel}>()
 )
-

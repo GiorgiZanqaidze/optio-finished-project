@@ -1,7 +1,7 @@
 <div class="min-w-full">
   <div class="flex justify-between mx-10 my-2" >
     <button (click)="closeDrawer()" mat-raised-button color="primary"><mat-icon>backspace</mat-icon> Back</button>
-    <button (click)="deleteBanner()" mat-raised-button color="accent" *ngIf="formService.showDeleteButton">
+    <button (click)="deleteBanner()" mat-raised-button color="accent" *ngIf="showDeleteButton">
       delete
       <mat-icon>delete</mat-icon>
     </button>
@@ -49,7 +49,7 @@
       <mat-form-field>
         <mat-label *ngIf="bannerForm.controls.fileId.value">Selected Image:</mat-label>
         <input type="text" formControlName="fileId" id="fileId" class="invisible"  matInput>
-        <img *ngIf="formService.editFileId; else onlyFileId" [src]="apiUrl + '/blob/' + bannerForm.controls.fileId.value" alt="banner"  class="block mx-auto max-h-[20rem]">
+        <img *ngIf="editFileId; else onlyFileId" [src]="apiUrl + '/blob/' + bannerForm.controls.fileId.value" alt="banner"  class="block mx-auto max-h-[20rem]">
         <ng-template #onlyFileId>
           <span >{{bannerForm.controls.fileId.value}}</span>
         </ng-template>

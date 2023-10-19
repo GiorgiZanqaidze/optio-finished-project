@@ -3,7 +3,9 @@ import {MatDrawer} from "@angular/material/sidenav";
 import {FormsService} from "../services/forms/forms.service";
 import {Store} from "@ngrx/store";
 import {Observable} from "rxjs";
-import {drawerOpen} from "../store/drawer/drawer.action";
+import {drawerClose, drawerOpen} from "../store/drawer/drawer.action";
+import {setDeleteButton} from "../store/form/form.actions";
+import {FormStore} from "../store/form/form.reducer";
 
 @Component({
   selector: 'app-banners-list',
@@ -16,20 +18,31 @@ export class BannersListComponent implements OnInit{
 
   constructor(
     private formService: FormsService,
-    private store: Store<{drawer: boolean}>,
+    private drawerStore: Store<{drawer: boolean}>,
+    private formStore: Store<{form: FormStore}>
   ) {
-    this.drawer$ = store.select('drawer')
+    this.drawer$ = drawerStore.select('drawer')
   }
 
   @ViewChild('drawer') drawer!: MatDrawer
 
   ngOnInit() {
     const drawerIsOpen = localStorage.getItem('drawerIsOpen')
-    if (drawerIsOpen) this.store.dispatch(drawerOpen({drawerState: JSON.parse(drawerIsOpen)}))
+    if (drawerIsOpen) this.drawerStore.dispatch(drawerOpen({drawerState: JSON.parse(drawerIsOpen)}))
   }
 
-  drawerOpen() { this.store.dispatch(drawerOpen({drawerState: this.drawer.opened})) }
+  drawerOpen() { this.drawerStore.dispatch(drawerOpen({drawerState: this.drawer.opened})) }
 
-  drawerClose() { this.formService.onDrawerClose() }
+  drawerClose() {
+    this.drawerStore.dispatch(drawerClose({drawerState: false}))
+    this.formService.bannerForm.reset()
+    for (const controlName of Object.keys(this.formService.bannerForm.controls)) {
+      const control = this.formService.bannerForm.get(controlName);
+      control?.setErrors(null);
+    }
+    this.formStore.dispatch(setDeleteButton({show: false}))
+    localStorage.clear();
+    sessionStorage.clear()
+  }
 
 }

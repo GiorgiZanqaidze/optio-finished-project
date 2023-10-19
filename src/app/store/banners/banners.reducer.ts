@@ -3,7 +3,7 @@ import {
   addOrEditBanner,
   bannersPageChange, deleteBanner,
   setBannersData,
-  setBannersSearchAndSortForm, submitBannersData,
+  setBannersSearchAndSortForm,
 } from "./banners.actions";
 import {BannerModel} from "../../shared/types/banner.model";
 
@@ -59,15 +59,10 @@ export const bannersReducer = createReducer(
     return {...state, bannersData: filteredBanners}
   }),
 
-  on(submitBannersData, (state, action) =>{
-    return state
-  }),
-
   on(addOrEditBanner, (state, {newBanner}) => {
     const editFlag = localStorage.getItem('editFlag')
-    let newState
     if (editFlag && JSON.parse(editFlag)) {
-      newState = state.bannersData.map((banner) => {
+      const newState = state.bannersData.map((banner) => {
         if (newBanner.id == banner.id) {
           return newBanner
         } else {
@@ -79,7 +74,7 @@ export const bannersReducer = createReducer(
       const cloneBanners = state.bannersData.slice()
       cloneBanners.unshift(newBanner)
       cloneBanners.pop()
-      newState = cloneBanners
+      const newState = cloneBanners
       return {...state, bannersData: newState, totalPages: state.totalPages + 1}
     }
   })
