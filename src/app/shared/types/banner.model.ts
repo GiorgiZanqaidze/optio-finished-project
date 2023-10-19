@@ -3,7 +3,7 @@ export interface BannerModel {
   name: string,
   active: null | undefined,
   startDate: string,
-  endDate: string,
+  endDate: string | null,
   labels: string[],
   zoneId: string,
   url: string,
