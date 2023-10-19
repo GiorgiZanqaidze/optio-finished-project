@@ -1,27 +1,82 @@
-# OptioTask
+# Optio.Ai | Angular Internship | Giorgi Zankaidze 🎉
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.3.
+#
+### 📝 Table of Contents
+* 🔍 [Prerequisites](#prerequisites)
+* 🛠️ [Tech Stack](#tech-stack)
+* 🚀 [Getting Started](#getting-started)
+#
+### Prerequisites 🔍
+Before you can run the project, make sure you have the following tools and dependencies installed on your system:
 
-## Development server
+1. 🟢 [Node.js](https://nodejs.org/): You need Node.js to run JavaScript on your computer. Download and install it if you haven't already.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+2. 🅰️ [Angular CLI](https://angular.io/cli): Install the Angular CLI globally using the following command: `npm install -g @angular/cli`
 
-## Code scaffolding
+#
+### Project Structure 🏗️
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+```angular-project/
+├── .angular
+├── node_modules/
+├── src/
+│   ├── app/
+│   │   ├── banners-list/
+│   │   ├── constants/
+│   │   ├── services/
+│   │   ├── shared/
+│   │   ├── store/
+│   │   ├── app.component.html
+│   │   ├── app.component.spect.ts
+│   │   ├── app.component.ts
+│   │   ├── app.module.ts
+│   │   ├── app-routing.module.ts
+│   ├── environments/
+│   │   ├── environment.development.ts
+│   │   ├── environment.module.ts
+│   ├── assets/
+│   ├── index.html
+│   ├── main.ts
+│   ├── style.css
+├── .editorconfig/
+├── angular.json
+├── package.json
+├── package-lock.json
+├── tsconfig.json
+├── .editorconfig
+├── .gitignore
+├── README.md
+├── tailwind.config.js
+├── tsconfig.app.json
+├── tsconfig.json
+├── tsconfig.spec.json
+```
+#
+### 🛠️ Tech Stack 
+- <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Angular_full_color_logo.svg/2048px-Angular_full_color_logo.svg.png" width="25" style="position: relative; top: 4px" /> Angular
+- <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Typescript_logo_2020.svg/512px-Typescript_logo_2020.svg.png?20221110153201" width="25" style="position: relative; top: 4px" /> TypeScript
+- <img src="https://ngrx.io/assets/images/badge.svg" width="25" style="position: relative; top: 4px" /> ngrx (for state management)
+- <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Tailwind_CSS_Logo.svg/512px-Tailwind_CSS_Logo.svg.png?20230715030042" width="25" style="position: relative; top: 4px" />Tailwind CSS (for styling)
+- <img src="https://repository-images.githubusercontent.com/220078160/9353b600-0e54-11ea-9712-b79b66b93c00#" width="25" style="position: relative; top: 4px" /> Angular Material UI (for UI components)
 
-## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+#
+### 🚀 Getting Started 
 
-## Running unit tests
+To get started with this project, follow these steps:
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+1. 📋 First of all you need to clone Optio.Ai Task repository from github:
+```sh
+git clone https://github.com/GiorgiZanqaidze/optio-internship.git
+```
 
-## Running end-to-end tests
+2. 🔧  Next step requires you to run *npm install* in order to install all the dependencies.
+```sh
+npm install
+```
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+3. 🚀 Running the project locally:
+```sh
+ng serve
+```
 
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
