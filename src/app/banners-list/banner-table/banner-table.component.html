@@ -1,4 +1,4 @@
-<div class="overflow-x-scroll md:overflow-auto border" style="max-height: calc(100vh - 30vh); min-height: calc(100vh - 30vh)">
+<div class="overflow-x-scroll md:overflow-auto border text-xs md:text-sm " style="max-height: calc(100vh - 30vh); min-height: calc(100vh - 30vh)">
   <table mat-table [dataSource]="(bannersData$ | async) ?? []">
     <ng-container matColumnDef="Name">
       <th mat-header-cell *matHeaderCellDef> Name </th>
@@ -7,8 +7,8 @@
     <ng-container matColumnDef="Status">
       <th mat-header-cell *matHeaderCellDef> Status </th>
       <td mat-cell *matCellDef="let element">
-        <p *ngIf="element.active">Active</p>
-        <p *ngIf="!element.active">Inactive</p>
+        <p *ngIf="element.active">🟢 Active</p>
+        <p *ngIf="!element.active">🔴 Inactive</p>
       </td>
     </ng-container>
     <ng-container matColumnDef="Zone">
@@ -32,8 +32,8 @@
       <th mat-header-cell *matHeaderCellDef> Labels </th>
       <td mat-cell *matCellDef="let element">
         <ng-container *ngIf="element?.labels?.length > 0; else noLabels">
-          <ul class="grid-cols-4 gap-2 inline-grid">
-            <li *ngFor="let label of element.labels" class="p-2 bg-gray-100">{{label | titlecase}}</li>
+          <ul class="md:grid-cols-4 md:gap-2 inline-grid grid-cols-2 gap-1 text-xs md:text-sm">
+            <li *ngFor="let label of element.labels" class="md:p-2 bg-gray-100">{{label | titlecase}}</li>
           </ul>
         </ng-container>
         <ng-template #noLabels>N/A</ng-template>
@@ -47,16 +47,17 @@
         </div>
       </td>
     </ng-container>
-    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" style="background: #dcdcdc"></tr>
     <tr
       mat-row *matRowDef="let row; columns: displayedColumns;"
-      class="hover:bg-gray-200 hover:cursor-pointer border-gray-300"
+      class="hover:bg-gray-200 hover:cursor-pointer border-gray-300 transition-all"
       (click)="showEditBannerForm(row)"
     ></tr>
   </table>
 </div>
-<div class="border border-t-2">
+<div class="">
   <mat-paginator
+    style="background: #dcdcdc"
     color="primary"
     [pageSizeOptions]="[3, 5, 10]"
     [pageSize]="(bannersPageSize$ | async) ?? 3"

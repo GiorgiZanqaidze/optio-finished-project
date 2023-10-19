@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild} from '@angular/core';
 import {MatDrawer} from "@angular/material/sidenav";
-import {FormsService} from "../services/forms/forms.service";
+import {FormsService} from "../services/banners/forms.service";
 import {Store} from "@ngrx/store";
 import {Observable} from "rxjs";
 import {drawerClose, drawerOpen} from "../store/drawer/drawer.action";

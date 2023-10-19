@@ -5,7 +5,7 @@ import {ActivatedRoute, Params, Router} from "@angular/router";
 @Injectable({
   providedIn: 'root'
 })
-export class BannersService {
+export class RouteParamsService {
   constructor(
     private router: Router,
     private route: ActivatedRoute,

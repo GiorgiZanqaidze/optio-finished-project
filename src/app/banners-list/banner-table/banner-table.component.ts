@@ -1,8 +1,8 @@
 import {Component, Input} from '@angular/core';
 import {BannerModel} from "../../shared/types/banner.model";
 import {environment} from "../../../environments/environment";
-import {BannersService} from "../../services/banners/banners.service";
-import {FormsService} from "../../services/forms/forms.service";
+import {RouteParamsService} from "../../services/banners/route-params.service";
+import {FormsService} from "../../services/banners/forms.service";
 import {PageEvent} from "@angular/material/paginator";
 import {Store} from "@ngrx/store";
 import {Observable} from "rxjs";
@@ -35,7 +35,7 @@ export class BannerTableComponent{
 
   constructor(
     private formService: FormsService,
-    public bannersService: BannersService,
+    public bannersService: RouteParamsService,
     private drawerStore: Store<{drawer: boolean}>,
     private bannersStore: Store<{banners: BannersStore}>
   ) {

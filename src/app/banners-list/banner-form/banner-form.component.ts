@@ -1,12 +1,12 @@
 import {Component, OnInit} from '@angular/core';
-import {FormsService} from "../../services/forms/forms.service";
+import {FormsService} from "../../services/banners/forms.service";
 import {dataUrlToBlob} from '../../shared/utilities/file-utils'
 import {ReferenceDataModel} from "../../shared/types/reference-data.model";
 import {filter, tap} from "rxjs";
 import {BannerModel} from "../../shared/types/banner.model";
 import {ApiService} from "../../services/api/api.service";
 import {environment} from "../../../environments/environment";
-import {BannersService} from "../../services/banners/banners.service";
+import {RouteParamsService} from "../../services/banners/route-params.service";
 import {Store} from "@ngrx/store";
 import {drawerClose, drawerOpen} from "../../store/drawer/drawer.action";
 import {BannersStore} from "../../store/banners/banners.reducer";
@@ -31,7 +31,7 @@ export class BannerFormComponent implements OnInit{
   constructor(
     public formService: FormsService,
     private apiService: ApiService,
-    public bannerService: BannersService,
+    public bannerService: RouteParamsService,
     private drawerStore: Store<{drawer: boolean}>,
     private bannersStore: Store<{banners: BannersStore}>,
     private formStore: Store<{form: FormStore}>
