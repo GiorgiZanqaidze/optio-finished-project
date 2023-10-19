@@ -17,11 +17,10 @@ import {
   setBannerId,
   setDeleteButton,
   setEditFileId,
-  setFormData,
+  setFormData, submitBannerData,
   submitFormData
 } from "../../store/form/form.actions";
 import {bannerFormData, editFileId, fileFormData, showDeleteButton} from "../../store/form/form.selectors";
-import {map} from "rxjs/operators";
 
 @Component({
   selector: 'app-banner-form',
@@ -63,7 +62,16 @@ export class BannerFormComponent implements OnInit{
   public readonly apiUrl = environment.ApiUrl
 
   submitBannerData() {
-    this.formStore.dispatch(submitFormData({data: this.bannerForm.value, blob: this.fileFormData}))
+    const fileId = JSON.parse(sessionStorage.getItem('editFileId') as string)
+    const editFlag = JSON.parse(localStorage.getItem('editFlag') as string)
+    const bannerId = JSON.parse(localStorage.getItem('bannerId') as string)
+    if (!fileId) {
+      this.formStore.dispatch(submitFormData({data: this.bannerForm.value, blob: this.fileFormData}))
+    } else {
+      const mergedBannerData = {...this.formService.bannerForm.value, id: bannerId, fileId: fileId}
+      this.formStore.dispatch(submitBannerData({bannerData: mergedBannerData, editFlag}))
+    }
+
   }
 
   onSelectedFile(event: Event) {

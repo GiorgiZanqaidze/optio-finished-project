@@ -56,14 +56,13 @@ export const bannersReducer = createReducer(
     const filteredBanners = state.bannersData.filter((banner) => {
       return action.bannerId !== banner.id
     })
-    return {...state, bannersData: filteredBanners}
+    return {...state, bannersData: filteredBanners, totalPages: state.totalPages - 1}
   }),
 
-  on(addOrEditBanner, (state, {newBanner}) => {
-    const editFlag = localStorage.getItem('editFlag')
-    if (editFlag && JSON.parse(editFlag)) {
+  on(addOrEditBanner, (state, {newBanner, editFlag}) => {
+    if (editFlag) {
       const newState = state.bannersData.map((banner) => {
-        if (newBanner.id == banner.id) {
+        if (newBanner.id === banner.id) {
           return newBanner
         } else {
           return banner
@@ -73,7 +72,6 @@ export const bannersReducer = createReducer(
     } else {
       const cloneBanners = state.bannersData.slice()
       cloneBanners.unshift(newBanner)
-      cloneBanners.pop()
       const newState = cloneBanners
       return {...state, bannersData: newState, totalPages: state.totalPages + 1}
     }

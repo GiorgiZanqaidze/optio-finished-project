@@ -28,38 +28,21 @@ export class FormEffects {
       exhaustMap(({data, blob}) => {
         const fileId = JSON.parse(sessionStorage.getItem('editFileId') as string)
         const bannerId = JSON.parse(localStorage.getItem('bannerId') as string)
-        this.drawerStore.dispatch(drawerClose({drawerState: false}))
-        if (!fileId) {
-          return this.apiService.submitBlob(blob).pipe(
-            map((blobResponse: any) => {
-              const mergedSubmitData = {
-                ...data,
-                fileId: blobResponse.data.id,
-                id: bannerId
-              };
-              return FormActions.submitBannerData({bannerData: mergedSubmitData})
-            }),
-            catchError((error) => {
-              console.error('Error in DeleteBanner', error);
-              return EMPTY;
-            })
-          )
-        } else {
-          const submitData = {
-            ...data,
-            fileId: fileId,
-            id: bannerId
-          };
-          return this.apiService.submitBannerForm(submitData).pipe(
-            map((bannerData: any) => {
-              return BannerActions.addOrEditBanner({newBanner: bannerData.data})
-            }),
-            catchError((error) => {
-              console.error('Error in DeleteBanner', error);
-              return EMPTY;
-            })
-          )
-        }
+        const editFlag = JSON.parse(localStorage.getItem('editFlag') as string)
+        return this.apiService.submitBlob(blob).pipe(
+          map((blobResponse: any) => {
+            const mergedSubmitData = {
+              ...data,
+              fileId: blobResponse.data.id,
+              id: bannerId
+            };
+            return FormActions.submitBannerData({bannerData: mergedSubmitData, editFlag})
+          }),
+          catchError((error) => {
+            console.error('Error in Submit Banner Data with blob', error);
+            return EMPTY;
+          })
+        )
       })
     )
   );
@@ -67,10 +50,11 @@ export class FormEffects {
   submitBannerData$ = createEffect(() =>
     this.actions$.pipe(
       ofType(FormActions.submitBannerData),
-      exhaustMap(({bannerData}) =>
+      exhaustMap(({bannerData, editFlag}) =>
         this.apiService.submitBannerForm(bannerData).pipe(
-          map(() => {
-            return BannerActions.addOrEditBanner({newBanner: bannerData})
+          map((newBannerData: any) => {
+            this.drawerStore.dispatch(drawerClose({drawerState: false}))
+            return BannerActions.addOrEditBanner({newBanner: newBannerData.data, editFlag})
           }),
           catchError((error) => {
             console.error('Error in DeleteBanner', error);

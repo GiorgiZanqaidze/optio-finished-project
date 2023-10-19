@@ -35,5 +35,5 @@ export const submitFormData = createAction(
 
 export const submitBannerData = createAction(
   "[Form] Set Form Data Response",
-  props<{bannerData: BannerModel}>()
+  props<{bannerData: any, editFlag: boolean}>()
 )

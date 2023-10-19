@@ -23,5 +23,5 @@ export const deleteBanner = createAction(
 
 export const addOrEditBanner = createAction(
   "[Banner] Add Or Edit",
-  props<{newBanner: BannerModel}>()
+  props<{newBanner: BannerModel, editFlag: boolean}>()
 )

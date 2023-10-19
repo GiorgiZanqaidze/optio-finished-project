@@ -1,4 +1,4 @@
-<form [formGroup]="searchBannersForm" (submit)="bannersSearch()" class="flex gap-5 items-center">
+<form [formGroup]="searchBannersForm" (submit)="bannersSearch()" class="flex gap-5  flex-col md:flex-row">
   <mat-form-field appearance="fill" color="primary">
     <mat-label>Search By Name</mat-label>
     <input  matInput placeholder="Banner name" formControlName="search">
@@ -19,6 +19,5 @@
       <mat-option value="startDate">Start Date</mat-option>
     </mat-select>
   </mat-form-field>
-  <button class="ml-4" mat-raised-button color="warn">Filter & Sort<mat-icon>filter_list</mat-icon></button>
+  <button class="md:ml-4" mat-raised-button color="warn">Filter & Sort<mat-icon>filter_list</mat-icon></button>
 </form>
-<div class="mat-elevation-z8">

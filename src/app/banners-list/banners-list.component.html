@@ -4,14 +4,14 @@
       <app-banner-form></app-banner-form>
     </mat-drawer>
     <mat-drawer-content>
-      <div class="fixed right-10 top-10" >
-        <button *ngIf="!drawer.opened" (click)="drawer.toggle()" mat-raised-button color="primary">
-          <mat-icon>library_add</mat-icon>
-          <span>Add Banner</span>
-        </button>
-      </div>
-      <div class="bg-red-50 rounded-xl p-20 mx-[5rem] my-5">
-        <app-banners-filter-sort></app-banners-filter-sort>
+      <div class="rounded-xl px-5 md:px-20 md:mx-[5rem] mt-20">
+        <div class="flex flex-col md:flex-row gap-10 justify-between mb-5 md:mb-0">
+          <app-banners-filter-sort></app-banners-filter-sort>
+          <button *ngIf="!drawer.opened" (click)="drawer.toggle()" mat-raised-button color="primary">
+            <mat-icon>library_add</mat-icon>
+            <span>Add Banner</span>
+          </button>
+        </div>
         <app-banner-table ></app-banner-table>
       </div>
     </mat-drawer-content>
