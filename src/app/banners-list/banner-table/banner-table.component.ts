@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {BannerModel} from "../../shared/types/banner.model";
+import {Banner} from "../../shared/types/banner";
 import {environment} from "../../../environments/environment";
 import {RouteParamsService} from "../../services/banners/route-params.service";
 import {FormsService} from "../../services/banners/forms.service";
@@ -13,6 +13,7 @@ import {
   bannersPageSize,
   totalPages
 } from "../../store/banners/banners.selector";
+import {displayedColumns} from "../../constants/display-columns";
 
 @Component({
   selector: 'app-banner-table',
@@ -20,14 +21,14 @@ import {
 })
 export class BannerTableComponent{
 
-  @Input() dataSource!: BannerModel[]
+  @Input() dataSource!: Banner[]
 
-  displayedColumns = ['Name', "Status", "Zone", "StartDate", "EndDate", "Labels", 'Image']
+  public readonly displayedColumns = displayedColumns
 
   public readonly apiUrl = environment.ApiUrl
 
   drawer$!: Observable<boolean>
-  bannersData$!: Observable<BannerModel[]>
+  bannersData$!: Observable<Banner[]>
   totalPages$!: Observable<number>
   bannersPage$!: Observable<number>
   bannersPageSize$!: Observable<number>
@@ -49,7 +50,7 @@ export class BannerTableComponent{
     this.bannersService.onRouteParamsChange(queryParams)
   }
 
-  showEditBannerForm(rowData: BannerModel) {
+  showEditBannerForm(rowData: Banner) {
     localStorage.setItem("editFlag", JSON.stringify(true))
     localStorage.setItem("bannerId", JSON.stringify(rowData.id))
     this.formService.setItem({editFlag: true, bannerId: rowData.id})

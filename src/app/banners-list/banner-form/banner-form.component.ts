@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {FormsService} from "../../services/banners/forms.service";
 import {dataUrlToBlob} from '../../shared/utilities/file-utils'
-import {ReferenceDataModel} from "../../shared/types/reference-data.model";
+import {ReferenceData} from "../../shared/types/reference-data";
 import {filter, tap} from "rxjs";
-import {BannerModel} from "../../shared/types/banner.model";
+import {Banner} from "../../shared/types/banner";
 import {ApiService} from "../../services/api/api.service";
 import {environment} from "../../../environments/environment";
 import {RouteParamsService} from "../../services/banners/route-params.service";
@@ -46,10 +46,10 @@ export class BannerFormComponent implements OnInit{
     })
     this.formStore.select(editFileId).subscribe(id => this.editFileId = id)
   }
-  channels!: ReferenceDataModel[]
-  zones!: ReferenceDataModel[]
-  languages!: ReferenceDataModel[]
-  labels!: ReferenceDataModel[]
+  channels!: ReferenceData[]
+  zones!: ReferenceData[]
+  languages!: ReferenceData[]
+  labels!: ReferenceData[]
   editFlag!: boolean
   fileFormData!: FormData
   showDeleteButton!: boolean
@@ -83,7 +83,7 @@ export class BannerFormComponent implements OnInit{
       .subscribe((data) => {
         this.apiService.fetchBannerById(data.bannerId)
           .pipe(tap((banner: any) => {
-            const formData = banner.data as BannerModel
+            const formData = banner.data as Banner
             sessionStorage.setItem('bannerFormData', JSON.stringify(formData));
             this.formService.bannerForm.patchValue(formData)
             const editFileId = banner.data.fileId

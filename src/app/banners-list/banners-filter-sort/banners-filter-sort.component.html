@@ -13,8 +13,8 @@
   <mat-form-field>
     <mat-label>Sort By</mat-label>
     <mat-select formControlName="sortBy" >
-      <mat-option *ngFor="let sort of sortBy" [value]="sort.key">{{sort.name | titlecase}}</mat-option>
+      <mat-option *ngFor="let sort of SortBy" [value]="sort.key">{{sort.name | titlecase}}</mat-option>
     </mat-select>
   </mat-form-field>
-  <button class="md:ml-4" mat-raised-button color="warn">Filter & Sort<mat-icon>filter_list</mat-icon></button>
+  <button class="md:ml-4" mat-raised-button color="warn" style="background: #FF6B6B">Filter & Sort<mat-icon>filter_list</mat-icon></button>
 </form>

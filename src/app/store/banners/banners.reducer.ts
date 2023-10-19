@@ -5,12 +5,12 @@ import {
   setBannersData,
   setBannersSearchAndSortForm,
 } from "./banners.actions";
-import {BannerModel} from "../../shared/types/banner.model";
+import {Banner} from "../../shared/types/banner";
 
 export interface BannersStore {
   bannersPage: number,
   bannersPageSize: number
-  bannersData: BannerModel[],
+  bannersData: Banner[],
   totalPages: number
   searchAndSortBannerForm: {search: string, sortDirection: string, sortBy: string},
   showBannerEditForm: {editFlag: boolean, bannerId: number}
@@ -35,7 +35,7 @@ export const bannersReducer = createReducer(
   on(setBannersData, (state, action) => {
     return {
       ...state,
-      bannersData: action.bannersData.entities as BannerModel[],
+      bannersData: action.bannersData.entities as Banner[],
       totalPages: action.bannersData.total
     }
   }),

@@ -1,5 +1,5 @@
 import {createAction, props} from "@ngrx/store";
-import {BannerModel} from "../../shared/types/banner.model";
+import {Banner} from "../../shared/types/banner";
 import {Form} from "@angular/forms";
 import {createEffect} from "@ngrx/effects";
 
