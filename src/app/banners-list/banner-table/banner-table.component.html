@@ -1,4 +1,4 @@
-<div class="overflow-x-scroll md:overflow-auto border text-xs md:text-sm " style="max-height: calc(100vh - 30vh); min-height: calc(100vh - 30vh)">
+<div class="overflow-x-scroll md:overflow-auto border-x border-t text-xs md:text-sm scroll" style="max-height: calc(100vh - 30vh); min-height: calc(100vh - 30vh)">
   <table mat-table [dataSource]="(bannersData$ | async) ?? []">
     <ng-container matColumnDef="Name">
       <th mat-header-cell *matHeaderCellDef> Name </th>
@@ -55,17 +55,15 @@
     ></tr>
   </table>
 </div>
-<div class="">
-  <mat-paginator
-    style="background: #dcdcdc"
-    color="primary"
-    [pageSizeOptions]="[3, 5, 10]"
-    [pageSize]="(bannersPageSize$ | async) ?? 3"
-    showFirstLastButtons
-    [pageIndex]="(bannersPage$ | async) ?? 0"
-    [length]="(totalPages$ | async) ?? 0"
-    (page)="pageChange($event)"
-  >
-  </mat-paginator>
-</div>
+<mat-paginator
+  style="background: #dcdcdc"
+  color="primary"
+  [pageSizeOptions]="[3, 5, 10]"
+  [pageSize]="(bannersPageSize$ | async) ?? 3"
+  showFirstLastButtons
+  [pageIndex]="(bannersPage$ | async) ?? 0"
+  [length]="(totalPages$ | async) ?? 0"
+  (page)="pageChange($event)"
+>
+</mat-paginator>
 

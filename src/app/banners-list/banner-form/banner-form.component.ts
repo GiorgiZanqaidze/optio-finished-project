@@ -25,7 +25,6 @@ import {bannerFormData, editFileId, fileFormData, showDeleteButton} from "../../
 @Component({
   selector: 'app-banner-form',
   templateUrl: './banner-form.component.html',
-  styleUrls: ['./banner-form.component.css']
 })
 export class BannerFormComponent implements OnInit{
   constructor(
