@@ -13,10 +13,10 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 }
 
 .scroll::-webkit-scrollbar-track, body::-webkit-scrollbar {
-    background: #dcdcdc;
+    background: #f1f1f1;
 }
 
 .scroll::-webkit-scrollbar-thumb, body::-webkit-scrollbar {
     border-radius: 100px;
-    background-color: rgba(45, 48, 167, 0.84);
+    background-color: #888;
 }

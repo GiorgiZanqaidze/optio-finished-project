@@ -47,16 +47,16 @@
         </div>
       </td>
     </ng-container>
-    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" style="background: #dcdcdc"></tr>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" style="background: #f1f1f1"></tr>
     <tr
       mat-row *matRowDef="let row; columns: displayedColumns;"
-      class="hover:bg-gray-200 hover:cursor-pointer border-gray-300 transition-all"
+      class="hover:bg-light hover:cursor-pointer border-gray-300 transition-all"
       (click)="showEditBannerForm(row)"
     ></tr>
   </table>
 </div>
 <mat-paginator
-  style="background: #dcdcdc"
+  style="background: #f1f1f1"
   color="primary"
   [pageSizeOptions]="[3, 5, 10]"
   [pageSize]="(bannersPageSize$ | async) ?? 3"
