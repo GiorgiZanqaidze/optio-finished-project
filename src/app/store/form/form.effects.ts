@@ -57,7 +57,6 @@ export class FormEffects {
           map((newBannerData: any) => {
             this.UIStore.dispatch(drawerToggle({drawerState: false}))
             this.UIStore.dispatch(stopSubmitBannerLoading())
-            console.log(this.UIStore.select(isLoadingSubmitBanner).subscribe(res => console.log(res)))
             return BannerActions.addOrEditBanner({newBanner: newBannerData.data, editFlag})
           }),
           catchError((error) => {

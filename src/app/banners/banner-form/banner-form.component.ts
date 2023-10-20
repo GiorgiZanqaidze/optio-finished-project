@@ -7,7 +7,7 @@ import {Banner} from "../../shared/types/banner";
 import {ApiService} from "../../services/api/api.service";
 import {environment} from "../../../environments/environment";
 import {Store} from "@ngrx/store";
-import {drawerToggle, startSubmitBannerLoading} from "../../store/UI/UI.action";
+import {drawerToggle, startSubmitBannerLoading, stopSubmitBannerLoading} from "../../store/UI/UI.action";
 import {BannersStore} from "../../store/banners/banners.reducer";
 import { deleteBanner} from "../../store/banners/banners.actions";
 import {FormStore} from "../../store/form/form.reducer";
@@ -21,6 +21,8 @@ import {
 } from "../../store/form/form.actions";
 import {bannerFormData, editFileId, fileFormData, showDeleteButton} from "../../store/form/form.selectors";
 import {drawerUI, isLoadingSubmitBanner} from "../../store/UI/UI.selectors";
+import {map} from "rxjs/operators";
+import {data} from "autoprefixer";
 
 @Component({
   selector: 'app-banner-form',
@@ -69,14 +71,12 @@ export class BannerFormComponent implements OnInit{
     const editFlag = JSON.parse(localStorage.getItem('editFlag') as string)
     const bannerId = JSON.parse(localStorage.getItem('bannerId') as string)
     this.UIStore.dispatch(startSubmitBannerLoading())
-    console.log(this.UIStore.select(isLoadingSubmitBanner).subscribe(res => console.log(res)))
     if (!fileId) {
       this.formStore.dispatch(submitFormData({data: this.bannerForm.value, blob: this.fileFormData}))
     } else {
       const mergedBannerData = {...this.formService.bannerForm.value, id: bannerId, fileId: fileId}
       this.formStore.dispatch(submitBannerData({bannerData: mergedBannerData, editFlag}))
     }
-
   }
 
   onSelectedFile(event: Event) {
@@ -86,6 +86,12 @@ export class BannerFormComponent implements OnInit{
 
   ngOnInit() {
     this.formService.getBannerIdObservable()
+      .pipe(
+        tap(() => {
+          this.UIStore.dispatch(startSubmitBannerLoading());
+          this.UIStore.dispatch(drawerToggle({drawerState: true}))
+        })
+      )
       .subscribe((data) => {
         this.apiService.fetchBannerById(data.bannerId)
           .pipe(tap((banner: any) => {
@@ -97,9 +103,10 @@ export class BannerFormComponent implements OnInit{
             this.formStore.dispatch(setDeleteButton({show: true}))
             this.formStore.dispatch(setBannerId({id: data.bannerId}))
             sessionStorage.setItem('editFileId', JSON.stringify(editFileId))
+
           }))
           .subscribe(() => {
-            this.UIStore.dispatch(drawerToggle({drawerState: true}))
+            this.UIStore.dispatch(stopSubmitBannerLoading())
           })
       })
 
