@@ -107,10 +107,13 @@ ng serve
 #
 ### 📋 Usage 
 
-To use the Optio Banner Management Module effectively:
+## To use the Optio Banner Management Module effectively:
+
 
 1. Create new banners using the "Create Banner" button.
+## <img src="src/assets/Screenshot_1.png" width="400" style="position: relative; top: 4px" />
 2. Manage and organize existing banners using the table view.
+## <img src="src/assets/Screenshot_2.png" width="400" style="position: relative; top: 4px" />
 3. Edit and delete banners as needed.
 
 #
@@ -118,3 +121,8 @@ To use the Optio Banner Management Module effectively:
 * Giorgi Zankaidze - https://github.com/GiorgiZanqaidze
 * David Gabrichidze - https://github.com/davidgabrichidze
 * Zura Japoshvili - https://github.com/zura-japoshvili
+
+
+
+
+
