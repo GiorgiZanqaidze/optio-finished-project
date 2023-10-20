@@ -4,11 +4,13 @@ import * as FormActions from './form.actions';
 import {EMPTY, map} from "rxjs";
 import {Injectable} from "@angular/core";
 import * as BannerActions from "../banners/banners.actions";
-import {drawerClose} from "../drawer/drawer.action";
+import {drawerToggle, startSubmitBannerLoading, stopSubmitBannerLoading} from "../UI/UI.action";
 import {ApiService} from "../../services/api/api.service";
 import {Store} from "@ngrx/store";
 import {BannersStore} from "../banners/banners.reducer";
 import {FormStore} from "./form.reducer";
+import {UIStore} from "../UI/UI.reducer";
+import {isLoadingSubmitBanner} from "../UI/UI.selectors";
 
 @Injectable()
 export class FormEffects {
@@ -16,7 +18,7 @@ export class FormEffects {
   constructor(
     private actions$: Actions,
     private apiService: ApiService,
-    private drawerStore: Store<{drawer: boolean}>,
+    private UIStore: Store<{UI: UIStore}>,
     private bannersStore: Store<{banners: BannersStore}>,
     private formStore: Store<{form: FormStore}>
   ) {}
@@ -53,7 +55,8 @@ export class FormEffects {
       exhaustMap(({bannerData, editFlag}) =>
         this.apiService.submitBannerForm(bannerData).pipe(
           map((newBannerData: any) => {
-            this.drawerStore.dispatch(drawerClose({drawerState: false}))
+            this.UIStore.dispatch(drawerToggle({drawerState: false}))
+            this.UIStore.dispatch(stopSubmitBannerLoading())
             return BannerActions.addOrEditBanner({newBanner: newBannerData.data, editFlag})
           }),
           catchError((error) => {

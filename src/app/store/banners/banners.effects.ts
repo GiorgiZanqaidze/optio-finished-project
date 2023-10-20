@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {EMPTY, of} from 'rxjs';
+import {EMPTY, of, tap} from 'rxjs';
 import { map, exhaustMap, catchError } from 'rxjs/operators';
 import {ROUTER_NAVIGATED} from "@ngrx/router-store";
 import {ApiService} from "../../services/api/api.service";
@@ -9,7 +9,13 @@ import {BannersStore} from "./banners.reducer";
 import {Store} from "@ngrx/store";
 
 import * as BannerActions from './banners.actions';
-import {drawerClose} from "../drawer/drawer.action";
+import {
+  drawerToggle,
+  startLoading,
+  startSubmitBannerLoading,
+  stopLoading,
+  stopSubmitBannerLoading
+} from "../UI/UI.action";
 @Injectable()
 export class BannersEffects {
 
@@ -17,7 +23,8 @@ export class BannersEffects {
     private actions$: Actions,
     private apiService: ApiService,
     private bannersStore: Store<{banners: BannersStore}>,
-    private drawerStore: Store<{drawer: boolean}>
+    private UIStore: Store<{drawer: boolean}>
+
   ) {}
 
   BannersrouterNavigatedEffect$ = createEffect(() =>
@@ -26,6 +33,7 @@ export class BannersEffects {
       exhaustMap((action: any) => {
 
         const {search, pageSize, page, sortBy, sortDirection} = action.payload.routerState.root.queryParams;
+        this.UIStore.dispatch(startLoading());
 
         this.bannersStore.dispatch(bannersPageChange({ page: +page || 0, pageSize: +pageSize || 3 }));
 
@@ -33,6 +41,7 @@ export class BannersEffects {
 
         return this.apiService.fetchBanners(search || "", page || 0, pageSize || 3, sortBy, sortDirection).pipe(
           map((bannersData: any) => {
+            this.bannersStore.dispatch(stopLoading());
             return setBannersData({bannersData: bannersData.data})
           }),
           catchError((error) => {
@@ -45,12 +54,15 @@ export class BannersEffects {
   );
 
   deleteBanner$ = createEffect(() =>
-    this.actions$.pipe(
+    this.actions$
+      .pipe(
       ofType(BannerActions.deleteBanner),
-      exhaustMap((action) =>
-        this.apiService.deleteBanner(action.bannerId).pipe(
+      exhaustMap((action) => {
+        this.UIStore.dispatch(startSubmitBannerLoading());
+        return this.apiService.deleteBanner(action.bannerId).pipe(
           map(() => {
-            this.drawerStore.dispatch(drawerClose({drawerState: false}))
+            this.UIStore.dispatch(drawerToggle({drawerState: false}))
+            this.UIStore.dispatch(stopSubmitBannerLoading());
             return BannerActions.deleteBanner({bannerId: action.bannerId})
           }),
           catchError((error) => {
@@ -58,6 +70,8 @@ export class BannersEffects {
             return EMPTY;
           })
         )
+        }
+
       )
     )
   );

@@ -1,8 +1,8 @@
-<div class="min-w-full">
+<div class="min-w-full py-5">
   <div class="flex justify-between mx-10 my-2" >
     <button (click)="closeDrawer()" mat-raised-button color="primary"><mat-icon>backspace</mat-icon> Back</button>
     <button (click)="deleteBanner()" mat-raised-button color="accent" *ngIf="showDeleteButton">
-      delete
+      Delete Banner
       <mat-icon>delete</mat-icon>
     </button>
   </div>
@@ -78,8 +78,15 @@
           <mat-option *ngFor="let label of labels" [value]="label.key">{{label.name}}</mat-option>
         </mat-select>
       </mat-form-field>
-      <button class="bg-blue-300 md:text-xl rounded disabled:bg-amber-10 disabled:cursor-not-allowed" [disabled]="bannerForm.invalid"  mat-raised-button color="primary">Submit</button>
+      <button class="bg-blue-300 md:text-xl rounded disabled:bg-amber-10 disabled:cursor-not-allowed" [disabled]="bannerForm.invalid"  mat-raised-button color="primary">
+        <ng-container *ngIf="showDeleteButton">Edit Banner</ng-container>
+        <ng-container *ngIf="!showDeleteButton">Create Banner</ng-container>
+      </button>
     </div>
   </form>
 </div>
+<div class="absolute top-0 left-0 right-0 bottom-0 bg-gray-500 opacity-50" *ngIf="submitBannerDataIsLoading$">
+  <mat-spinner class="top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></mat-spinner>
+</div>
+
 

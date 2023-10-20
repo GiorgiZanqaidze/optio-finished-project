@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { BannersListComponent } from './banners-list/banners-list.component';
+import { BannersComponent } from './banners/banners.component';
 import {StoreModule} from "@ngrx/store";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {MatPaginatorModule} from "@angular/material/paginator";
@@ -13,7 +13,7 @@ import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { EffectsModule } from '@ngrx/effects';
-import { BannerFormComponent } from './banners-list/banner-form/banner-form.component';
+import { BannerFormComponent } from './banners/banner-form/banner-form.component';
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatSelectModule} from "@angular/material/select";
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
@@ -24,22 +24,23 @@ import {MatIconModule} from "@angular/material/icon";
 import {AuthInterceptorService} from "./services/interceptors/auth-interceptor.service";
 import {ApiUrlInterceptorService} from "./services/interceptors/api-url-interceptor.service";
 import {MatTableModule} from "@angular/material/table";
-import { BannerTableComponent } from './banners-list/banner-table/banner-table.component';
-import { BannersFilterSortComponent } from './banners-list/banners-filter-sort/banners-filter-sort.component';
+import { BannerTableComponent } from './banners/banner-table/banner-table.component';
+import { BannersFilterSortComponent } from './banners/banners-filter-sort/banners-filter-sort.component';
 import {MatButtonModule} from "@angular/material/button";
-import {drawerReducer} from "./store/drawer/drawer.reducer";
+import {UIReducer} from "./store/UI/UI.reducer";
 import {bannersReducer} from "./store/banners/banners.reducer";
 import {BannersEffects} from "./store/banners/banners.effects";
 import {StoreRouterConnectingModule} from "@ngrx/router-store";
 import {formReducer} from "./store/form/form.reducer";
 import {FormEffects} from "./store/form/form.effects";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    BannersListComponent,
+    BannersComponent,
     BannerFormComponent,
     BannerTableComponent,
     BannersFilterSortComponent,
@@ -65,7 +66,7 @@ import {FormEffects} from "./store/form/form.effects";
     MatTableModule,
     MatButtonModule,
     StoreModule.forRoot({
-      drawer: drawerReducer,
+      UI: UIReducer,
       banners: bannersReducer,
       form: formReducer
     }),
@@ -73,7 +74,8 @@ import {FormEffects} from "./store/form/form.effects";
       BannersEffects,
       FormEffects
     ]),
-    StoreRouterConnectingModule.forRoot()
+    StoreRouterConnectingModule.forRoot(),
+    MatProgressSpinnerModule
   ],
   providers: [
       {
