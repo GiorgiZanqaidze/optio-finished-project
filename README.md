@@ -102,3 +102,18 @@ npm install
 ng serve
 ```
 
+#
+### 📋 Usage 
+
+To use the Optio Banner Management Module effectively:
+
+1. Create new banners using the "Create Banner" button.
+2. Manage and organize existing banners using the table view.
+3. Edit and delete banners as needed.
+
+#
+###
+👥 Contributors
+* Giorgi Zankaidze - https://github.com/GiorgiZanqaidze
+* David Gabrichidze - https://github.com/davidgabrichidze
+* Zura Japoshvili - https://github.com/zura-japoshvili

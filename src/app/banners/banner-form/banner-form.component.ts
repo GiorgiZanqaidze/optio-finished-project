@@ -21,8 +21,6 @@ import {
 } from "../../store/form/form.actions";
 import {bannerFormData, editFileId, fileFormData, showDeleteButton} from "../../store/form/form.selectors";
 import {drawerUI, isLoadingSubmitBanner} from "../../store/UI/UI.selectors";
-import {map} from "rxjs/operators";
-import {data} from "autoprefixer";
 
 @Component({
   selector: 'app-banner-form',
