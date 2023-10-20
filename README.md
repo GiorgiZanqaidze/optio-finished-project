@@ -1,12 +1,20 @@
-# Optio.Ai | Angular Internship | Giorgi Zankaidze 🎉
+# <img src="https://www.optio.ai/wp-content/uploads/2022/07/Optio-Symbol-Mint.png" width="40" style="position: relative; top: 4px" /> Optio | Angular Internship | Giorgi Zankaidze
+
+#
+## 🌐 Banner Management Application
+The Optio Banner Management Module is a pivotal tool designed to facilitate effective communication between banks and their customers within the digital landscape. In the ever-evolving banking sector, the need for continuous dialogue with customers is paramount, and digital channels, particularly mobile and internet banking, have become the primary platforms for this interaction. Banners, serving as messengers of the bank's latest offers, updated features, and vital messages, play a pivotal role in this communication process.
 
 #
 ### 📝 Table of Contents
-* 🔍 [Prerequisites](#prerequisites)
-* 🛠️ [Tech Stack](#tech-stack)
-* 🚀 [Getting Started](#getting-started)
+* 🔍 [Prerequisites](#prerequisites-)
+* 🛠️ [Tech Stack](#-tech-stack-)
+* 🏗️ [Project Structure](#project-structure-)
+* 🚀 [Getting Started](#-getting-started-)
+
+
+
 #
-### Prerequisites 🔍
+### 🔍 Prerequisites 
 Before you can run the project, make sure you have the following tools and dependencies installed on your system:
 
 1. 🟢 [Node.js](https://nodejs.org/): You need Node.js to run JavaScript on your computer. Download and install it if you haven't already.
@@ -14,18 +22,32 @@ Before you can run the project, make sure you have the following tools and depen
 2. 🅰️ [Angular CLI](https://angular.io/cli): Install the Angular CLI globally using the following command: `npm install -g @angular/cli`
 
 #
-### Project Structure 🏗️
+### 🏗️  Project Structure 
 
 ```angular-project/
 ├── .angular
 ├── node_modules/
 ├── src/
 │   ├── app/
-│   │   ├── banners-list/
+│   │   ├── banners/
+│   │   │     ├── banner-form/
+│   │   │     ├── banner-table/
+│   │   │     ├── banners-filter-sort/
+│   │   │     ├── banners.component.html
+│   │   │     ├── banners.component.spec.ts
+│   │   │     ├── banners.component.ts
 │   │   ├── constants/
 │   │   ├── services/
+│   │   │     ├── api/
+│   │   │     ├── banners/
+│   │   │     ├── interceptors/
 │   │   ├── shared/
+│   │   │     ├── types/
+│   │   │     ├── utilities/
 │   │   ├── store/
+│   │   │     ├── banners/
+│   │   │     ├── form/
+│   │   │     ├── UI/
 │   │   ├── app.component.html
 │   │   ├── app.component.spect.ts
 │   │   ├── app.component.ts
