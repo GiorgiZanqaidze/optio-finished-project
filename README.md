@@ -111,9 +111,9 @@ ng serve
 
 
 1. Create new banners using the "Create Banner" button.
-## <img src="src/assets/Screenshot_1.png" width="400" style="position: relative; top: 4px" />
+# <img src="src/assets/Screenshot_1.png" width="600" style="position: relative; top: 4px" />
 2. Manage and organize existing banners using the table view.
-## <img src="src/assets/Screenshot_2.png" width="400" style="position: relative; top: 4px" />
+# <img src="src/assets/Screenshot_2.png" width="600" style="position: relative; top: 4px" />
 3. Edit and delete banners as needed.
 
 #
