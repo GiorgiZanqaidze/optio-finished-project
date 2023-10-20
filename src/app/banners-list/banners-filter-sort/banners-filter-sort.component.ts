@@ -1,20 +1,22 @@
 import {Component} from '@angular/core';
-import {BannersService} from "../../services/banners/banners.service";
+import {RouteParamsService} from "../../services/banners/route-params.service";
 import {FormControl, FormGroup} from "@angular/forms";
 import {BannersStore} from "../../store/banners/banners.reducer";
 import {Store} from "@ngrx/store";
 import {searchAndSortBannerForm} from "../../store/banners/banners.selector";
+import {SortBy} from "../../constants/sorting-options";
 
 @Component({
   selector: 'app-banners-filter-sort',
   templateUrl: './banners-filter-sort.component.html',
-  styleUrls: ['./banners-filter-sort.component.css']
 })
 export class BannersFilterSortComponent{
 
+    protected readonly SortBy = SortBy;
+    
   constructor(
     private bannersStore: Store<{banners: BannersStore}>,
-    private bannersService: BannersService
+    private bannersService: RouteParamsService
   ) {
       this.bannersStore.select(searchAndSortBannerForm).subscribe((form) => {
         this.searchBannersForm.patchValue(form)

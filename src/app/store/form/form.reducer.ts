@@ -1,10 +1,10 @@
 import {createReducer, on} from "@ngrx/store";
-import {BannerModel} from "../../shared/types/banner.model";
+import {Banner} from "../../shared/types/banner";
 import {selectFile, setBannerId, setDeleteButton, setEditFileId, setFormData} from "./form.actions";
 import {fileReader} from "../../shared/utilities/file-utils";
 
 export interface FormStore {
-  bannerFormData: BannerModel,
+  bannerFormData: Banner,
   fileFormData: FormData,
   showDeleteButton: boolean,
   editFileId: null | string | number,

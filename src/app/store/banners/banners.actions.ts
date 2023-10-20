@@ -1,5 +1,5 @@
 import {createAction, props} from "@ngrx/store";
-import {BannerModel} from "../../shared/types/banner.model";
+import {Banner} from "../../shared/types/banner";
 
 export const bannersPageChange = createAction(
   '[Banners] Change Pagination',
@@ -8,7 +8,7 @@ export const bannersPageChange = createAction(
 
 export const setBannersData = createAction(
   "[Banners] SetData",
-  props<{bannersData: {total: number, entities: BannerModel[], searchAfter: string[]}}>()
+  props<{bannersData: {total: number, entities: Banner[], searchAfter: string[]}}>()
 )
 
 export const setBannersSearchAndSortForm = createAction(
@@ -23,5 +23,5 @@ export const deleteBanner = createAction(
 
 export const addOrEditBanner = createAction(
   "[Banner] Add Or Edit",
-  props<{newBanner: BannerModel, editFlag: boolean}>()
+  props<{newBanner: Banner, editFlag: boolean}>()
 )

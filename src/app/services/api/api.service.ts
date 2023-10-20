@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../../environments/environment";
 import {map} from "rxjs";
-import {ReferenceDataModel} from "../../shared/types/reference-data.model";
+import {ReferenceData} from "../../shared/types/reference-data";
 
 @Injectable({
   providedIn: 'root'
@@ -12,11 +12,11 @@ export class ApiService {
   constructor(private http: HttpClient) { }
 
   fetchBanners(search?: string | null | undefined, pageIndex?: number, pageSize?: number, sortBy?: string | null | undefined, sortDirection?: string | null | undefined) {
-    return this.http.post("/banners/find",{search, pageIndex, pageSize, sortBy, sortDirection})
+    return this.http.post("/banners/find", {search, pageIndex, pageSize, sortBy, sortDirection, excludes: ['url', 'priority', 'createdAt', 'modifiedAt'],})
   }
 
   fetchBannerById(id: number) {
-    return this.http.post("/banners/find-one",{id})
+    return this.http.post("/banners/find-one",{id, excludes: ['createdAt', 'modifiedAt']})
   }
 
   submitBlob(formData: any) {
@@ -33,7 +33,7 @@ export class ApiService {
         includes: ['key', 'name'],
       })
       .pipe(
-        map((data: any) => data.data.entities as ReferenceDataModel[])
+        map((data: any) => data.data.entities as ReferenceData[])
       );
   }
 
@@ -44,7 +44,7 @@ export class ApiService {
         includes: ['key', 'name'],
       })
       .pipe(
-        map((data: any) => data.data.entities as ReferenceDataModel[])
+        map((data: any) => data.data.entities as ReferenceData[])
       );
   }
 
@@ -55,7 +55,7 @@ export class ApiService {
         includes: ['key', 'name'],
       })
       .pipe(
-        map((data: any) => data.data.entities as ReferenceDataModel[])
+        map((data: any) => data.data.entities as ReferenceData[])
       );
   }
 
@@ -66,7 +66,7 @@ export class ApiService {
         includes: ['key', 'name'],
       })
       .pipe(
-        map((data: any) => data.data.entities as ReferenceDataModel[])
+        map((data: any) => data.data.entities as ReferenceData[])
       );
   }
 

@@ -1,4 +1,4 @@
-export interface BannerModel {
+export interface Banner {
   id: number,
   name: string,
   active: null | undefined,

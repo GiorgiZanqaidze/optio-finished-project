@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { BannersService } from './banners.service';
+import { RouteParamsService } from './route-params.service';
 
 describe('BannersService', () => {
-  let service: BannersService;
+  let service: RouteParamsService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(BannersService);
+    service = TestBed.inject(RouteParamsService);
   });
 
   it('should be created', () => {

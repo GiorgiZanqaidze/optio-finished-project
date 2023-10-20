@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {forkJoin, Observable, Subject} from "rxjs";
-import {ReferenceDataModel} from "../../shared/types/reference-data.model";
+import {ReferenceData} from "../../shared/types/reference-data";
 import { FormControl, FormGroup, Validators} from "@angular/forms";
 import {ApiService} from "../api/api.service";
 
@@ -39,7 +39,7 @@ export class FormsService {
     return this.getBannerById.asObservable();
   }
 
-  getReferenceData(): Observable<{ channels: ReferenceDataModel[], zones: ReferenceDataModel[], labels: ReferenceDataModel[], languages: ReferenceDataModel[] }> {
+  getReferenceData(): Observable<{ channels: ReferenceData[], zones: ReferenceData[], labels: ReferenceData[], languages: ReferenceData[] }> {
     return forkJoin({
       channels: this.apiService.getChannels(),
       zones: this.apiService.getZones(),
