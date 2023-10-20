@@ -8,10 +8,10 @@ import {setDeleteButton} from "../store/form/form.actions";
 import {FormStore} from "../store/form/form.reducer";
 
 @Component({
-  selector: 'app-banners-list',
-  templateUrl: './banners-list.component.html',
+  selector: 'app-banners',
+  templateUrl: './banners.component.html',
 })
-export class BannersListComponent implements OnInit{
+export class BannersComponent implements OnInit{
 
   drawer$!: Observable<boolean>
 

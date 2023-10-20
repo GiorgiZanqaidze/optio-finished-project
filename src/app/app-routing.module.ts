@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import {BannersListComponent} from "./banners-list/banners-list.component";
+import {BannersComponent} from "./banners/banners.component";
 
 const routes: Routes = [
   {
@@ -10,7 +10,7 @@ const routes: Routes = [
   },
   {
     path: "banners",
-    component: BannersListComponent,
+    component: BannersComponent,
   },
   {
     path: "**",
