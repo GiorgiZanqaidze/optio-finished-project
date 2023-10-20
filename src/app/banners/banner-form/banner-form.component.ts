@@ -7,7 +7,7 @@ import {Banner} from "../../shared/types/banner";
 import {ApiService} from "../../services/api/api.service";
 import {environment} from "../../../environments/environment";
 import {Store} from "@ngrx/store";
-import {drawerClose, drawerOpen} from "../../store/drawer/drawer.action";
+import {drawerToggle, startSubmitBannerLoading} from "../../store/UI/UI.action";
 import {BannersStore} from "../../store/banners/banners.reducer";
 import { deleteBanner} from "../../store/banners/banners.actions";
 import {FormStore} from "../../store/form/form.reducer";
@@ -20,19 +20,33 @@ import {
   submitFormData
 } from "../../store/form/form.actions";
 import {bannerFormData, editFileId, fileFormData, showDeleteButton} from "../../store/form/form.selectors";
+import {drawerUI, isLoadingSubmitBanner} from "../../store/UI/UI.selectors";
 
 @Component({
   selector: 'app-banner-form',
   templateUrl: './banner-form.component.html',
 })
 export class BannerFormComponent implements OnInit{
+
+  channels!: ReferenceData[]
+  zones!: ReferenceData[]
+  languages!: ReferenceData[]
+  labels!: ReferenceData[]
+  editFlag!: boolean
+  fileFormData!: FormData
+  showDeleteButton!: boolean
+  editFileId!: null | number | string
+  submitBannerDataIsLoading$!: boolean
   constructor(
     public formService: FormsService,
     private apiService: ApiService,
-    private drawerStore: Store<{drawer: boolean}>,
+    private UIStore: Store<{UI: boolean}>,
     private bannersStore: Store<{banners: BannersStore}>,
     private formStore: Store<{form: FormStore}>
   ) {
+    this.UIStore.select(isLoadingSubmitBanner).subscribe((loading) => {
+      this.submitBannerDataIsLoading$ = loading
+    })
     this.formStore.select(bannerFormData).subscribe((form) => {
       this.formService.bannerForm.patchValue(form)
     })
@@ -44,14 +58,6 @@ export class BannerFormComponent implements OnInit{
     })
     this.formStore.select(editFileId).subscribe(id => this.editFileId = id)
   }
-  channels!: ReferenceData[]
-  zones!: ReferenceData[]
-  languages!: ReferenceData[]
-  labels!: ReferenceData[]
-  editFlag!: boolean
-  fileFormData!: FormData
-  showDeleteButton!: boolean
-  editFileId!: null | number | string
 
 
   bannerForm = this.formService.bannerForm
@@ -62,6 +68,8 @@ export class BannerFormComponent implements OnInit{
     const fileId = JSON.parse(sessionStorage.getItem('editFileId') as string)
     const editFlag = JSON.parse(localStorage.getItem('editFlag') as string)
     const bannerId = JSON.parse(localStorage.getItem('bannerId') as string)
+    this.UIStore.dispatch(startSubmitBannerLoading())
+    console.log(this.UIStore.select(isLoadingSubmitBanner).subscribe(res => console.log(res)))
     if (!fileId) {
       this.formStore.dispatch(submitFormData({data: this.bannerForm.value, blob: this.fileFormData}))
     } else {
@@ -91,7 +99,7 @@ export class BannerFormComponent implements OnInit{
             sessionStorage.setItem('editFileId', JSON.stringify(editFileId))
           }))
           .subscribe(() => {
-            this.drawerStore.dispatch(drawerOpen({drawerState: true}))
+            this.UIStore.dispatch(drawerToggle({drawerState: true}))
           })
       })
 
@@ -126,7 +134,7 @@ export class BannerFormComponent implements OnInit{
       if (file) this.formStore.dispatch(selectFile({file: file}))
     }
 
-    this.drawerStore.select('drawer').subscribe((drawer) => {
+    this.UIStore.select(drawerUI).subscribe((drawer) => {
       if (JSON.parse(localStorage.getItem('drawerIsOpen') as string)) {
         this.formService.getReferenceData()
           .subscribe((referenceData) => {
@@ -144,5 +152,5 @@ export class BannerFormComponent implements OnInit{
     this.bannersStore.dispatch(deleteBanner({bannerId: JSON.parse(bannerId)}))
   }
 
-  closeDrawer() { this.drawerStore.dispatch(drawerClose({drawerState: false})) }
+  closeDrawer() { this.UIStore.dispatch(drawerToggle({drawerState: false})) }
 }

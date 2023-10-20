@@ -9,7 +9,7 @@ import {BannersStore} from "./banners.reducer";
 import {Store} from "@ngrx/store";
 
 import * as BannerActions from './banners.actions';
-import {drawerClose} from "../drawer/drawer.action";
+import {drawerToggle, startLoading, stopLoading} from "../UI/UI.action";
 @Injectable()
 export class BannersEffects {
 
@@ -17,7 +17,8 @@ export class BannersEffects {
     private actions$: Actions,
     private apiService: ApiService,
     private bannersStore: Store<{banners: BannersStore}>,
-    private drawerStore: Store<{drawer: boolean}>
+    private UIStore: Store<{drawer: boolean}>
+
   ) {}
 
   BannersrouterNavigatedEffect$ = createEffect(() =>
@@ -26,6 +27,7 @@ export class BannersEffects {
       exhaustMap((action: any) => {
 
         const {search, pageSize, page, sortBy, sortDirection} = action.payload.routerState.root.queryParams;
+        this.UIStore.dispatch(startLoading());
 
         this.bannersStore.dispatch(bannersPageChange({ page: +page || 0, pageSize: +pageSize || 3 }));
 
@@ -33,6 +35,7 @@ export class BannersEffects {
 
         return this.apiService.fetchBanners(search || "", page || 0, pageSize || 3, sortBy, sortDirection).pipe(
           map((bannersData: any) => {
+            this.bannersStore.dispatch(stopLoading());
             return setBannersData({bannersData: bannersData.data})
           }),
           catchError((error) => {
@@ -50,7 +53,7 @@ export class BannersEffects {
       exhaustMap((action) =>
         this.apiService.deleteBanner(action.bannerId).pipe(
           map(() => {
-            this.drawerStore.dispatch(drawerClose({drawerState: false}))
+            this.UIStore.dispatch(drawerToggle({drawerState: false}))
             return BannerActions.deleteBanner({bannerId: action.bannerId})
           }),
           catchError((error) => {

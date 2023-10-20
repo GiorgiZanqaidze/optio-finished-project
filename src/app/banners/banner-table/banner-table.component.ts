@@ -14,6 +14,7 @@ import {
   totalPages
 } from "../../store/banners/banners.selector";
 import {displayedColumns} from "../../constants/display-columns";
+import {drawerUI, isLoadingUI} from "../../store/UI/UI.selectors";
 
 @Component({
   selector: 'app-banner-table',
@@ -28,19 +29,21 @@ export class BannerTableComponent{
   public readonly apiUrl = environment.ApiUrl
 
   drawer$!: Observable<boolean>
-  bannersData$!: Observable<Banner[]>
+  bannersData$!: Banner[]
   totalPages$!: Observable<number>
   bannersPage$!: Observable<number>
   bannersPageSize$!: Observable<number>
+  isLoading$!: boolean
 
   constructor(
     private formService: FormsService,
     public bannersService: RouteParamsService,
-    private drawerStore: Store<{drawer: boolean}>,
+    private UIStore: Store<{drawer: boolean}>,
     private bannersStore: Store<{banners: BannersStore}>
   ) {
-    this.drawer$ = drawerStore.select('drawer')
-    this.bannersData$ = bannersStore.select(bannersData)
+    this.drawer$ = UIStore.select(drawerUI)
+    bannersStore.select(bannersData).subscribe(data => this.bannersData$ = data)
+    UIStore.select(isLoadingUI).subscribe(isLoading => this.isLoading$ = isLoading)
     this.totalPages$ = bannersStore.select(totalPages)
     this.bannersPage$ = bannersStore.select(bannersPage)
     this.bannersPageSize$ = bannersStore.select(bannersPageSize)

@@ -56,7 +56,7 @@ export const bannersReducer = createReducer(
     const filteredBanners = state.bannersData.filter((banner) => {
       return action.bannerId !== banner.id
     })
-    return {...state, bannersData: filteredBanners, totalPages: state.totalPages - 1}
+    return {...state, bannersData: filteredBanners}
   }),
 
   on(addOrEditBanner, (state, {newBanner, editFlag}) => {
