@@ -10,6 +10,8 @@ The Optio Banner Management Module is a pivotal tool designed to facilitate effe
 * 🛠️ [Tech Stack](#-tech-stack-)
 * 🏗️ [Project Structure](#project-structure-)
 * 🚀 [Getting Started](#-getting-started-)
+* 💡 [Usage](#-usage-)
+* 👥 [Contributors](#-contributors)
 
 
 
@@ -112,8 +114,7 @@ To use the Optio Banner Management Module effectively:
 3. Edit and delete banners as needed.
 
 #
-###
-👥 Contributors
+### 👥 Contributors
 * Giorgi Zankaidze - https://github.com/GiorgiZanqaidze
 * David Gabrichidze - https://github.com/davidgabrichidze
 * Zura Japoshvili - https://github.com/zura-japoshvili
