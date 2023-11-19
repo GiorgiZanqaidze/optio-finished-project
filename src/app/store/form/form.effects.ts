@@ -4,13 +4,12 @@ import * as FormActions from './form.actions';
 import {EMPTY, map} from "rxjs";
 import {Injectable} from "@angular/core";
 import * as BannerActions from "../banners/banners.actions";
-import {drawerToggle, startSubmitBannerLoading, stopSubmitBannerLoading} from "../UI/UI.action";
+import {drawerToggle, stopSubmitBannerLoading} from "../UI/UI.action";
 import {ApiService} from "../../services/api/api.service";
 import {Store} from "@ngrx/store";
 import {BannersStore} from "../banners/banners.reducer";
 import {FormStore} from "./form.reducer";
 import {UIStore} from "../UI/UI.reducer";
-import {isLoadingSubmitBanner} from "../UI/UI.selectors";
 
 @Injectable()
 export class FormEffects {
@@ -28,7 +27,6 @@ export class FormEffects {
     this.actions$.pipe(
       ofType(FormActions.submitFormData),
       exhaustMap(({data, blob}) => {
-        const fileId = JSON.parse(sessionStorage.getItem('editFileId') as string)
         const bannerId = JSON.parse(localStorage.getItem('bannerId') as string)
         const editFlag = JSON.parse(localStorage.getItem('editFlag') as string)
         return this.apiService.submitBlob(blob).pipe(

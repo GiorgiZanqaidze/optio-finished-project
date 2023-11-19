@@ -1,7 +1,4 @@
 import {createAction, props} from "@ngrx/store";
-import {Banner} from "../../shared/types/banner";
-import {Form} from "@angular/forms";
-import {createEffect} from "@ngrx/effects";
 
 export const setFormData = createAction(
   "[Form] Set Data",

@@ -139,7 +139,7 @@ export class BannerFormComponent implements OnInit{
       if (file) this.formStore.dispatch(selectFile({file: file}))
     }
 
-    this.UIStore.select(drawerUI).subscribe((drawer) => {
+    this.UIStore.select(drawerUI).subscribe(() => {
       if (JSON.parse(localStorage.getItem('drawerIsOpen') as string)) {
         this.formService.getReferenceData()
           .subscribe((referenceData) => {
