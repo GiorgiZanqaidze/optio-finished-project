@@ -92,7 +92,7 @@ export class BannerFormComponent implements OnInit{
       )
       .subscribe((data) => {
         this.apiService.fetchBannerById(data.bannerId)
-          .pipe(tap((banner: any) => {
+          .pipe(tap((banner: any | null) => {
             const formData = banner.data as Banner
             sessionStorage.setItem('bannerFormData', JSON.stringify(formData));
             this.formService.bannerForm.patchValue(formData)
