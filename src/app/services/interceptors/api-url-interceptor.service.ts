@@ -8,11 +8,9 @@ import {environment} from "../../../environments/environment";
 })
 export class ApiUrlInterceptorService {
 
-  constructor() { }
-
   private readonly baseUrl = environment.ApiUrl
 
-  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     const modifiedRequest = request.clone({
       url: `${this.baseUrl}${request.url}`,
     });

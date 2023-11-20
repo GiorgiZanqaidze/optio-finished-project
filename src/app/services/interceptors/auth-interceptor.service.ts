@@ -10,8 +10,6 @@ export class AuthInterceptorService {
 
   private readonly JwtToken = environment.JwtToken
 
-  constructor() { }
-
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const modifiedRequest = request.clone({
       setHeaders: {
