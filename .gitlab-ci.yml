@@ -4,6 +4,7 @@ build-job:
   script:
     - echo "Hello, $GITLAB_USER_LOGIN!"
     - npm install -g @angular/cli  # Install Angular CLI globally
+    - npm install --save-dev @angular-eslint/builder
     - ng lint
 
 test-job1:
