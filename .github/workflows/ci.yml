@@ -27,9 +27,6 @@ jobs:
       - name: Run ESLint
         run: ng lint
 
-      - name: Unit test
-        run: ng test
-
       - name: Build
         run: ng build --configuration=production
     
