@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -34,6 +34,7 @@ import {StoreRouterConnectingModule} from "@ngrx/router-store";
 import {formReducer} from "./store/form/form.reducer";
 import {FormEffects} from "./store/form/form.effects";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 
 
@@ -75,7 +76,8 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
       FormEffects
     ]),
     StoreRouterConnectingModule.forRoot(),
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() })
   ],
   providers: [
       {
