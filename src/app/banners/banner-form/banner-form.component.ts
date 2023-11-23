@@ -36,7 +36,7 @@ export class BannerFormComponent implements OnInit{
   fileFormData!: FormData
   showDeleteButton!: boolean
   editFileId!: null | number | string
-  submitBannerDataIsLoading$!: boolean
+  submitBannerDataIsLoading$ = this.UIStore.select(isLoadingSubmitBanner)
   constructor(
     public formService: FormsService,
     private apiService: ApiService,
@@ -44,9 +44,9 @@ export class BannerFormComponent implements OnInit{
     private bannersStore: Store<{banners: BannersStore}>,
     private formStore: Store<{form: FormStore}>
   ) {
-    this.UIStore.select(isLoadingSubmitBanner).subscribe((loading) => {
-      this.submitBannerDataIsLoading$ = loading
-    })
+    // this.UIStore.select(isLoadingSubmitBanner).subscribe((loading) => {
+    //   this.submitBannerDataIsLoading$ = loading
+    // })
     this.formStore.select(bannerFormData).subscribe((form) => {
       this.formService.bannerForm.patchValue(form)
     })

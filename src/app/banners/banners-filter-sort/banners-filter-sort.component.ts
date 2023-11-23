@@ -1,6 +1,5 @@
-import {Component, Input, Output,  EventEmitter, OnInit} from '@angular/core';
-import {RouteParamsService} from "../../services/banners/route-params.service";
-import { FormGroup } from "@angular/forms";
+import {Component, Input, Output,  EventEmitter} from '@angular/core';
+import { FormBuilder, FormGroup } from "@angular/forms";
 import {BannersStore} from "../../store/banners/banners.reducer";
 import {Store} from "@ngrx/store";
 import {searchAndSortBannerForm} from "../../store/banners/banners.selector";
@@ -22,16 +21,16 @@ export class BannersFilterSortComponent{
     this.bannersSearch.emit(this.searchBannersForm.value)
    }
 
+  constructor(private bannersStore: Store<{banners: BannersStore}>, private formBuilder: FormBuilder) {
+      this.searchBannersForm = this.formBuilder.group({
+        search: '',
+        sortDirection: '',
+        sortBy: ''
+      })
 
-  constructor(
-    private bannersStore: Store<{banners: BannersStore}>,
-    private bannersService: RouteParamsService
-  ) {
       this.bannersStore.select(searchAndSortBannerForm).subscribe((form) => {
         this.searchBannersForm.patchValue(form)
       })
   }
-
-
 
 }

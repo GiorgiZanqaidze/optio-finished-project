@@ -1,5 +1,5 @@
 <div class="overflow-x-scroll md:overflow-auto border-x border-t text-xs md:text-sm scroll" style="max-height: calc(100vh - 30vh); min-height: calc(100vh - 30vh)">
-  <ng-container *ngIf="bannersData$ && !isLoading$">
+  <ng-container *ngIf="bannersData$ && (isLoading$ | async) === false">
     <table mat-table [dataSource]="bannersData$">
       <ng-container matColumnDef="Name">
         <th mat-header-cell *matHeaderCellDef> Name </th>
@@ -56,7 +56,7 @@
       ></tr>
     </table>
   </ng-container>
-  <div *ngIf="isLoading$" class="mt-20 flex justify-center items-center">
+  <div *ngIf="isLoading$ | async" class="mt-20 flex justify-center items-center">
     <mat-spinner></mat-spinner>
   </div>
 </div>

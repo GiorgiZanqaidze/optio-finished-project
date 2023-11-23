@@ -15,16 +15,16 @@ import { RouteParamsService } from '../services/banners/route-params.service';
 })
 export class BannersComponent implements OnInit{
 
-  // drawer$!: Observable<boolean>
   constructor(
     private formService: FormsService,
     private drawerStore: Store<{drawer: boolean}>,
     private formStore: Store<{form: FormStore}>,
-    private bannersService: RouteParamsService
+    private bannersService: RouteParamsService,
   ) {}
   drawer$ = this.drawerStore.select(drawerUI)
 
   @ViewChild('drawer') drawer!: MatDrawer
+
 
   ngOnInit() {
     const drawerIsOpen = localStorage.getItem('drawerIsOpen')
@@ -50,6 +50,8 @@ export class BannersComponent implements OnInit{
     "sortDirection": new  FormControl<string>('asc'),
     "sortBy": new FormControl<string>('name.raw')
   })
+
+
 
   bannersSearch(data: any) { this.bannersService.onRouteParamsChange(data) }
 

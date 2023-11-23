@@ -85,7 +85,7 @@
     </div>
   </form>
 </div>
-<div class="absolute top-0 left-0 right-0 bottom-0 bg-gray-500 opacity-50" *ngIf="submitBannerDataIsLoading$">
+<div class="absolute top-0 left-0 right-0 bottom-0 bg-gray-500 opacity-50" *ngIf="submitBannerDataIsLoading$ | async">
   <mat-spinner class="top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></mat-spinner>
 </div>
 
