@@ -1,6 +1,6 @@
-import {Component} from '@angular/core';
+import {Component, Input, Output,  EventEmitter, OnInit} from '@angular/core';
 import {RouteParamsService} from "../../services/banners/route-params.service";
-import {FormControl, FormGroup} from "@angular/forms";
+import { FormGroup } from "@angular/forms";
 import {BannersStore} from "../../store/banners/banners.reducer";
 import {Store} from "@ngrx/store";
 import {searchAndSortBannerForm} from "../../store/banners/banners.selector";
@@ -12,8 +12,17 @@ import {SortBy} from "../../constants/sorting-options";
 })
 export class BannersFilterSortComponent{
 
-    protected readonly SortBy = SortBy;
-    
+  protected readonly SortBy = SortBy;
+
+  @Input() searchBannersForm!: FormGroup
+
+  @Output() bannersSearch = new EventEmitter<any>()
+
+  onBannersSearch() {
+    this.bannersSearch.emit(this.searchBannersForm.value)
+   }
+
+
   constructor(
     private bannersStore: Store<{banners: BannersStore}>,
     private bannersService: RouteParamsService
@@ -23,11 +32,6 @@ export class BannersFilterSortComponent{
       })
   }
 
-  searchBannersForm = new FormGroup({
-    "search": new FormControl<string>(''),
-    "sortDirection": new  FormControl<string>('asc'),
-    "sortBy": new FormControl<string>('name.raw')
-  })
 
-  bannersSearch() { this.bannersService.onRouteParamsChange(this.searchBannersForm.value) }
+
 }

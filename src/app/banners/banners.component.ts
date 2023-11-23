@@ -2,11 +2,12 @@ import { Component, OnInit, ViewChild} from '@angular/core';
 import {MatDrawer} from "@angular/material/sidenav";
 import {FormsService} from "../services/banners/forms.service";
 import {Store} from "@ngrx/store";
-import {Observable} from "rxjs";
 import { drawerToggle} from "../store/UI/UI.action";
 import {setDeleteButton} from "../store/form/form.actions";
 import {FormStore} from "../store/form/form.reducer";
 import {drawerUI} from "../store/UI/UI.selectors";
+import { FormControl, FormGroup } from '@angular/forms';
+import { RouteParamsService } from '../services/banners/route-params.service';
 
 @Component({
   selector: 'app-banners',
@@ -14,15 +15,14 @@ import {drawerUI} from "../store/UI/UI.selectors";
 })
 export class BannersComponent implements OnInit{
 
-  drawer$!: Observable<boolean>
-
+  // drawer$!: Observable<boolean>
   constructor(
     private formService: FormsService,
     private drawerStore: Store<{drawer: boolean}>,
-    private formStore: Store<{form: FormStore}>
-  ) {
-    this.drawer$ = drawerStore.select(drawerUI)
-  }
+    private formStore: Store<{form: FormStore}>,
+    private bannersService: RouteParamsService
+  ) {}
+  drawer$ = this.drawerStore.select(drawerUI)
 
   @ViewChild('drawer') drawer!: MatDrawer
 
@@ -44,5 +44,13 @@ export class BannersComponent implements OnInit{
     localStorage.clear();
     sessionStorage.clear()
   }
+
+  searchBannersForm = new FormGroup({
+    "search": new FormControl<string>(''),
+    "sortDirection": new  FormControl<string>('asc'),
+    "sortBy": new FormControl<string>('name.raw')
+  })
+
+  bannersSearch(data: any) { this.bannersService.onRouteParamsChange(data) }
 
 }
