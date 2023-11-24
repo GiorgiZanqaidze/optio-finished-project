@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {EMPTY} from 'rxjs';
+import {EMPTY, of} from 'rxjs';
 import { map, exhaustMap, catchError } from 'rxjs/operators';
 import {ROUTER_NAVIGATED} from "@ngrx/router-store";
 import {ApiService} from "../../services/api/api.service";
@@ -9,6 +9,8 @@ import {BannersStore} from "./banners.reducer";
 import {Store} from "@ngrx/store";
 
 import * as BannerActions from './banners.actions';
+import * as UIActions from "../UI/UI.action"
+
 import {
   drawerToggle,
   startLoading,
@@ -27,7 +29,7 @@ export class BannersEffects {
 
   ) {}
 
-  BannersrouterNavigatedEffect$ = createEffect(() =>
+  BannersRouterNavigatedEffect$ = createEffect(() =>
     this.actions$.pipe(
       ofType(ROUTER_NAVIGATED),
       exhaustMap((action: any) => {
@@ -45,13 +47,23 @@ export class BannersEffects {
             return setBannersData({bannersData: bannersData.data})
           }),
           catchError((error) => {
-            console.error('Error in BannersrouterNavigatedEffect', error);
-            return EMPTY;
+            console.log(error.error.message);
+            return of(BannerActions.errorResponse({error: error.error.message}));
           })
         );
       })
     )
   );
+
+  // errorResponse$ = createEffect(() => {
+  //   this.actions$
+  //   .pipe(
+  //     ofType(BannerActions.errorResponse),
+  //     exhaustMap(() => {
+  //       return UIActions.stopLoading().type
+  //     })
+  //   )
+  // })
 
   deleteBanner$ = createEffect(() =>
     this.actions$
@@ -71,7 +83,6 @@ export class BannersEffects {
           })
         )
         }
-
       )
     )
   );

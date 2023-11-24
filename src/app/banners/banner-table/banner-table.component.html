@@ -56,8 +56,11 @@
       ></tr>
     </table>
   </ng-container>
-  <div *ngIf="isLoading$ | async" class="mt-20 flex justify-center items-center">
+  <div *ngIf="(isLoading$ | async) && (apiError$ | async) === null" class="mt-20 flex justify-center items-center">
     <mat-spinner></mat-spinner>
+  </div>
+  <div *ngIf="apiError$ | async" class="text-red-500 h-full mt-8" >
+    <h1 class="flex justify-center font-bold">{{apiError$ | async}}</h1>
   </div>
 </div>
 <mat-paginator

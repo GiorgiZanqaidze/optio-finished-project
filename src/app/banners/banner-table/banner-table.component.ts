@@ -7,6 +7,7 @@ import {PageEvent} from "@angular/material/paginator";
 import {Store} from "@ngrx/store";
 import {BannersStore} from "../../store/banners/banners.reducer";
 import {
+  apiError,
   bannersData,
   bannersPage,
   bannersPageSize,
@@ -33,6 +34,7 @@ export class BannerTableComponent{
   bannersPage$ = this.bannersStore.select(bannersPage)
   bannersPageSize$ = this.bannersStore.select(bannersPageSize)
   isLoading$ = this.UIStore.select(isLoadingUI)
+  apiError$ = this.bannersStore.select(apiError)
 
   constructor(
     private formService: FormsService,
@@ -42,6 +44,8 @@ export class BannerTableComponent{
   ) {
     bannersStore.select(bannersData).subscribe(data => this.bannersData$ = data)
   }
+
+
   pageChange(event: PageEvent) {
     const queryParams = {page: event.pageIndex, pageSize: event.pageSize};
     this.bannersService.onRouteParamsChange(queryParams)
@@ -52,4 +56,6 @@ export class BannerTableComponent{
     localStorage.setItem("bannerId", JSON.stringify(rowData.id))
     this.formService.setItem({editFlag: true, bannerId: rowData.id})
   }
+
+
 }

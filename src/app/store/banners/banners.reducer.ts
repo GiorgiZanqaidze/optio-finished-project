@@ -2,6 +2,7 @@ import {createReducer, on} from "@ngrx/store";
 import {
   addOrEditBanner,
   bannersPageChange, deleteBanner,
+  errorResponse,
   setBannersData,
   setBannersSearchAndSortForm,
 } from "./banners.actions";
@@ -13,7 +14,8 @@ export interface BannersStore {
   bannersData: Banner[],
   totalPages: number
   searchAndSortBannerForm: {search: string, sortDirection: string, sortBy: string},
-  showBannerEditForm: {editFlag: boolean, bannerId: number}
+  showBannerEditForm: {editFlag: boolean, bannerId: number},
+  apiError: string | null
 }
 
 const initialState: BannersStore = {
@@ -22,7 +24,8 @@ const initialState: BannersStore = {
   bannersData: [],
   totalPages: 0,
   searchAndSortBannerForm: {search: "", sortDirection: "", sortBy: ""},
-  showBannerEditForm: {editFlag: false, bannerId: 0}
+  showBannerEditForm: {editFlag: false, bannerId: 0},
+  apiError: null
 }
 
 export const bannersReducer = createReducer(
@@ -75,5 +78,12 @@ export const bannersReducer = createReducer(
       const newState = cloneBanners
       return {...state, bannersData: newState, totalPages: state.totalPages + 1}
     }
+  }),
+
+  on(errorResponse, (state, action) => {
+
+    console.log(state);
+
+    return {...state, apiError: action.error}
   })
 )

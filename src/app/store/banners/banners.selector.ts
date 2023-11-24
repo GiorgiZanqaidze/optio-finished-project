@@ -27,3 +27,8 @@ export const searchAndSortBannerForm = createSelector(
   selectBannersState,
   (state) => state.searchAndSortBannerForm
 )
+
+export const apiError = createSelector(
+  selectBannersState,
+  (state) => state.apiError
+)

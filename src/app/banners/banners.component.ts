@@ -8,6 +8,7 @@ import {FormStore} from "../store/form/form.reducer";
 import {drawerUI} from "../store/UI/UI.selectors";
 import { FormControl, FormGroup } from '@angular/forms';
 import { RouteParamsService } from '../services/banners/route-params.service';
+import { apiError } from '../store/banners/banners.selector';
 
 @Component({
   selector: 'app-banners',
@@ -23,8 +24,9 @@ export class BannersComponent implements OnInit{
   ) {}
   drawer$ = this.drawerStore.select(drawerUI)
 
-  @ViewChild('drawer') drawer!: MatDrawer
+  apiError$ = this.drawerStore.select(apiError)
 
+  @ViewChild('drawer') drawer!: MatDrawer
 
   ngOnInit() {
     const drawerIsOpen = localStorage.getItem('drawerIsOpen')
@@ -50,8 +52,6 @@ export class BannersComponent implements OnInit{
     "sortDirection": new  FormControl<string>('asc'),
     "sortBy": new FormControl<string>('name.raw')
   })
-
-
 
   bannersSearch(data: any) { this.bannersService.onRouteParamsChange(data) }
 

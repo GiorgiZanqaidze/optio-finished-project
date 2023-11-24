@@ -44,9 +44,6 @@ export class BannerFormComponent implements OnInit{
     private bannersStore: Store<{banners: BannersStore}>,
     private formStore: Store<{form: FormStore}>
   ) {
-    // this.UIStore.select(isLoadingSubmitBanner).subscribe((loading) => {
-    //   this.submitBannerDataIsLoading$ = loading
-    // })
     this.formStore.select(bannerFormData).subscribe((form) => {
       this.formService.bannerForm.patchValue(form)
     })
@@ -101,7 +98,6 @@ export class BannerFormComponent implements OnInit{
             this.formStore.dispatch(setDeleteButton({show: true}))
             this.formStore.dispatch(setBannerId({id: data.bannerId}))
             sessionStorage.setItem('editFileId', JSON.stringify(editFileId))
-
           }))
           .subscribe(() => {
             this.UIStore.dispatch(stopSubmitBannerLoading())

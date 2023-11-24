@@ -25,3 +25,8 @@ export const addOrEditBanner = createAction(
   "[Banner] Add Or Edit",
   props<{newBanner: Banner, editFlag: boolean}>()
 )
+
+export const errorResponse = createAction(
+  "[Banner] Get Error Response",
+  props<{error: string}>()
+)
