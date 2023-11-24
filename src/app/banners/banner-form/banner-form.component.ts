@@ -19,8 +19,8 @@ import {
   setFormData, submitBannerData,
   submitFormData
 } from "../../store/form/form.actions";
-import {bannerFormData, editFileId, fileFormData, formServerError, showDeleteButton} from "../../store/form/form.selectors";
-import {drawerUI, isLoadingSubmitBanner} from "../../store/UI/UI.selectors";
+import {bannerFormData, channelsReference, editFileId, fileFormData, formServerError, labelsReference, languagesReference, showDeleteButton, zonesReference} from "../../store/form/form.selectors";
+import { isLoadingSubmitBanner} from "../../store/UI/UI.selectors";
 
 @Component({
   selector: 'app-banner-form',
@@ -29,10 +29,10 @@ import {drawerUI, isLoadingSubmitBanner} from "../../store/UI/UI.selectors";
 export class BannerFormComponent implements OnInit{
 
   formApiError$ = this.formStore.select(formServerError)
-  channels!: ReferenceData[]
-  zones!: ReferenceData[]
-  languages!: ReferenceData[]
-  labels!: ReferenceData[]
+  channels$ = this.formStore.select(channelsReference)
+  zones$ = this.formStore.select(zonesReference)
+  languages$ = this.formStore.select(languagesReference)
+  labels$ = this.formStore.select(labelsReference)
   editFlag!: boolean
   fileFormData!: FormData
   showDeleteButton!: boolean
@@ -136,17 +136,19 @@ export class BannerFormComponent implements OnInit{
       if (file) this.formStore.dispatch(selectFile({file: file}))
     }
 
-    this.UIStore.select(drawerUI).subscribe(() => {
-      if (JSON.parse(localStorage.getItem('drawerIsOpen') as string)) {
-        this.formService.getReferenceData()
-          .subscribe((referenceData) => {
-            this.channels = referenceData.channels
-            this.zones = referenceData.zones
-            this.languages = referenceData.languages
-            this.labels = referenceData.labels
-          })
-      }
-    })
+    // this.UIStore.select(drawerUI).subscribe(() => {
+    //   if (JSON.parse(localStorage.getItem('drawerIsOpen') as string)) {
+    //     this.formService.getReferenceData()
+    //       .subscribe((referenceData) => {
+    //         this.channels = referenceData.channels
+    //         this.zones = referenceData.zones
+    //         this.languages = referenceData.languages
+    //         this.labels = referenceData.labels
+    //       })
+    //   }
+    // })
+
+
   }
 
   deleteBanner() {

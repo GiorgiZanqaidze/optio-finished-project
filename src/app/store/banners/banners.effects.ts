@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {EMPTY, of} from 'rxjs';
+import {of} from 'rxjs';
 import { map, exhaustMap, catchError, finalize } from 'rxjs/operators';
 import {ROUTER_NAVIGATED} from "@ngrx/router-store";
 import {ApiService} from "../../services/api/api.service";
@@ -9,7 +9,7 @@ import {BannersStore} from "./banners.reducer";
 import {Store} from "@ngrx/store";
 
 import * as BannerActions from './banners.actions';
-import * as UIActions from "../UI/UI.action"
+
 
 import {
   drawerToggle,
@@ -26,7 +26,6 @@ export class BannersEffects {
     private apiService: ApiService,
     private bannersStore: Store<{banners: BannersStore}>,
     private UIStore: Store<{drawer: boolean}>
-
   ) {}
 
   BannersRouterNavigatedEffect$ = createEffect(() =>

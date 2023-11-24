@@ -33,3 +33,23 @@ export const formServerError = createSelector(
   selectFormState,
   (state) => state.formServerError
 )
+
+export const channelsReference = createSelector(
+  selectFormState,
+  (state) => state.channels
+)
+
+export const languagesReference = createSelector(
+  selectFormState,
+  (state) => state.languages
+)
+
+export const zonesReference = createSelector(
+  selectFormState,
+  (state) => state.zones
+)
+
+export const labelsReference = createSelector(
+  selectFormState,
+  (state) => state.labels
+)

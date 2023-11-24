@@ -1,8 +1,8 @@
 import {createReducer, on} from "@ngrx/store";
 import {Banner} from "../../shared/types/banner";
-import {selectFile, setBannerId, setDeleteButton, setEditFileId, setFormData, submitServerError} from "./form.actions";
+import {selectFile, setBannerId, setDeleteButton, setEditFileId, setFormData, setReferenceData, submitServerError} from "./form.actions";
 import {fileReader} from "../../shared/utilities/file-utils";
-import { act } from "@ngrx/effects";
+import { ReferenceData } from "src/app/shared/types/reference-data";
 
 export interface FormStore {
   bannerFormData: Banner,
@@ -10,7 +10,11 @@ export interface FormStore {
   showDeleteButton: boolean,
   editFileId: null | string | number,
   bannerId: null | string | number,
-  formServerError: null | string
+  formServerError: null | string,
+  channels: ReferenceData[]
+  zones: ReferenceData[]
+  languages: ReferenceData[]
+  labels: ReferenceData[]
 }
 
 const initialState: FormStore = {
@@ -32,7 +36,11 @@ const initialState: FormStore = {
   showDeleteButton: false,
   editFileId: null,
   bannerId: null,
-  formServerError: null
+  formServerError: null,
+  channels: [],
+  zones: [],
+  languages: [],
+  labels: [],
 }
 
 export const formReducer = createReducer(
@@ -64,5 +72,9 @@ export const formReducer = createReducer(
 
   on(submitServerError, (state, {error}) => {
     return {...state, formServerError: error}
+  }),
+
+  on(setReferenceData, (state, {channels, labels, zones, languages}) => {
+    return {...state, channels, labels, zones, languages }
   })
 )

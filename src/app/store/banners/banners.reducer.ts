@@ -81,9 +81,6 @@ export const bannersReducer = createReducer(
   }),
 
   on(errorResponse, (state, action) => {
-
-    console.log(state);
-
     return {...state, apiError: action.error}
   })
 )

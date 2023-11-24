@@ -3,7 +3,7 @@ import {MatDrawer} from "@angular/material/sidenav";
 import {FormsService} from "../services/banners/forms.service";
 import {Store} from "@ngrx/store";
 import { drawerToggle} from "../store/UI/UI.action";
-import {setDeleteButton} from "../store/form/form.actions";
+import {openEditForm, setDeleteButton} from "../store/form/form.actions";
 import {FormStore} from "../store/form/form.reducer";
 import {drawerUI} from "../store/UI/UI.selectors";
 import { FormControl, FormGroup } from '@angular/forms';
@@ -33,7 +33,10 @@ export class BannersComponent implements OnInit{
     if (drawerIsOpen) this.drawerStore.dispatch(drawerToggle({drawerState: JSON.parse(drawerIsOpen)}))
   }
 
-  drawerOpen() { this.drawerStore.dispatch(drawerToggle({drawerState: this.drawer.opened})) }
+  drawerOpen() {
+     this.drawerStore.dispatch(drawerToggle({drawerState: this.drawer.opened}))
+     this.formStore.dispatch(openEditForm())
+  }
 
   drawerClose() {
     this.drawerStore.dispatch(drawerToggle({drawerState: false}))

@@ -29,7 +29,7 @@ export class BannerTableComponent{
   public readonly apiUrl = environment.ApiUrl
 
   drawer$ = this.UIStore.select(drawerUI)
-  bannersData$!: Banner[]
+  bannersData$ = this.bannersStore.select(bannersData)
   totalPages$ = this.bannersStore.select(totalPages)
   bannersPage$ = this.bannersStore.select(bannersPage)
   bannersPageSize$ = this.bannersStore.select(bannersPageSize)
@@ -41,9 +41,7 @@ export class BannerTableComponent{
     public bannersService: RouteParamsService,
     private UIStore: Store<{drawer: boolean}>,
     private bannersStore: Store<{banners: BannersStore}>
-  ) {
-    bannersStore.select(bannersData).subscribe(data => this.bannersData$ = data)
-  }
+  ) {}
 
 
   pageChange(event: PageEvent) {
