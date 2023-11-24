@@ -19,7 +19,7 @@ import {
   setFormData, submitBannerData,
   submitFormData
 } from "../../store/form/form.actions";
-import {bannerFormData, editFileId, fileFormData, showDeleteButton} from "../../store/form/form.selectors";
+import {bannerFormData, editFileId, fileFormData, formServerError, showDeleteButton} from "../../store/form/form.selectors";
 import {drawerUI, isLoadingSubmitBanner} from "../../store/UI/UI.selectors";
 
 @Component({
@@ -28,6 +28,7 @@ import {drawerUI, isLoadingSubmitBanner} from "../../store/UI/UI.selectors";
 })
 export class BannerFormComponent implements OnInit{
 
+  formApiError$ = this.formStore.select(formServerError)
   channels!: ReferenceData[]
   zones!: ReferenceData[]
   languages!: ReferenceData[]

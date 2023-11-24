@@ -1,7 +1,7 @@
 import {Actions, createEffect, ofType} from "@ngrx/effects";
 import {catchError, exhaustMap} from "rxjs/operators";
 import * as FormActions from './form.actions';
-import {EMPTY, map} from "rxjs";
+import { map, of} from "rxjs";
 import {Injectable} from "@angular/core";
 import * as BannerActions from "../banners/banners.actions";
 import {drawerToggle, stopSubmitBannerLoading} from "../UI/UI.action";
@@ -40,7 +40,7 @@ export class FormEffects {
           }),
           catchError((error) => {
             console.error('Error in Submit Banner Data with blob', error);
-            return EMPTY;
+            return of(FormActions.submitServerError({error: "error"}));
           })
         )
       })
@@ -59,7 +59,7 @@ export class FormEffects {
           }),
           catchError((error) => {
             console.error('Error in DeleteBanner', error);
-            return EMPTY;
+            return of(FormActions.submitServerError({error: "error"}));
           })
         )
       )

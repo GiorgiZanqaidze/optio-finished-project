@@ -34,3 +34,8 @@ export const submitBannerData = createAction(
   "[Form] Set Form Data Response",
   props<{bannerData: any, editFlag: boolean}>()
 )
+
+export const submitServerError = createAction(
+  "[Form] Set Server Error",
+  props<{error: string}>()
+)

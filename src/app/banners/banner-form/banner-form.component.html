@@ -83,9 +83,13 @@
         <ng-container *ngIf="!showDeleteButton">Create Banner</ng-container>
       </button>
     </div>
+    <h1  *ngIf="formApiError$ | async" class="absolute top-2 left-1/2 bg-red-500 text-black text-center h-10 text-xl w-36 -translate-x-1/2">
+      Server Error
+    </h1>
   </form>
 </div>
-<div class="absolute top-0 left-0 right-0 bottom-0 bg-gray-500 opacity-50" *ngIf="submitBannerDataIsLoading$ | async">
+<div class="absolute top-0 left-0 right-0 bottom-0 bg-gray-500 opacity-50" *ngIf="(submitBannerDataIsLoading$ | async) && (formApiError$ | async) === null">
   <mat-spinner class="top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></mat-spinner>
 </div>
+
 

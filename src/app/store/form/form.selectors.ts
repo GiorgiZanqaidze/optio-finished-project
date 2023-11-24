@@ -28,3 +28,8 @@ export const bannerId = createSelector(
   selectFormState,
   (state) => state.bannerId
 )
+
+export const formServerError = createSelector(
+  selectFormState,
+  (state) => state.formServerError
+)

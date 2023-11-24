@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {EMPTY, of} from 'rxjs';
-import { map, exhaustMap, catchError } from 'rxjs/operators';
+import { map, exhaustMap, catchError, finalize } from 'rxjs/operators';
 import {ROUTER_NAVIGATED} from "@ngrx/router-store";
 import {ApiService} from "../../services/api/api.service";
 import {bannersPageChange, setBannersData, setBannersSearchAndSortForm} from "./banners.actions";
@@ -55,15 +55,6 @@ export class BannersEffects {
     )
   );
 
-  // errorResponse$ = createEffect(() => {
-  //   this.actions$
-  //   .pipe(
-  //     ofType(BannerActions.errorResponse),
-  //     exhaustMap(() => {
-  //       return UIActions.stopLoading().type
-  //     })
-  //   )
-  // })
 
   deleteBanner$ = createEffect(() =>
     this.actions$
@@ -77,9 +68,12 @@ export class BannersEffects {
             this.UIStore.dispatch(stopSubmitBannerLoading());
             return BannerActions.deleteBanner({bannerId: action.bannerId})
           }),
+          finalize(() => {
+            this.bannersStore.dispatch(stopLoading());
+          }),
           catchError((error) => {
-            console.error('Error in DeleteBanner', error);
-            return EMPTY;
+            console.error('Error in DeleteBanner', error.error.error);
+            return of(BannerActions.errorResponse({error: error.error.error}));
           })
         )
         }

@@ -1,14 +1,16 @@
 import {createReducer, on} from "@ngrx/store";
 import {Banner} from "../../shared/types/banner";
-import {selectFile, setBannerId, setDeleteButton, setEditFileId, setFormData} from "./form.actions";
+import {selectFile, setBannerId, setDeleteButton, setEditFileId, setFormData, submitServerError} from "./form.actions";
 import {fileReader} from "../../shared/utilities/file-utils";
+import { act } from "@ngrx/effects";
 
 export interface FormStore {
   bannerFormData: Banner,
   fileFormData: FormData,
   showDeleteButton: boolean,
   editFileId: null | string | number,
-  bannerId: null | string | number
+  bannerId: null | string | number,
+  formServerError: null | string
 }
 
 const initialState: FormStore = {
@@ -29,7 +31,8 @@ const initialState: FormStore = {
   fileFormData: new FormData(),
   showDeleteButton: false,
   editFileId: null,
-  bannerId: null
+  bannerId: null,
+  formServerError: null
 }
 
 export const formReducer = createReducer(
@@ -58,4 +61,8 @@ export const formReducer = createReducer(
   on(setBannerId, (state, {id}) => {
     return {...state, bannerId: id}
   }),
+
+  on(submitServerError, (state, {error}) => {
+    return {...state, formServerError: error}
+  })
 )
