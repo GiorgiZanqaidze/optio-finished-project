@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {Banner} from "../../shared/types/banner";
 import {environment} from "../../../environments/environment";
 import {RouteParamsService} from "../../services/banners/route-params.service";
@@ -15,12 +15,13 @@ import {
 } from "../../store/banners/banners.selector";
 import {displayedColumns} from "../../constants/display-columns";
 import {drawerUI, isLoadingUI} from "../../store/UI/UI.selectors";
+import { getBannerById } from 'src/app/store/banners/banners.actions';
 
 @Component({
   selector: 'app-banner-table',
   templateUrl: './banner-table.component.html',
 })
-export class BannerTableComponent{
+export class BannerTableComponent implements OnInit{
 
   @Input() dataSource!: Banner[]
 
@@ -53,7 +54,24 @@ export class BannerTableComponent{
     localStorage.setItem("editFlag", JSON.stringify(true))
     localStorage.setItem("bannerId", JSON.stringify(rowData.id))
     this.formService.setItem({editFlag: true, bannerId: rowData.id})
+
+    this.bannersStore.dispatch(getBannerById({editFlag: true, bannerId: rowData.id}))
   }
+
+
+  ngOnInit(): void {
+    const bannerId = localStorage.getItem("bannerId") as string
+    const editFlag = localStorage.getItem("bannerId") as string
+
+    const number = parseInt(bannerId)
+
+    if (editFlag && number) {
+      console.log(number);
+      this.bannersStore.dispatch(getBannerById({editFlag: true, bannerId: number}))
+    }
+
+  }
+
 
 
 }

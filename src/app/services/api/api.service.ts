@@ -71,6 +71,6 @@ export class ApiService {
   }
 
   deleteBanner(id: string | number) {
-    return this.http.post('/banners/remove1', {id: id})
+    return this.http.post('/banners/remove', {id: id})
   }
 }

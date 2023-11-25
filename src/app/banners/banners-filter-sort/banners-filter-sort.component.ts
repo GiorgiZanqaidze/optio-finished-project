@@ -19,7 +19,7 @@ export class BannersFilterSortComponent{
 
   onBannersSearch() {
     this.bannersSearch.emit(this.searchBannersForm.value)
-   }
+  }
 
   constructor(private bannersStore: Store<{banners: BannersStore}>, private formBuilder: FormBuilder) {
       this.searchBannersForm = this.formBuilder.group({

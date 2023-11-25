@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {FormsService} from "../../services/banners/forms.service";
 import {dataUrlToBlob} from '../../shared/utilities/file-utils'
-import {ReferenceData} from "../../shared/types/reference-data";
 import {tap} from "rxjs";
 import {Banner} from "../../shared/types/banner";
 import {ApiService} from "../../services/api/api.service";
@@ -33,11 +32,14 @@ export class BannerFormComponent implements OnInit{
   zones$ = this.formStore.select(zonesReference)
   languages$ = this.formStore.select(languagesReference)
   labels$ = this.formStore.select(labelsReference)
+  submitBannerDataIsLoading$ = this.UIStore.select(isLoadingSubmitBanner)
+
+
   editFlag!: boolean
   fileFormData!: FormData
   showDeleteButton!: boolean
   editFileId!: null | number | string
-  submitBannerDataIsLoading$ = this.UIStore.select(isLoadingSubmitBanner)
+
   constructor(
     public formService: FormsService,
     private apiService: ApiService,
@@ -126,7 +128,6 @@ export class BannerFormComponent implements OnInit{
     const editFlag = localStorage.getItem('editFlag')
     if (editFlag && JSON.parse(editFlag)) { this.formStore.dispatch(setDeleteButton({show: true})) }
 
-
     const fileUrl = localStorage.getItem('fileDataUrl')
     const fileName = localStorage.getItem('fileName')
     const fileType = localStorage.getItem('fileType')
@@ -135,20 +136,6 @@ export class BannerFormComponent implements OnInit{
       const file = dataUrlToBlob(fileUrl, fileName, fileType)
       if (file) this.formStore.dispatch(selectFile({file: file}))
     }
-
-    // this.UIStore.select(drawerUI).subscribe(() => {
-    //   if (JSON.parse(localStorage.getItem('drawerIsOpen') as string)) {
-    //     this.formService.getReferenceData()
-    //       .subscribe((referenceData) => {
-    //         this.channels = referenceData.channels
-    //         this.zones = referenceData.zones
-    //         this.languages = referenceData.languages
-    //         this.labels = referenceData.labels
-    //       })
-    //   }
-    // })
-
-
   }
 
   deleteBanner() {

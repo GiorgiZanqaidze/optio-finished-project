@@ -11,9 +11,6 @@ type Input = string | null
 })
 export class FormsService {
 
-  constructor(
-    private apiService: ApiService,
-  ) {}
 
   bannerForm = new FormGroup({
     "name": new FormControl<Input>(null, [Validators.required]),
@@ -39,12 +36,4 @@ export class FormsService {
     return this.getBannerById.asObservable();
   }
 
-  getReferenceData(): Observable<{ channels: ReferenceData[], zones: ReferenceData[], labels: ReferenceData[], languages: ReferenceData[] }> {
-    return forkJoin({
-      channels: this.apiService.getChannels(),
-      zones: this.apiService.getZones(),
-      labels: this.apiService.getLabels(),
-      languages: this.apiService.getLanguages()
-    });
-  }
 }

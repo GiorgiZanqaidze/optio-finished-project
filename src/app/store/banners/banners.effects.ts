@@ -18,6 +18,7 @@ import {
   stopLoading,
   stopSubmitBannerLoading
 } from "../UI/UI.action";
+import { Banner } from 'src/app/shared/types/banner';
 @Injectable()
 export class BannersEffects {
 
@@ -67,9 +68,6 @@ export class BannersEffects {
             this.UIStore.dispatch(stopSubmitBannerLoading());
             return BannerActions.deleteBanner({bannerId: action.bannerId})
           }),
-          finalize(() => {
-            this.bannersStore.dispatch(stopLoading());
-          }),
           catchError((error) => {
             console.error('Error in DeleteBanner', error.error.error);
             return of(BannerActions.errorResponse({error: error.error.error}));
@@ -79,6 +77,28 @@ export class BannersEffects {
       )
     )
   );
+
+  getBannerById$ = createEffect(() =>
+  this.actions$
+    .pipe(
+    ofType(BannerActions.getBannerById),
+    exhaustMap((action) => {
+
+      return this.apiService.fetchBannerById(action.bannerId).pipe(
+        map((bannerData: any) => {
+          // console.log(bannerData.data);
+
+          return BannerActions.setBannerData({bannerData: bannerData.data});
+        }),
+        catchError((error) => {
+          console.error('Error in DeleteBanner', error.error.error);
+          return of(BannerActions.errorResponse({error: error.error.error}));
+        })
+      )
+      }
+    )
+  )
+);
 
 
 

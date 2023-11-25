@@ -20,18 +20,22 @@ export const UIReducer = createReducer(
     localStorage.setItem('drawerIsOpen', JSON.stringify(drawerState))
     return {...state, drawer: drawerState}
   }),
+
   on(startLoading, (state) => ({
     ...state,
     isLoading: true,
   })),
+
   on(stopLoading, (state) => ({
     ...state,
     isLoading: false,
   })),
+
   on(startSubmitBannerLoading, (state) => ({
     ...state,
     isLoadingSubmitBanner: true,
   })),
+
   on(stopSubmitBannerLoading, (state) => ({
     ...state,
     isLoadingSubmitBanner: false,
