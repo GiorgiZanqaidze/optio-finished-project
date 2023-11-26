@@ -5,12 +5,10 @@ import {Store} from "@ngrx/store";
 import { drawerToggle} from "../store/UI/UI.action";
 import { setDeleteButton} from "../store/form/form.actions";
 import {FormStore} from "../store/form/form.reducer";
-import {drawerUI} from "../store/UI/UI.selectors";
 import { FormControl, FormGroup } from '@angular/forms';
 import { RouteParamsService } from '../services/banners/route-params.service';
-import { apiError } from '../store/banners/banners.selector';
+import {apiError, drawerUI} from '../store/banners/banners.selector';
 import {BannersStore} from "../store/banners/banners.reducer";
-import {openEditForm} from "../store/banners/banners.actions";
 
 @Component({
   selector: 'app-banners',
@@ -25,7 +23,7 @@ export class BannersComponent implements OnInit{
     private bannersService: RouteParamsService,
     private bannerStore: Store<{banner: BannersStore}>
   ) {}
-  drawer$ = this.drawerStore.select(drawerUI)
+  drawer$ = this.bannerStore.select(drawerUI)
 
   apiError$ = this.drawerStore.select(apiError)
 
@@ -38,7 +36,6 @@ export class BannersComponent implements OnInit{
 
   drawerOpen() {
      this.drawerStore.dispatch(drawerToggle({drawerState: this.drawer.opened}))
-     this.bannerStore.dispatch(openEditForm())
   }
 
   drawerClose() {

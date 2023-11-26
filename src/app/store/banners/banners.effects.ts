@@ -56,7 +56,6 @@ export class BannersEffects {
               sortBy: sortBy || "",
               sortDirection: sortDirection || ""
             }
-            console.log(bannersData)
             return setBannersData(actionPayload)
           }),
           catchError((error) => {
@@ -98,6 +97,8 @@ export class BannersEffects {
         const labelsApi = this.apiService.getLabels()
         const languagesApi = this.apiService.getLanguages()
 
+
+
         return forkJoin([channelsApi, labelsApi, zonesApi, languagesApi]).pipe(
           map(([channels, labels, zones, languages]) => {
             return BannerActions.setReferenceData({channels, labels, zones, languages})
@@ -116,12 +117,14 @@ export class BannersEffects {
       ofType(BannerActions.getBannerById),
       exhaustMap((action) => {
 
+
+
         return this.apiService.fetchBannerById(action.bannerId).pipe(
           map((bannerData: any) => {
-            return BannerActions.setBannerData({bannerData: bannerData.data});
+            sessionStorage.setItem('editFileId', bannerData.data.fileId)
+            return BannerActions.setBannerData({bannerData: bannerData.data, editFileId: bannerData.data.fileId});
           }),
           catchError((error) => {
-            console.error('Error in DeleteBanner', error.error.error);
             return of(BannerActions.errorResponse({error: error.error.error}));
           })
         )
@@ -165,7 +168,6 @@ export class BannersEffects {
             return BannerActions.addOrEditBanner({newBanner: newBannerData.data, editFlag})
           }),
           catchError((error) => {
-            console.error('Error in DeleteBanner', error);
             return of(BannerActions.submitServerError({error: "error"}));
           })
         )

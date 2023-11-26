@@ -1,25 +1,24 @@
 import {Component, OnInit} from '@angular/core';
 import {FormsService} from "../../services/banners/forms.service";
 import {dataUrlToBlob} from '../../shared/utilities/file-utils'
-import {tap} from "rxjs";
-import {Banner} from "../../shared/types/banner";
 import {ApiService} from "../../services/api/api.service";
 import {environment} from "../../../environments/environment";
 import {Store} from "@ngrx/store";
-import {drawerToggle, startSubmitBannerLoading, stopSubmitBannerLoading} from "../../store/UI/UI.action";
+import {drawerToggle} from "../../store/UI/UI.action";
 import {BannersStore} from "../../store/banners/banners.reducer";
-import { deleteBanner} from "../../store/banners/banners.actions";
-import {FormStore} from "../../store/form/form.reducer";
 import {
-  selectFile,
-  setBannerId,
+  deleteBanner,
   setDeleteButton,
+  submitBannerData,
+  submitFormData,
+  selectFile,
   setEditFileId,
-  setFormData, submitBannerData,
-  submitFormData
-} from "../../store/form/form.actions";
-import {bannerFormData, channelsReference, editFileId, fileFormData, formServerError, labelsReference, languagesReference, showDeleteButton, zonesReference} from "../../store/form/form.selectors";
-import { isLoadingSubmitBanner} from "../../store/UI/UI.selectors";
+  setFormData,
+  startSubmitBannerLoading,
+} from "../../store/banners/banners.actions";
+import {FormStore} from "../../store/form/form.reducer";
+import {  channelsReference, fileFormData, formServerError, labelsReference, languagesReference, zonesReference} from "../../store/form/form.selectors";
+import {editFileId, isLoadingSubmitBanner, showDeleteButton} from 'src/app/store/banners/banners.selector';
 
 @Component({
   selector: 'app-banner-form',
@@ -32,7 +31,7 @@ export class BannerFormComponent implements OnInit{
   zones$ = this.formStore.select(zonesReference)
   languages$ = this.formStore.select(languagesReference)
   labels$ = this.formStore.select(labelsReference)
-  submitBannerDataIsLoading$ = this.UIStore.select(isLoadingSubmitBanner)
+  submitBannerDataIsLoading$ = this.bannersStore.select(isLoadingSubmitBanner)
 
 
   editFlag!: boolean
@@ -43,20 +42,20 @@ export class BannerFormComponent implements OnInit{
   constructor(
     public formService: FormsService,
     private apiService: ApiService,
-    private UIStore: Store<{UI: boolean}>,
+    // private UIStore: Store<{UI: boolean}>,
     private bannersStore: Store<{banners: BannersStore}>,
     private formStore: Store<{form: FormStore}>
   ) {
-    this.formStore.select(bannerFormData).subscribe((form) => {
-      this.formService.bannerForm.patchValue(form)
-    })
+
     this.formStore.select(fileFormData).subscribe(data => {
       this.fileFormData = data
     })
     this.formStore.select(showDeleteButton).subscribe(show => {
       this.showDeleteButton = show
     })
-    this.formStore.select(editFileId).subscribe(id => this.editFileId = id)
+    this.bannersStore.select(editFileId).subscribe(id => {
+      this.editFileId = id
+    })
   }
 
 
@@ -68,7 +67,7 @@ export class BannerFormComponent implements OnInit{
     const fileId = JSON.parse(sessionStorage.getItem('editFileId') as string)
     const editFlag = JSON.parse(localStorage.getItem('editFlag') as string)
     const bannerId = JSON.parse(localStorage.getItem('bannerId') as string)
-    this.UIStore.dispatch(startSubmitBannerLoading())
+    this.bannersStore.dispatch(startSubmitBannerLoading())
     if (!fileId) {
       this.formStore.dispatch(submitFormData({data: this.bannerForm.value, blob: this.fileFormData}))
     } else {
@@ -83,31 +82,6 @@ export class BannerFormComponent implements OnInit{
   }
 
   ngOnInit() {
-    this.formService.getBannerIdObservable()
-      .pipe(
-        tap(() => {
-          this.UIStore.dispatch(startSubmitBannerLoading());
-          this.UIStore.dispatch(drawerToggle({drawerState: true}))
-        })
-      )
-      .subscribe((data) => {
-        this.apiService.fetchBannerById(data.bannerId)
-          .pipe(tap((banner: any | null) => {
-            const formData = banner.data as Banner
-            sessionStorage.setItem('bannerFormData', JSON.stringify(formData));
-            this.formService.bannerForm.patchValue(formData)
-            const editFileId = banner.data.fileId
-            this.formStore.dispatch(setEditFileId({id: editFileId}))
-            this.formStore.dispatch(setDeleteButton({show: true}))
-            this.formStore.dispatch(setBannerId({id: data.bannerId}))
-            sessionStorage.setItem('editFileId', JSON.stringify(editFileId))
-          }))
-          .subscribe(() => {
-            this.UIStore.dispatch(stopSubmitBannerLoading())
-          })
-      })
-
-
     const formData = sessionStorage.getItem('bannerFormData') as string;
     this.formStore.dispatch(setFormData({formData: JSON.parse(formData)}))
 
@@ -126,7 +100,7 @@ export class BannerFormComponent implements OnInit{
     })
 
     const editFlag = localStorage.getItem('editFlag')
-    if (editFlag && JSON.parse(editFlag)) { this.formStore.dispatch(setDeleteButton({show: true})) }
+    if (editFlag && JSON.parse(editFlag)) { this.bannersStore.dispatch(setDeleteButton({show: true})) }
 
     const fileUrl = localStorage.getItem('fileDataUrl')
     const fileName = localStorage.getItem('fileName')
@@ -143,5 +117,5 @@ export class BannerFormComponent implements OnInit{
     this.bannersStore.dispatch(deleteBanner({bannerId: JSON.parse(bannerId)}))
   }
 
-  closeDrawer() { this.UIStore.dispatch(drawerToggle({drawerState: false})) }
+  closeDrawer() { this.bannersStore.dispatch(drawerToggle({drawerState: false})) }
 }

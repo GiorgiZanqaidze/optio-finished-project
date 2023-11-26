@@ -6,6 +6,7 @@ import {
   setBannerData,
   setBannersData,
   setBannersSearchAndSortForm,
+  drawerToggle
 } from "./banners.actions";
 import {Banner} from "../../shared/types/banner";
 import { ReferenceData } from "src/app/shared/types/reference-data";
@@ -19,7 +20,6 @@ import {
 } from "../form/form.actions";
 import {fileReader} from "../../shared/utilities/file-utils";
 import {
-  drawerToggle,
   startLoading,
   startSubmitBannerLoading,
   stopLoading,
@@ -108,9 +108,6 @@ export const bannersReducer = createReducer(
       bannersPage: action.page,
       bannersPageSize: action.pageSize,
       searchAndSortBannerForm: searchAndSortBannerForm
-      // search: s,
-      // sortBy: string,
-      // sortDirection: string
     }
   }),
 
@@ -155,10 +152,23 @@ export const bannersReducer = createReducer(
     return {...state, apiError: action.error, isLoading: false}
   }),
 
-  on(setBannerData, (state, {bannerData}) =>  {
+  on(setBannerData, (state, {bannerData, editFileId}) =>  {
     console.log(bannerData);
-
-    return state
+    const bannerFormData = {
+      id: bannerData.id,
+      name: bannerData.name,
+      zoneId: bannerData.zoneId,
+      active: bannerData.active,
+      startDate: bannerData.startDate,
+      endDate: bannerData.endDate,
+      fileId: bannerData.fileId,
+      priority: bannerData.priority,
+      channelId: bannerData.channelId,
+      language: bannerData.language,
+      url: bannerData.url,
+      labels: bannerData.labels
+    }
+    return {...state, bannerFormData, drawer: true, editFileId: editFileId}
   }),
 
 
@@ -192,10 +202,11 @@ export const bannersReducer = createReducer(
   }),
 
   on(setReferenceData, (state, {channels, labels, zones, languages}) => {
-    return {...state, channels, labels, zones, languages }
+    return {...state, channels, labels, zones, languages, showDeleteButton: true}
   }),
 
 //   Ui reducers
+
   on(drawerToggle, (state, {drawerState}) => {
     localStorage.setItem('drawerIsOpen', JSON.stringify(drawerState))
     return {...state, drawer: drawerState}

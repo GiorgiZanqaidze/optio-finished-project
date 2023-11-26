@@ -7,20 +7,20 @@ import {PageEvent} from "@angular/material/paginator";
 import {Store} from "@ngrx/store";
 import {BannersStore} from "../../store/banners/banners.reducer";
 import {
-  apiError,
+  apiError, bannerFormData,
   bannersData,
   bannersPage,
   bannersPageSize, isLoadingUI,
   totalPages
 } from "../../store/banners/banners.selector";
 import {displayedColumns} from "../../constants/display-columns";
-import { getBannerById } from 'src/app/store/banners/banners.actions';
+import {getBannerById, openEditForm} from 'src/app/store/banners/banners.actions';
 
 @Component({
   selector: 'app-banner-table',
   templateUrl: './banner-table.component.html',
 })
-export class BannerTableComponent implements OnInit{
+export class BannerTableComponent  implements OnInit{
 
   @Input() dataSource!: Banner[]
 
@@ -38,7 +38,6 @@ export class BannerTableComponent implements OnInit{
   constructor(
     private formService: FormsService,
     public bannersService: RouteParamsService,
-    private UIStore: Store<{drawer: boolean}>,
     private bannersStore: Store<{banners: BannersStore}>
   ) {}
 
@@ -51,25 +50,15 @@ export class BannerTableComponent implements OnInit{
   showEditBannerForm(rowData: Banner) {
     localStorage.setItem("editFlag", JSON.stringify(true))
     localStorage.setItem("bannerId", JSON.stringify(rowData.id))
-    this.formService.setItem({editFlag: true, bannerId: rowData.id})
-
+    this.bannersStore.dispatch(openEditForm())
     this.bannersStore.dispatch(getBannerById({editFlag: true, bannerId: rowData.id}))
   }
 
-
-  ngOnInit(): void {
-    const bannerId = localStorage.getItem("bannerId") as string
-    const editFlag = localStorage.getItem("bannerId") as string
-
-    const number = parseInt(bannerId)
-
-    if (editFlag && number) {
-      console.log(number);
-      this.bannersStore.dispatch(getBannerById({editFlag: true, bannerId: number}))
-    }
+  ngOnInit() {
+    this.bannersStore.select(bannerFormData).subscribe(formData => {
+      this.formService.bannerForm.patchValue(formData)
+    })
 
   }
-
-
 }
 

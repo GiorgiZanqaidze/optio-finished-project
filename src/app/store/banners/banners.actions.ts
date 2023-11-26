@@ -46,7 +46,7 @@ export const getBannerById = createAction(
 
 export const setBannerData = createAction(
   "[Banner] Set Banner By Id",
-  props<{bannerData: Banner}>()
+  props<{bannerData: Banner, editFileId: number | string}>()
 )
 
 // form actions ==============================================================================
@@ -105,6 +105,11 @@ export const setReferenceData = createAction(
 
 
 // UI actions ==============================================================================
+
+export const drawerToggle = createAction(
+  '[Drawer component] open',
+  props<{drawerState: boolean}>()
+)
 
 export const startLoading = createAction('[Loading] Start Loading');
 export const stopLoading = createAction('[Loading] Stop Loading');
