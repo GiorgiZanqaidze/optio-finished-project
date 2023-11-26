@@ -1,7 +1,7 @@
 import {Actions, createEffect, ofType} from "@ngrx/effects";
 import {catchError, exhaustMap, mergeMap} from "rxjs/operators";
 import * as FormActions from './form.actions';
-import { forkJoin, map, of} from "rxjs";
+import {map, of} from "rxjs";
 import {Injectable} from "@angular/core";
 import * as BannerActions from "../banners/banners.actions";
 import {drawerToggle, stopSubmitBannerLoading} from "../UI/UI.action";
@@ -39,7 +39,6 @@ export class FormEffects {
             return FormActions.submitBannerData({bannerData: mergedSubmitData, editFlag})
           }),
           catchError((error) => {
-            console.error('Error in Submit Banner Data with blob', error);
             return of(FormActions.submitServerError({error: "error"}));
           })
         )
@@ -65,27 +64,4 @@ export class FormEffects {
       )
     )
   );
-
-  onOpenEditForm$ = createEffect(() =>
-      this.actions$.pipe(
-      ofType(FormActions.openEditForm),
-      mergeMap(() => {
-        const channelsApi = this.apiService.getChannels()
-        const zonesApi = this.apiService.getZones()
-        const labelsApi = this.apiService.getLabels()
-        const languagesApi = this.apiService.getLanguages()
-
-        return forkJoin([channelsApi, labelsApi, zonesApi, languagesApi]).pipe(
-          map(([channels, labels, zones, languages]) => {
-            return FormActions.setReferenceData({channels, labels, zones, languages})
-          }),
-          catchError((error) => {
-            return of(FormActions.referenceDataApiError());
-          })
-        );
-      })
-    )
-  );
-
-
 }

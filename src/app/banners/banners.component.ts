@@ -3,12 +3,14 @@ import {MatDrawer} from "@angular/material/sidenav";
 import {FormsService} from "../services/banners/forms.service";
 import {Store} from "@ngrx/store";
 import { drawerToggle} from "../store/UI/UI.action";
-import {openEditForm, setDeleteButton} from "../store/form/form.actions";
+import { setDeleteButton} from "../store/form/form.actions";
 import {FormStore} from "../store/form/form.reducer";
 import {drawerUI} from "../store/UI/UI.selectors";
 import { FormControl, FormGroup } from '@angular/forms';
 import { RouteParamsService } from '../services/banners/route-params.service';
 import { apiError } from '../store/banners/banners.selector';
+import {BannersStore} from "../store/banners/banners.reducer";
+import {openEditForm} from "../store/banners/banners.actions";
 
 @Component({
   selector: 'app-banners',
@@ -21,6 +23,7 @@ export class BannersComponent implements OnInit{
     private drawerStore: Store<{drawer: boolean}>,
     private formStore: Store<{form: FormStore}>,
     private bannersService: RouteParamsService,
+    private bannerStore: Store<{banner: BannersStore}>
   ) {}
   drawer$ = this.drawerStore.select(drawerUI)
 
@@ -35,7 +38,7 @@ export class BannersComponent implements OnInit{
 
   drawerOpen() {
      this.drawerStore.dispatch(drawerToggle({drawerState: this.drawer.opened}))
-     this.formStore.dispatch(openEditForm())
+     this.bannerStore.dispatch(openEditForm())
   }
 
   drawerClose() {

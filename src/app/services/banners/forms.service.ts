@@ -1,8 +1,6 @@
 import {Injectable} from '@angular/core';
-import {forkJoin, Observable, Subject} from "rxjs";
-import {ReferenceData} from "../../shared/types/reference-data";
+import { Observable, Subject} from "rxjs";
 import { FormControl, FormGroup, Validators} from "@angular/forms";
-import {ApiService} from "../api/api.service";
 
 type Input = string | null
 

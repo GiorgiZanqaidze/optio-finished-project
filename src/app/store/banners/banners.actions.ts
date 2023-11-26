@@ -9,7 +9,14 @@ export const bannersPageChange = createAction(
 
 export const setBannersData = createAction(
   "[Banners] SetData",
-  props<{bannersData: {total: number, entities: Banner[], searchAfter: string[]}}>()
+  props<{
+      bannersData: {total: number, entities: Banner[], searchAfter: string[]},
+      page: number,
+      pageSize: number,
+      search: string,
+      sortBy: string,
+      sortDirection: string
+    }>()
 )
 
 export const setBannersSearchAndSortForm = createAction(
@@ -42,6 +49,7 @@ export const setBannerData = createAction(
   props<{bannerData: Banner}>()
 )
 
+// form actions ==============================================================================
 export const setFormData = createAction(
   "[Form] Set Data",
   props<{formData: any | undefined}>()
@@ -94,3 +102,12 @@ export const setReferenceData = createAction(
   "[Form] Set Banners Data",
   props<{channels: ReferenceData[], labels: ReferenceData[], zones: ReferenceData[], languages: ReferenceData[]}>()
 )
+
+
+// UI actions ==============================================================================
+
+export const startLoading = createAction('[Loading] Start Loading');
+export const stopLoading = createAction('[Loading] Stop Loading');
+
+export const startSubmitBannerLoading = createAction('[Loading] Start Submit Banner Loading');
+export const stopSubmitBannerLoading = createAction('[Loading] Stop Submit Banner Loading');

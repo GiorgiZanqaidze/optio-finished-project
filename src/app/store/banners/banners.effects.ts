@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {of} from 'rxjs';
-import { map, exhaustMap, catchError, finalize } from 'rxjs/operators';
+import {forkJoin, of} from 'rxjs';
+import {map, exhaustMap, catchError, mergeMap} from 'rxjs/operators';
 import {ROUTER_NAVIGATED} from "@ngrx/router-store";
 import {ApiService} from "../../services/api/api.service";
-import {bannersPageChange, setBannersData, setBannersSearchAndSortForm} from "./banners.actions";
+import { setBannersData} from "./banners.actions";
 import {BannersStore} from "./banners.reducer";
 import {Store} from "@ngrx/store";
 
@@ -12,42 +12,54 @@ import * as BannerActions from './banners.actions';
 
 
 import {
-  drawerToggle,
-  startLoading,
+  drawerToggle, startLoading,
   startSubmitBannerLoading,
-  stopLoading,
   stopSubmitBannerLoading
 } from "../UI/UI.action";
-import { Banner } from 'src/app/shared/types/banner';
+import * as FormActions from "../form/form.actions";
 @Injectable()
 export class BannersEffects {
 
   constructor(
     private actions$: Actions,
     private apiService: ApiService,
-    private bannersStore: Store<{banners: BannersStore}>,
-    private UIStore: Store<{drawer: boolean}>
+    private UIStore: Store<{drawer: boolean}>,
+    private bannerStore: Store<{banner: BannersStore}>
   ) {}
+
+
 
   BannersRouterNavigatedEffect$ = createEffect(() =>
     this.actions$.pipe(
       ofType(ROUTER_NAVIGATED),
       exhaustMap((action: any) => {
 
+        this.bannerStore.dispatch(startLoading())
+
         const {search, pageSize, page, sortBy, sortDirection} = action.payload.routerState.root.queryParams;
-        this.UIStore.dispatch(startLoading());
 
-        this.bannersStore.dispatch(bannersPageChange({ page: +page || 0, pageSize: +pageSize || 3 }));
+        const payloadAPI = {
+          search: search || "",
+          pageIndex: page || 0,
+          pageSize: pageSize || 3,
+          sortBy: sortBy || "",
+          sortDirection: sortDirection || ""
+        }
 
-        this.bannersStore.dispatch(setBannersSearchAndSortForm({search: search || "", sortBy: sortBy || "", sortDirection: sortDirection || ""}))
-
-        return this.apiService.fetchBanners(search || "", page || 0, pageSize || 3, sortBy, sortDirection).pipe(
+        return this.apiService.fetchBanners(payloadAPI).pipe(
           map((bannersData: any) => {
-            this.bannersStore.dispatch(stopLoading());
-            return setBannersData({bannersData: bannersData.data})
+            const actionPayload = {
+              bannersData: bannersData.data,
+              page: page || 0,
+              pageSize: +pageSize || 3,
+              search: search || "",
+              sortBy: sortBy || "",
+              sortDirection: sortDirection || ""
+            }
+            console.log(bannersData)
+            return setBannersData(actionPayload)
           }),
           catchError((error) => {
-            console.log(error.error.message);
             return of(BannerActions.errorResponse({error: error.error.message}));
           })
         );
@@ -69,6 +81,46 @@ export class BannersEffects {
             return BannerActions.deleteBanner({bannerId: action.bannerId})
           }),
           catchError((error) => {
+            return of(BannerActions.errorResponse({error: error.error.error}));
+          })
+        )
+        }
+      )
+    )
+  );
+
+  onOpenEditForm$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(BannerActions.openEditForm),
+      mergeMap(() => {
+        const channelsApi = this.apiService.getChannels()
+        const zonesApi = this.apiService.getZones()
+        const labelsApi = this.apiService.getLabels()
+        const languagesApi = this.apiService.getLanguages()
+
+        return forkJoin([channelsApi, labelsApi, zonesApi, languagesApi]).pipe(
+          map(([channels, labels, zones, languages]) => {
+            return BannerActions.setReferenceData({channels, labels, zones, languages})
+          }),
+          catchError((error) => {
+            return of(BannerActions.referenceDataApiError());
+          })
+        );
+      })
+    )
+  );
+
+  getBannerById$ = createEffect(() =>
+    this.actions$
+      .pipe(
+      ofType(BannerActions.getBannerById),
+      exhaustMap((action) => {
+
+        return this.apiService.fetchBannerById(action.bannerId).pipe(
+          map((bannerData: any) => {
+            return BannerActions.setBannerData({bannerData: bannerData.data});
+          }),
+          catchError((error) => {
             console.error('Error in DeleteBanner', error.error.error);
             return of(BannerActions.errorResponse({error: error.error.error}));
           })
@@ -78,28 +130,48 @@ export class BannersEffects {
     )
   );
 
-  getBannerById$ = createEffect(() =>
-  this.actions$
-    .pipe(
-    ofType(BannerActions.getBannerById),
-    exhaustMap((action) => {
 
-      return this.apiService.fetchBannerById(action.bannerId).pipe(
-        map((bannerData: any) => {
-          // console.log(bannerData.data);
-
-          return BannerActions.setBannerData({bannerData: bannerData.data});
-        }),
-        catchError((error) => {
-          console.error('Error in DeleteBanner', error.error.error);
-          return of(BannerActions.errorResponse({error: error.error.error}));
-        })
-      )
-      }
+  submitFormData$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(BannerActions.submitFormData),
+      exhaustMap(({data, blob}) => {
+        const bannerId = JSON.parse(localStorage.getItem('bannerId') as string)
+        const editFlag = JSON.parse(localStorage.getItem('editFlag') as string)
+        return this.apiService.submitBlob(blob).pipe(
+          map((blobResponse: any) => {
+            const mergedSubmitData = {
+              ...data,
+              fileId: blobResponse.data.id,
+              id: bannerId
+            };
+            return BannerActions.submitBannerData({bannerData: mergedSubmitData, editFlag})
+          }),
+          catchError((error) => {
+            return of(BannerActions.submitServerError({error: "error"}));
+          })
+        )
+      })
     )
-  )
-);
+  );
 
+  submitBannerData$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(BannerActions.submitBannerData),
+      exhaustMap(({bannerData, editFlag}) =>
+        this.apiService.submitBannerForm(bannerData).pipe(
+          map((newBannerData: any) => {
+            this.UIStore.dispatch(drawerToggle({drawerState: false}))
+            this.UIStore.dispatch(stopSubmitBannerLoading())
+            return BannerActions.addOrEditBanner({newBanner: newBannerData.data, editFlag})
+          }),
+          catchError((error) => {
+            console.error('Error in DeleteBanner', error);
+            return of(BannerActions.submitServerError({error: "error"}));
+          })
+        )
+      )
+    )
+  );
 
 
 }

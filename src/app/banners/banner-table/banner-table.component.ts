@@ -10,11 +10,10 @@ import {
   apiError,
   bannersData,
   bannersPage,
-  bannersPageSize,
+  bannersPageSize, isLoadingUI,
   totalPages
 } from "../../store/banners/banners.selector";
 import {displayedColumns} from "../../constants/display-columns";
-import {drawerUI, isLoadingUI} from "../../store/UI/UI.selectors";
 import { getBannerById } from 'src/app/store/banners/banners.actions';
 
 @Component({
@@ -29,12 +28,11 @@ export class BannerTableComponent implements OnInit{
 
   public readonly apiUrl = environment.ApiUrl
 
-  drawer$ = this.UIStore.select(drawerUI)
   bannersData$ = this.bannersStore.select(bannersData)
   totalPages$ = this.bannersStore.select(totalPages)
   bannersPage$ = this.bannersStore.select(bannersPage)
   bannersPageSize$ = this.bannersStore.select(bannersPageSize)
-  isLoading$ = this.UIStore.select(isLoadingUI)
+  isLoading$ = this.bannersStore.select(isLoadingUI)
   apiError$ = this.bannersStore.select(apiError)
 
   constructor(
@@ -73,5 +71,5 @@ export class BannerTableComponent implements OnInit{
   }
 
 
-
 }
+
