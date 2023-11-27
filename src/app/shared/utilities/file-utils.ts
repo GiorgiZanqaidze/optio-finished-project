@@ -13,7 +13,7 @@ export function dataUrlToBlob(dataUrl: string, fileName: string, fileType: strin
 }
 
 
-export function fileReader(file: File) {
+export function fileReader(file: File | undefined | any) {
   if (file) {
     const reader = new FileReader();
     reader.onload = (e) => {

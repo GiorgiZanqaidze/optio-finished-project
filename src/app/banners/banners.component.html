@@ -12,6 +12,8 @@
         [showDeleteButton$]="showDeleteButton$ | async"
         [formApiError$]="formApiError$ | async"
         (submitBannerData)="submitBannerData($event)"
+        (selectedFile)="selectedFile($event)"
+        (deleteBanner)="deleteBanner($event)"
       ></app-banner-form>
     </mat-drawer>
     <mat-drawer-content>

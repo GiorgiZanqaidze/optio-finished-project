@@ -1,16 +1,10 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {dataUrlToBlob} from '../../shared/utilities/file-utils'
 import {environment} from "../../../environments/environment";
 import {Store} from "@ngrx/store";
 import {BannersStore} from "../store/banners.reducer";
 import {
-  deleteBanner,
-  setDeleteButton,
-  selectFile,
   setEditFileId,
   setFormData,
-  startSubmitBannerLoading,
-  openEditForm,
 } from "../store/banners.actions";
 import {
   editFileId,
@@ -48,13 +42,28 @@ export class BannerFormComponent implements OnInit{
 
   @Output() submitBannerData = new EventEmitter()
 
+  @Output() selectedFile = new EventEmitter()
+
+  @Output() deleteBanner = new EventEmitter()
+
+  onDeleteBanner() {
+      const bannerId = localStorage.getItem("bannerId") as string
+      this.deleteBanner.emit(bannerId)
+  }
+
+  onSelectedFile(event: Event) {
+    const file = (event.target as HTMLInputElement)?.files?.[0];
+      console.log(file)
+      if (file) this.selectedFile.emit(file)
+  }
+
+  onCloseDrawer() {
+      this.drawerClose.emit()
+  }
 
   fileFormData!: FormData
   editFileId!: string | number | null
 
-  onCloseDrawer() {
-    this.drawerClose.emit()
-  }
 
   constructor(
     private bannersStore: Store<{banners: BannersStore}>,
@@ -66,7 +75,6 @@ export class BannerFormComponent implements OnInit{
       this.editFileId = id
     })
   }
-
 
   onSubmitBannerData() {
     const fileId = sessionStorage.getItem('editFileId')
@@ -80,11 +88,6 @@ export class BannerFormComponent implements OnInit{
       blob: this.fileFormData,
     }
     this.submitBannerData.emit(emitPayload)
-  }
-
-  onSelectedFile(event: Event) {
-    const file = (event.target as HTMLInputElement)?.files?.[0];
-    if (file) this.bannersStore.dispatch(selectFile({file: file}))
   }
 
   ngOnInit() {
@@ -108,26 +111,5 @@ export class BannerFormComponent implements OnInit{
         sessionStorage.removeItem('editFileId')
       }
     })
-
-    const editFlag = localStorage.getItem('editFlag')
-    if (editFlag && JSON.parse(editFlag)) {
-      this.bannersStore.dispatch(setDeleteButton({show: true}))
-      this.bannersStore.dispatch(openEditForm())
-    }
-
-    const fileUrl = localStorage.getItem('fileDataUrl')
-    const fileName = localStorage.getItem('fileName')
-    const fileType = localStorage.getItem('fileType')
-
-    if (fileUrl && fileType && fileName) {
-      const file = dataUrlToBlob(fileUrl, fileName, fileType)
-      if (file) this.bannersStore.dispatch(selectFile({file: file}))
-    }
-  }
-
-  deleteBanner() {
-    const bannerId = localStorage.getItem("bannerId") as string
-    this.bannersStore.dispatch(startSubmitBannerLoading())
-    this.bannersStore.dispatch(deleteBanner({bannerId: JSON.parse(bannerId)}))
   }
 }

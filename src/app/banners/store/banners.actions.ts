@@ -62,7 +62,7 @@ export const setFormData = createAction(
 
 export const selectFile = createAction(
   "[Form] Select Image File",
-  props<{file: File}>()
+  props<{file: File | undefined}>()
 )
 
 export const setDeleteButton = createAction(

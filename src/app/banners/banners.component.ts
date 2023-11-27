@@ -22,14 +22,16 @@ import {
 } from './store/banners.selector';
 import {BannersStore} from "./store/banners.reducer";
 import {
+    deleteBanner,
   drawerToggle,
   getBannerById,
-  openEditForm,
+  openEditForm, selectFile,
   setDeleteButton,
   startSubmitBannerLoading, submitBannerData, submitFormData
 } from "./store/banners.actions";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {Banner} from "../shared/types/banner";
+import {dataUrlToBlob} from "../shared/utilities/file-utils";
 
 type Input = string | null
 
@@ -69,19 +71,24 @@ export class BannersComponent implements OnInit{
   showDeleteButton$ =  this.bannerStore.select(showDeleteButton)
   formApiError$ = this.bannerStore.select(formServerError)
 
+  drawer$ = this.bannerStore.select(drawerUI)
+
+
   constructor(
     private bannerStore: Store<{banner: BannersStore}>,
     private router: Router,
     private route: ActivatedRoute
   ) {}
-  drawer$ = this.bannerStore.select(drawerUI)
 
 
   @ViewChild('drawer') drawer!: MatDrawer
 
   ngOnInit() {
     const drawerIsOpen = localStorage.getItem('drawerIsOpen')
-    if (drawerIsOpen) this.bannerStore.dispatch(drawerToggle({drawerState: JSON.parse(drawerIsOpen)}))
+    if (drawerIsOpen) {
+        this.bannerStore.dispatch(drawerToggle({drawerState: JSON.parse(drawerIsOpen)}))
+        this.bannerStore.dispatch(openEditForm())
+    }
 
     this.bannerStore.select(bannerFormData).subscribe(formData => {
       this.bannerForm.patchValue(formData)
@@ -90,6 +97,21 @@ export class BannersComponent implements OnInit{
     this.bannerStore.select(searchAndSortBannerForm).subscribe((form) => {
       this.searchBannersForm.patchValue(form)
     })
+
+    const editFlag = localStorage.getItem('editFlag')
+    if (editFlag && JSON.parse(editFlag)) {
+        this.bannerStore.dispatch(setDeleteButton({show: true}))
+        this.bannerStore.dispatch(openEditForm())
+    }
+
+    const fileUrl = localStorage.getItem('fileDataUrl')
+    const fileName = localStorage.getItem('fileName')
+    const fileType = localStorage.getItem('fileType')
+
+    if (fileUrl && fileType && fileName) {
+        const file = dataUrlToBlob(fileUrl, fileName, fileType)
+        if (file) this.bannerStore.dispatch(selectFile({file: file}))
+    }
   }
 
   drawerOpen() {
@@ -120,7 +142,7 @@ export class BannersComponent implements OnInit{
   }
 
   showEditBannerForm(rowData: Banner) {
-    this.bannerStore.dispatch(openEditForm())
+
     this.bannerStore.dispatch(getBannerById({editFlag: true, bannerId: rowData.id}))
   }
 
@@ -129,13 +151,21 @@ export class BannersComponent implements OnInit{
     const {fileId, bannerId, editFlag, blob, formData} = $event
 
     this.bannerStore.dispatch(startSubmitBannerLoading())
-    if (!$event.fileId) {
+    if (!fileId) {
       this.bannerStore.dispatch(submitFormData({data: formData, blob: blob}))
     } else {
       const mergedBannerData = {...formData, id: bannerId, fileId: fileId}
       this.bannerStore.dispatch(submitBannerData({bannerData: mergedBannerData, editFlag}))
     }
+    this.bannerForm.reset()
   }
 
+  selectedFile(file: File) {
+    this.bannerStore.dispatch(selectFile({file: file}))
+  }
 
+  deleteBanner(bannerId: string) {
+      this.bannerStore.dispatch(startSubmitBannerLoading())
+      this.bannerStore.dispatch(deleteBanner({bannerId: JSON.parse(bannerId)}))
+  }
 }
