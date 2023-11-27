@@ -107,6 +107,8 @@ export class BannersEffects {
       .pipe(
       ofType(BannerActions.getBannerById),
       exhaustMap((action) => {
+        localStorage.setItem("editFlag", JSON.stringify(true))
+        localStorage.setItem("bannerId", JSON.stringify(action.bannerId))
 
         return this.apiService.fetchBannerById(action.bannerId).pipe(
           map((bannerData: any) => {

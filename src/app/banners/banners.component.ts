@@ -2,7 +2,15 @@ import { Component, OnInit, ViewChild} from '@angular/core';
 import {MatDrawer} from "@angular/material/sidenav";
 import {Store} from "@ngrx/store";
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {apiError, bannerFormData, drawerUI} from './store/banners.selector';
+import {
+  apiError,
+  bannerFormData,
+  bannersData,
+  bannersPage,
+  bannersPageSize,
+  drawerUI, isLoadingUI,
+  totalPages
+} from './store/banners.selector';
 import {BannersStore} from "./store/banners.reducer";
 import {drawerToggle, setDeleteButton} from "./store/banners.actions";
 import {ActivatedRoute, Params, Router} from "@angular/router";
@@ -29,15 +37,20 @@ export class BannersComponent implements OnInit{
     "labels": new FormControl<string[]>([])
   })
 
+  bannersData$ = this.bannerStore.select(bannersData)
+  totalPages$ = this.bannerStore.select(totalPages)
+  bannersPage$ = this.bannerStore.select(bannersPage)
+  bannersPageSize$ = this.bannerStore.select(bannersPageSize)
+  isLoading$ = this.bannerStore.select(isLoadingUI)
+  apiError$ = this.bannerStore.select(apiError)
+
   constructor(
-    // private formService: FormsService,
     private bannerStore: Store<{banner: BannersStore}>,
     private router: Router,
     private route: ActivatedRoute
   ) {}
   drawer$ = this.bannerStore.select(drawerUI)
 
-  apiError$ = this.bannerStore.select(apiError)
 
   @ViewChild('drawer') drawer!: MatDrawer
 

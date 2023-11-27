@@ -12,7 +12,10 @@
             <span>Create Banner</span>
           </button>
         </div>
-        <app-banner-table (routeParamsChange)="routeParamsChange($event)" ></app-banner-table>
+        <app-banner-table
+          (routeParamsChange)="routeParamsChange($event)"
+          [bannersData$]="bannersData$ | async"
+        ></app-banner-table>
       </div>
     </mat-drawer-content>
   </mat-drawer-container>

@@ -1,11 +1,11 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Banner} from "../../shared/types/banner";
 import {environment} from "../../../environments/environment";
 import {PageEvent} from "@angular/material/paginator";
 import {Store} from "@ngrx/store";
 import {BannersStore} from "../store/banners.reducer";
 import {
-  apiError, bannerFormData,
+  apiError,
   bannersData,
   bannersPage,
   bannersPageSize, isLoadingUI,
@@ -24,6 +24,7 @@ export class BannerTableComponent{
 
   @Output() routeParamsChange = new EventEmitter()
 
+  @Input() bannersData$!: Banner[] | null
 
   onRouteParamsChange(event: PageEvent) {
     const queryParams = {page: event.pageIndex, pageSize: event.pageSize};
@@ -35,7 +36,6 @@ export class BannerTableComponent{
 
   public readonly apiUrl = environment.ApiUrl
 
-  bannersData$ = this.bannersStore.select(bannersData)
   totalPages$ = this.bannersStore.select(totalPages)
   bannersPage$ = this.bannersStore.select(bannersPage)
   bannersPageSize$ = this.bannersStore.select(bannersPageSize)
@@ -47,8 +47,6 @@ export class BannerTableComponent{
   ) {}
 
   showEditBannerForm(rowData: Banner) {
-    localStorage.setItem("editFlag", JSON.stringify(true))
-    localStorage.setItem("bannerId", JSON.stringify(rowData.id))
     this.bannersStore.dispatch(openEditForm())
     this.bannersStore.dispatch(getBannerById({editFlag: true, bannerId: rowData.id}))
   }
