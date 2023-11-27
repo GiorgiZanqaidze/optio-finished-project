@@ -11,7 +11,8 @@ import {
   selectFile,
   setEditFileId,
   setFormData,
-  startSubmitBannerLoading, openEditForm,
+  startSubmitBannerLoading,
+  openEditForm,
 } from "../store/banners.actions";
 import {
   editFileId,
@@ -26,6 +27,7 @@ import {
   bannerFormData
 } from 'src/app/banners/store/banners.selector';
 import {FormGroup} from "@angular/forms";
+import {ReferenceData} from "../../shared/types/reference-data";
 
 @Component({
   selector: 'app-banner-form',
@@ -33,14 +35,33 @@ import {FormGroup} from "@angular/forms";
 })
 export class BannerFormComponent implements OnInit{
 
-  formApiError$ = this.bannersStore.select(formServerError)
-  channels$ = this.bannersStore.select(channelsReference)
-  zones$ = this.bannersStore.select(zonesReference)
-  languages$ = this.bannersStore.select(languagesReference)
-  labels$ = this.bannersStore.select(labelsReference)
-  submitBannerDataIsLoading$ = this.bannersStore.select(isLoadingSubmitBanner)
+  public readonly apiUrl = environment.ApiUrl
+
+  @Input() channels$!: ReferenceData[] | null
+
+  @Input() zones$!: ReferenceData[] | null
+
+  @Input() languages$!: ReferenceData[] | null
+
+  @Input() labels$!: ReferenceData[] | null
+
+  @Input() submitBannerDataIsLoading$!: boolean | null
+
+  @Input() showDeleteButton$!: boolean | null
+
+  @Input() formApiError$!: string | null
+
+
+
+  // formApiError$ = this.bannersStore.select(formServerError)
+  // channels$ = this.bannersStore.select(channelsReference)
+  // zones$ = this.bannersStore.select(zonesReference)
+  // languages$ = this.bannersStore.select(languagesReference)
+  // labels$ = this.bannersStore.select(labelsReference)
+  // submitBannerDataIsLoading$ = this.bannersStore.select(isLoadingSubmitBanner)
+  // showDeleteButton =  this.bannersStore.select(showDeleteButton)
+
   fileFormData!: FormData
-  showDeleteButton =  this.bannersStore.select(showDeleteButton)
   editFileId!: string | number | null
 
   @Output() drawerClose = new EventEmitter<any>()
@@ -60,9 +81,8 @@ export class BannerFormComponent implements OnInit{
     this.bannersStore.select(editFileId).subscribe(id => {
       this.editFileId = id
     })
-}
+  }
 
-  public readonly apiUrl = environment.ApiUrl
 
   submitBannerData() {
     const fileId = sessionStorage.getItem('editFileId')

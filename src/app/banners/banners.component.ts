@@ -8,8 +8,17 @@ import {
   bannersData,
   bannersPage,
   bannersPageSize,
-  drawerUI, isLoadingUI,
-  totalPages
+  channelsReference,
+  drawerUI,
+  formServerError,
+  isLoadingSubmitBanner,
+  isLoadingUI,
+  labelsReference,
+  languagesReference,
+  searchAndSortBannerForm,
+  showDeleteButton,
+  totalPages,
+  zonesReference
 } from './store/banners.selector';
 import {BannersStore} from "./store/banners.reducer";
 import {drawerToggle, getBannerById, openEditForm, setDeleteButton} from "./store/banners.actions";
@@ -45,6 +54,15 @@ export class BannersComponent implements OnInit{
   isLoading$ = this.bannerStore.select(isLoadingUI)
   apiError$ = this.bannerStore.select(apiError)
 
+
+  channels$ = this.bannerStore.select(channelsReference)
+  zones$ = this.bannerStore.select(zonesReference)
+  languages$ = this.bannerStore.select(languagesReference)
+  labels$ = this.bannerStore.select(labelsReference)
+  submitBannerDataIsLoading$ = this.bannerStore.select(isLoadingSubmitBanner)
+  showDeleteButton$ =  this.bannerStore.select(showDeleteButton)
+  formApiError$ = this.bannerStore.select(formServerError)
+
   constructor(
     private bannerStore: Store<{banner: BannersStore}>,
     private router: Router,
@@ -61,6 +79,10 @@ export class BannersComponent implements OnInit{
 
     this.bannerStore.select(bannerFormData).subscribe(formData => {
       this.bannerForm.patchValue(formData)
+    })
+
+    this.bannerStore.select(searchAndSortBannerForm).subscribe((form) => {
+      this.searchBannersForm.patchValue(form)
     })
   }
 

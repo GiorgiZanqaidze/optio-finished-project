@@ -39,6 +39,5 @@ export class BannerTableComponent {
     const queryParams = {page: event.pageIndex, pageSize: event.pageSize};
     this.routeParamsChange.emit(queryParams)
   }
-
 }
 

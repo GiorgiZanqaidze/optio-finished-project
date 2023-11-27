@@ -1,7 +1,7 @@
 <div class="min-w-full py-5">
   <div class="flex justify-between mx-10 my-2" >
     <button (click)="onCloseDrawer()" mat-raised-button color="primary"><mat-icon>backspace</mat-icon> Back</button>
-    <button (click)="deleteBanner()" mat-raised-button color="accent" *ngIf="showDeleteButton | async">
+    <button (click)="deleteBanner()" mat-raised-button color="accent" *ngIf="showDeleteButton$">
       Delete Banner
       <mat-icon>delete</mat-icon>
     </button>
@@ -21,7 +21,7 @@
       <mat-form-field>
         <mat-label>Zone</mat-label>
         <mat-select formControlName="zoneId">
-          <mat-option *ngFor="let zone of zones$ | async" [value]="zone.key">{{zone.name}}</mat-option>
+          <mat-option *ngFor="let zone of zones$" [value]="zone.key">{{zone.name}}</mat-option>
         </mat-select>
       </mat-form-field>
       <mat-form-field>
@@ -31,13 +31,13 @@
       <mat-form-field>
         <mat-label>Channel</mat-label>
         <mat-select formControlName="channelId">
-          <mat-option *ngFor="let channel of channels$ | async" [value]="channel.key">{{channel.name}}</mat-option>
+          <mat-option *ngFor="let channel of channels$" [value]="channel.key">{{channel.name}}</mat-option>
         </mat-select>
       </mat-form-field>
       <mat-form-field>
         <mat-label>Language</mat-label>
         <mat-select formControlName="language">
-          <mat-option *ngFor="let language of languages$ | async" [value]="language.key">{{language.name}}</mat-option>
+          <mat-option *ngFor="let language of languages$" [value]="language.key">{{language.name}}</mat-option>
         </mat-select>
       </mat-form-field>
       <mat-radio-group formControlName="active" class="flex flex-col" aria-labelledby="active-group" aria-label="Select an option">
@@ -77,20 +77,20 @@
       <mat-form-field>
         <mat-label>Labels</mat-label>
         <mat-select formControlName="labels" multiple>
-          <mat-option *ngFor="let label of labels$ | async" [value]="label.key">{{label.name}}</mat-option>
+          <mat-option *ngFor="let label of labels$" [value]="label.key">{{label.name}}</mat-option>
         </mat-select>
       </mat-form-field>
       <button class="bg-blue-300 md:text-xl rounded disabled:bg-amber-10 disabled:cursor-not-allowed" [disabled]="bannerForm.invalid"  mat-raised-button color="primary">
-        <ng-container *ngIf="showDeleteButton | async; else noDelete">Edit Banner</ng-container>
+        <ng-container *ngIf="showDeleteButton$; else noDelete">Edit Banner</ng-container>
         <ng-template #noDelete>Create Banner</ng-template>
       </button>
     </div>
-    <h1  *ngIf="formApiError$ | async" class="absolute top-2 left-1/2 bg-red-500 text-black text-center h-10 text-xl w-36 -translate-x-1/2">
+    <h1  *ngIf="formApiError$" class="absolute top-2 left-1/2 bg-red-500 text-black text-center h-10 text-xl w-36 -translate-x-1/2">
       Server Error
     </h1>
   </form>
 </div>
-<div class="absolute top-0 left-0 right-0 bottom-0 bg-gray-500 opacity-50" *ngIf="(submitBannerDataIsLoading$ | async) && (formApiError$ | async) === null">
+<div class="absolute top-0 left-0 right-0 bottom-0 bg-gray-500 opacity-50" *ngIf="(submitBannerDataIsLoading$) && !formApiError$">
   <mat-spinner class="top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></mat-spinner>
 </div>
 
