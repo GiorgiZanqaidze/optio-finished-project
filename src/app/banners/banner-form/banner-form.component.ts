@@ -6,8 +6,6 @@ import {BannersStore} from "../store/banners.reducer";
 import {
   deleteBanner,
   setDeleteButton,
-  submitBannerData,
-  submitFormData,
   selectFile,
   setEditFileId,
   setFormData,
@@ -16,14 +14,7 @@ import {
 } from "../store/banners.actions";
 import {
   editFileId,
-  isLoadingSubmitBanner,
-  showDeleteButton,
-  channelsReference,
   fileFormData,
-  formServerError,
-  labelsReference,
-  languagesReference,
-  zonesReference,
   bannerFormData
 } from 'src/app/banners/store/banners.selector';
 import {FormGroup} from "@angular/forms";
@@ -51,22 +42,15 @@ export class BannerFormComponent implements OnInit{
 
   @Input() formApiError$!: string | null
 
-
-
-  // formApiError$ = this.bannersStore.select(formServerError)
-  // channels$ = this.bannersStore.select(channelsReference)
-  // zones$ = this.bannersStore.select(zonesReference)
-  // languages$ = this.bannersStore.select(languagesReference)
-  // labels$ = this.bannersStore.select(labelsReference)
-  // submitBannerDataIsLoading$ = this.bannersStore.select(isLoadingSubmitBanner)
-  // showDeleteButton =  this.bannersStore.select(showDeleteButton)
-
-  fileFormData!: FormData
-  editFileId!: string | number | null
-
   @Output() drawerClose = new EventEmitter<any>()
 
   @Input() bannerForm!: FormGroup
+
+  @Output() submitBannerData = new EventEmitter()
+
+
+  fileFormData!: FormData
+  editFileId!: string | number | null
 
   onCloseDrawer() {
     this.drawerClose.emit()
@@ -84,17 +68,18 @@ export class BannerFormComponent implements OnInit{
   }
 
 
-  submitBannerData() {
+  onSubmitBannerData() {
     const fileId = sessionStorage.getItem('editFileId')
     const editFlag = JSON.parse(localStorage.getItem('editFlag') as string)
     const bannerId = JSON.parse(localStorage.getItem('bannerId') as string)
-    this.bannersStore.dispatch(startSubmitBannerLoading())
-    if (!fileId) {
-      this.bannersStore.dispatch(submitFormData({data: this.bannerForm.value, blob: this.fileFormData}))
-    } else {
-      const mergedBannerData = {...this.bannerForm.value, id: bannerId, fileId: fileId}
-      this.bannersStore.dispatch(submitBannerData({bannerData: mergedBannerData, editFlag}))
+    const emitPayload = {
+      fileId: fileId,
+      bannerId: bannerId,
+      editFlag: editFlag,
+      formData: this.bannerForm.value,
+      blob: this.fileFormData,
     }
+    this.submitBannerData.emit(emitPayload)
   }
 
   onSelectedFile(event: Event) {

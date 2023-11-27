@@ -21,7 +21,13 @@ import {
   zonesReference
 } from './store/banners.selector';
 import {BannersStore} from "./store/banners.reducer";
-import {drawerToggle, getBannerById, openEditForm, setDeleteButton} from "./store/banners.actions";
+import {
+  drawerToggle,
+  getBannerById,
+  openEditForm,
+  setDeleteButton,
+  startSubmitBannerLoading, submitBannerData, submitFormData
+} from "./store/banners.actions";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {Banner} from "../shared/types/banner";
 
@@ -116,6 +122,19 @@ export class BannersComponent implements OnInit{
   showEditBannerForm(rowData: Banner) {
     this.bannerStore.dispatch(openEditForm())
     this.bannerStore.dispatch(getBannerById({editFlag: true, bannerId: rowData.id}))
+  }
+
+  submitBannerData($event: {fileId: number, bannerId: number, editFlag: boolean, blob: Blob, formData: Banner}) {
+
+    const {fileId, bannerId, editFlag, blob, formData} = $event
+
+    this.bannerStore.dispatch(startSubmitBannerLoading())
+    if (!$event.fileId) {
+      this.bannerStore.dispatch(submitFormData({data: formData, blob: blob}))
+    } else {
+      const mergedBannerData = {...formData, id: bannerId, fileId: fileId}
+      this.bannerStore.dispatch(submitBannerData({bannerData: mergedBannerData, editFlag}))
+    }
   }
 
 

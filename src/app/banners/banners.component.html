@@ -11,6 +11,7 @@
         [submitBannerDataIsLoading$]="submitBannerDataIsLoading$ | async"
         [showDeleteButton$]="showDeleteButton$ | async"
         [formApiError$]="formApiError$ | async"
+        (submitBannerData)="submitBannerData($event)"
       ></app-banner-form>
     </mat-drawer>
     <mat-drawer-content>
