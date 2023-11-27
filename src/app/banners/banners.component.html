@@ -14,6 +14,7 @@
         </div>
         <app-banner-table
           (routeParamsChange)="routeParamsChange($event)"
+          (showEditBannerForm)="showEditBannerForm($event)"
           [bannersData$]="bannersData$ | async"
           [totalPages$]="totalPages$ | async"
           [bannersPage$]="bannersPage$ | async"

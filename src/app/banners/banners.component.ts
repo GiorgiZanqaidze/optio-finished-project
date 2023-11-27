@@ -12,8 +12,9 @@ import {
   totalPages
 } from './store/banners.selector';
 import {BannersStore} from "./store/banners.reducer";
-import {drawerToggle, setDeleteButton} from "./store/banners.actions";
+import {drawerToggle, getBannerById, openEditForm, setDeleteButton} from "./store/banners.actions";
 import {ActivatedRoute, Params, Router} from "@angular/router";
+import {Banner} from "../shared/types/banner";
 
 type Input = string | null
 
@@ -70,10 +71,6 @@ export class BannersComponent implements OnInit{
   drawerClose() {
     this.bannerStore.dispatch(drawerToggle({drawerState: false}))
     this.bannerForm.reset()
-    // for (const controlName of Object.keys(this.bannerForm.controls)) {
-    //   const control = this.bannerForm.get(controlName);
-    //   control?.setErrors(null);
-    // }
     this.bannerStore.dispatch(setDeleteButton({show: false}))
     localStorage.clear();
     sessionStorage.clear()
@@ -92,6 +89,11 @@ export class BannersComponent implements OnInit{
       queryParams: queryParams,
       queryParamsHandling: 'merge',
     }).catch(err => console.log(err))
+  }
+
+  showEditBannerForm(rowData: Banner) {
+    this.bannerStore.dispatch(openEditForm())
+    this.bannerStore.dispatch(getBannerById({editFlag: true, bannerId: rowData.id}))
   }
 
 
