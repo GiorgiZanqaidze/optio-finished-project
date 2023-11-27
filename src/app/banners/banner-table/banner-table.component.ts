@@ -18,13 +18,30 @@ import {getBannerById, openEditForm} from 'src/app/banners/store/banners.actions
   selector: 'app-banner-table',
   templateUrl: './banner-table.component.html',
 })
-export class BannerTableComponent{
+export class BannerTableComponent {
 
   @Input() dataSource!: Banner[]
 
   @Output() routeParamsChange = new EventEmitter()
 
   @Input() bannersData$!: Banner[] | null
+
+  @Input() totalPages$!: number | null
+
+  @Input() bannersPage$!: number | null
+
+  @Input() bannersPageSize$!: number | null
+
+  @Input() isLoading$!: boolean | null
+
+  @Input() apiError$!: string | null
+
+
+  // totalPages$ = this.bannersStore.select(totalPages)
+  // bannersPage$ = this.bannersStore.select(bannersPage)
+  // bannersPageSize$ = this.bannersStore.select(bannersPageSize)
+  // isLoading$ = this.bannersStore.select(isLoadingUI)
+  // apiError$ = this.bannersStore.select(apiError)
 
   onRouteParamsChange(event: PageEvent) {
     const queryParams = {page: event.pageIndex, pageSize: event.pageSize};
@@ -36,11 +53,7 @@ export class BannerTableComponent{
 
   public readonly apiUrl = environment.ApiUrl
 
-  totalPages$ = this.bannersStore.select(totalPages)
-  bannersPage$ = this.bannersStore.select(bannersPage)
-  bannersPageSize$ = this.bannersStore.select(bannersPageSize)
-  isLoading$ = this.bannersStore.select(isLoadingUI)
-  apiError$ = this.bannersStore.select(apiError)
+
 
   constructor(
     private bannersStore: Store<{banners: BannersStore}>

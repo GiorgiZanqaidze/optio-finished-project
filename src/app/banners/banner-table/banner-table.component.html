@@ -1,5 +1,5 @@
 <div class="overflow-x-scroll md:overflow-auto border-x border-t text-xs md:text-sm scroll" style="max-height: calc(100vh - 30vh); min-height: calc(100vh - 30vh)">
-  <ng-container *ngIf="bannersData$ && (isLoading$ | async) === false">
+  <ng-container *ngIf="bannersData$ && !isLoading$">
     <table mat-table [dataSource]="bannersData$">
       <ng-container matColumnDef="Name">
         <th mat-header-cell *matHeaderCellDef> Name </th>
@@ -56,21 +56,21 @@
       ></tr>
     </table>
   </ng-container>
-  <div *ngIf="(isLoading$ | async) && (apiError$ | async) === null" class="mt-20 flex justify-center items-center">
+  <div *ngIf="isLoading$ && !apiError$" class="mt-20 flex justify-center items-center">
     <mat-spinner></mat-spinner>
   </div>
-  <div *ngIf="apiError$ | async" class="text-red-500 h-full mt-8" >
-    <h1 class="flex justify-center font-bold">{{apiError$ | async}}</h1>
+  <div *ngIf="apiError$" class="text-red-500 h-full mt-8" >
+    <h1 class="flex justify-center font-bold">{{apiError$}}</h1>
   </div>
 </div>
 <mat-paginator
   style="background: #f1f1f1"
   color="primary"
-  [pageSizeOptions]="[3, 5, 10]"
-  [pageSize]="(bannersPageSize$ | async) ?? 3"
   showFirstLastButtons
-  [pageIndex]="(bannersPage$ | async) ?? 0"
-  [length]="(totalPages$ | async) ?? 0"
+  [pageSizeOptions]="[3, 5, 10]"
+  [pageSize]="bannersPageSize$ ?? 3"
+  [pageIndex]="bannersPage$ ?? 0"
+  [length]="totalPages$ ?? 0"
   (page)="onRouteParamsChange($event)"
 >
 </mat-paginator>

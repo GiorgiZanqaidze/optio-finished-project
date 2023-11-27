@@ -15,6 +15,11 @@
         <app-banner-table
           (routeParamsChange)="routeParamsChange($event)"
           [bannersData$]="bannersData$ | async"
+          [totalPages$]="totalPages$ | async"
+          [bannersPage$]="bannersPage$ | async"
+          [bannersPageSize$]="bannersPageSize$ | async"
+          [isLoading$]="isLoading$ | async"
+          [apiError$]="apiError$ | async"
         ></app-banner-table>
       </div>
     </mat-drawer-content>
