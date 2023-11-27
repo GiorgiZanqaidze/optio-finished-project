@@ -11,12 +11,7 @@ import {Store} from "@ngrx/store";
 import * as BannerActions from './banners.actions';
 
 
-import {
-  drawerToggle, startLoading,
-  startSubmitBannerLoading,
-  stopSubmitBannerLoading
-} from "../UI/UI.action";
-import * as FormActions from "../form/form.actions";
+
 @Injectable()
 export class BannersEffects {
 
@@ -34,7 +29,7 @@ export class BannersEffects {
       ofType(ROUTER_NAVIGATED),
       exhaustMap((action: any) => {
 
-        this.bannerStore.dispatch(startLoading())
+        this.bannerStore.dispatch(BannerActions.startLoading())
 
         const {search, pageSize, page, sortBy, sortDirection} = action.payload.routerState.root.queryParams;
 
@@ -72,12 +67,10 @@ export class BannersEffects {
       .pipe(
       ofType(BannerActions.deleteBanner),
       exhaustMap((action) => {
-        this.UIStore.dispatch(startSubmitBannerLoading());
         return this.apiService.deleteBanner(action.bannerId).pipe(
           map(() => {
-            this.UIStore.dispatch(drawerToggle({drawerState: false}))
-            this.UIStore.dispatch(stopSubmitBannerLoading());
-            return BannerActions.deleteBanner({bannerId: action.bannerId})
+
+            return BannerActions.deleteBannerSuccess({bannerId: action.bannerId, drawerState: false, submitBannerLoading: false})
           }),
           catchError((error) => {
             return of(BannerActions.errorResponse({error: error.error.error}));
@@ -97,8 +90,6 @@ export class BannersEffects {
         const labelsApi = this.apiService.getLabels()
         const languagesApi = this.apiService.getLanguages()
 
-
-
         return forkJoin([channelsApi, labelsApi, zonesApi, languagesApi]).pipe(
           map(([channels, labels, zones, languages]) => {
             return BannerActions.setReferenceData({channels, labels, zones, languages})
@@ -116,8 +107,6 @@ export class BannersEffects {
       .pipe(
       ofType(BannerActions.getBannerById),
       exhaustMap((action) => {
-
-
 
         return this.apiService.fetchBannerById(action.bannerId).pipe(
           map((bannerData: any) => {
@@ -163,9 +152,7 @@ export class BannersEffects {
       exhaustMap(({bannerData, editFlag}) =>
         this.apiService.submitBannerForm(bannerData).pipe(
           map((newBannerData: any) => {
-            this.UIStore.dispatch(drawerToggle({drawerState: false}))
-            this.UIStore.dispatch(stopSubmitBannerLoading())
-            return BannerActions.addOrEditBanner({newBanner: newBannerData.data, editFlag})
+            return BannerActions.addOrEditBanner({newBanner: newBannerData.data, editFlag, drawerState: false, submitBannerLoading: false})
           }),
           catchError((error) => {
             return of(BannerActions.submitServerError({error: "error"}));

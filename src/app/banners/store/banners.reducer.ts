@@ -1,30 +1,28 @@
 import {createReducer, on} from "@ngrx/store";
 import {
   addOrEditBanner,
-  bannersPageChange, deleteBanner,
+  deleteBannerSuccess,
+  drawerToggle,
   errorResponse,
+  selectFile,
   setBannerData,
+  setBannerId,
   setBannersData,
   setBannersSearchAndSortForm,
-  drawerToggle
-} from "./banners.actions";
-import {Banner} from "../../shared/types/banner";
-import { ReferenceData } from "src/app/shared/types/reference-data";
-import {
-  selectFile,
-  setBannerId,
   setDeleteButton,
   setEditFileId,
-  setFormData, setReferenceData,
-  submitServerError
-} from "../form/form.actions";
-import {fileReader} from "../../shared/utilities/file-utils";
-import {
+  setFormData,
+  setReferenceData,
   startLoading,
   startSubmitBannerLoading,
   stopLoading,
-  stopSubmitBannerLoading
-} from "../UI/UI.action";
+  stopSubmitBannerLoading,
+  submitServerError
+} from "./banners.actions";
+import {Banner} from "../../shared/types/banner";
+import {ReferenceData} from "src/app/shared/types/reference-data";
+import {fileReader} from "../../shared/utilities/file-utils";
+
 
 export interface BannersStore {
   bannersPage: number,
@@ -123,11 +121,11 @@ export const bannersReducer = createReducer(
     }
   }),
 
-  on(deleteBanner, (state, action) => {
+  on(deleteBannerSuccess, (state, action) => {
     const filteredBanners = state.bannersData.filter((banner) => {
       return action.bannerId !== banner.id
     })
-    return {...state, bannersData: filteredBanners}
+    return {...state, bannersData: filteredBanners, drawer: action.drawerState, isLoadingSubmitBanner: action.submitBannerLoading}
   }),
 
   on(addOrEditBanner, (state, {newBanner, editFlag}) => {
@@ -139,12 +137,11 @@ export const bannersReducer = createReducer(
           return banner
         }
       })
-      return {...state, bannersData: newState}
+      return {...state, bannersData: newState, drawer: false, isLoadingSubmitBanner: false}
     } else {
       const cloneBanners = state.bannersData.slice()
       cloneBanners.unshift(newBanner)
-      const newState = cloneBanners
-      return {...state, bannersData: newState, totalPages: state.totalPages + 1}
+      return {...state, bannersData: cloneBanners, totalPages: state.totalPages + 1, drawer: false, isLoadingSubmitBanner: false}
     }
   }),
 
@@ -153,7 +150,6 @@ export const bannersReducer = createReducer(
   }),
 
   on(setBannerData, (state, {bannerData, editFileId}) =>  {
-    console.log(bannerData);
     const bannerFormData = {
       id: bannerData.id,
       name: bannerData.name,

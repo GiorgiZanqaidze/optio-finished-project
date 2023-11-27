@@ -1,19 +1,23 @@
 import {Component, Input, Output,  EventEmitter} from '@angular/core';
-import { FormBuilder, FormGroup } from "@angular/forms";
-import {BannersStore} from "../../store/banners/banners.reducer";
+import { FormBuilder } from "@angular/forms";
+import {BannersStore} from "../store/banners.reducer";
 import {Store} from "@ngrx/store";
-import {searchAndSortBannerForm} from "../../store/banners/banners.selector";
+import {searchAndSortBannerForm} from "../store/banners.selector";
 import {SortBy} from "../../constants/sorting-options";
 
 @Component({
-  selector: 'app-banners-filter-sort',
+  selector: 'app-store-filter-sort',
   templateUrl: './banners-filter-sort.component.html',
 })
 export class BannersFilterSortComponent{
 
   protected readonly SortBy = SortBy;
 
-  @Input() searchBannersForm!: FormGroup
+  @Input() searchBannersForm = this.formBuilder.group({
+    search: '',
+    sortDirection: '',
+    sortBy: ''
+  })
 
   @Output() bannersSearch = new EventEmitter<any>()
 
@@ -22,12 +26,6 @@ export class BannersFilterSortComponent{
   }
 
   constructor(private bannersStore: Store<{banners: BannersStore}>, private formBuilder: FormBuilder) {
-      this.searchBannersForm = this.formBuilder.group({
-        search: '',
-        sortDirection: '',
-        sortBy: ''
-      })
-
       this.bannersStore.select(searchAndSortBannerForm).subscribe((form) => {
         this.searchBannersForm.patchValue(form)
       })

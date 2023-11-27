@@ -29,9 +29,14 @@ export const deleteBanner = createAction(
   props<{ bannerId: number | string}>()
 );
 
+export const deleteBannerSuccess = createAction(
+  '[Banners] Delete Banner Success',
+  props<{ bannerId: number | string, drawerState: boolean, submitBannerLoading: boolean}>()
+);
+
 export const addOrEditBanner = createAction(
   "[Banner] Add Or Edit",
-  props<{newBanner: Banner, editFlag: boolean}>()
+  props<{newBanner: Banner, editFlag: boolean, drawerState: boolean, submitBannerLoading: boolean}>()
 )
 
 export const errorResponse = createAction(
@@ -83,6 +88,11 @@ export const submitFormData = createAction(
 export const submitBannerData = createAction(
   "[Form] Set Form Data Response",
   props<{bannerData: any, editFlag: boolean}>()
+)
+
+export const submitBannerDataSuccess = createAction(
+  "[Form] Set Form Data Response",
+  props<{bannerData: any, editFlag: boolean, drawerState: false, submitBannerLoading: false}>()
 )
 
 export const submitServerError = createAction(

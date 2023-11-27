@@ -71,7 +71,7 @@
   showFirstLastButtons
   [pageIndex]="(bannersPage$ | async) ?? 0"
   [length]="(totalPages$ | async) ?? 0"
-  (page)="pageChange($event)"
+  (page)="onRouteParamsChange($event)"
 >
 </mat-paginator>
 

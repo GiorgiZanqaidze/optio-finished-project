@@ -27,16 +27,11 @@ import {MatTableModule} from "@angular/material/table";
 import { BannerTableComponent } from './banners/banner-table/banner-table.component';
 import { BannersFilterSortComponent } from './banners/banners-filter-sort/banners-filter-sort.component';
 import {MatButtonModule} from "@angular/material/button";
-import {UIReducer} from "./store/UI/UI.reducer";
-import {bannersReducer} from "./store/banners/banners.reducer";
-import {BannersEffects} from "./store/banners/banners.effects";
+import {bannersReducer} from "./banners/store/banners.reducer";
+import {BannersEffects} from "./banners/store/banners.effects";
 import {StoreRouterConnectingModule} from "@ngrx/router-store";
-import {formReducer} from "./store/form/form.reducer";
-import {FormEffects} from "./store/form/form.effects";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-
-
 
 @NgModule({
   declarations: [
@@ -67,13 +62,10 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
     MatTableModule,
     MatButtonModule,
     StoreModule.forRoot({
-      UI: UIReducer,
       banners: bannersReducer,
-      form: formReducer
     }),
     EffectsModule.forRoot([
       BannersEffects,
-      FormEffects
     ]),
     StoreRouterConnectingModule.forRoot(),
     MatProgressSpinnerModule,
