@@ -110,11 +110,9 @@ export class BannersComponent implements OnInit{
   }
 
   drawerClose() {
-    this.bannerStore.dispatch(drawerToggle({drawerState: false}))
-    this.bannerStore.dispatch(setDeleteButton({show: false}))
+    // here changes the bannerId and actionForm
     this.bannerStore.dispatch(resetBannerFormAction())
     localStorage.clear();
-    sessionStorage.clear()
   }
 
   searchBannersForm = new FormGroup({

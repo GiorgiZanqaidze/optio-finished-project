@@ -15,7 +15,6 @@ export const bannersPage = createSelector(
   (state) => state.bannersPage
 );
 
-
 export const totalPages = createSelector(
   selectBannersState,
   (state) => state.totalPages
@@ -50,11 +49,6 @@ export const showDeleteButton = createSelector(
   selectBannersState,
   (state) => state.showDeleteButton
 );
-
-export const editFileId = createSelector(
-  selectBannersState,
-  (state) => state.editFileId
-)
 
 export const bannerId = createSelector(
   selectBannersState,

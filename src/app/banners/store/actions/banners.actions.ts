@@ -51,7 +51,7 @@ export const getBannerById = createAction(
 
 export const setBannerData = createAction(
   "[Banners Component] Set Banner By Id",
-  props<{bannerData: Banner, editFileId: number | string}>()
+  props<{bannerData: Banner}>()
 )
 
 export const setFormData = createAction(

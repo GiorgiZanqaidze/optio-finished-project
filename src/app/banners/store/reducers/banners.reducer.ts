@@ -45,7 +45,6 @@ const initialState: BannersStore = adapter.getInitialState({
   },
   fileFormData: new FormData(),
   showDeleteButton: false,
-  editFileId: null,
   bannerId: null,
   formServerError: null,
   channels: [],
@@ -112,7 +111,7 @@ export const bannersReducer = createReducer(
     return {...state, apiError: action.error, isLoading: false}
   }),
 
-  on(setBannerData, (state, {bannerData, editFileId}) =>  {
+  on(setBannerData, (state, {bannerData}) =>  {
     const bannerFormData = {
       id: bannerData.id,
       name: bannerData.name,
@@ -127,7 +126,7 @@ export const bannersReducer = createReducer(
       url: bannerData.url,
       labels: bannerData.labels
     }
-    return {...state, bannerFormData, drawer: true, editFileId: editFileId, showDeleteButton: true}
+    return {...state, bannerFormData, drawer: true, showDeleteButton: true}
   }),
 
   on(setFormData, (state, {formData}) => {
@@ -184,6 +183,6 @@ export const bannersReducer = createReducer(
   }),
 
   on(resetBannerFormAction, (state) => {
-    return {...state, resetBannerForm: !state.resetBannerForm}
+    return {...state, resetBannerForm: !state.resetBannerForm, drawerState: false, showDeleteButton: false}
   })
 )

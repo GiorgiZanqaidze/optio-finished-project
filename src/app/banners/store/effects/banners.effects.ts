@@ -108,7 +108,7 @@ export class BannersEffects {
 
         return this.apiService.fetchBannerById(action.bannerId).pipe(
           map((bannerData: any) => {
-            return BannerActions.setBannerData({bannerData: bannerData.data, editFileId: bannerData.data.fileId});
+            return BannerActions.setBannerData({bannerData: bannerData.data});
           }),
           catchError((error) => {
             return of(BannerActions.errorResponse({error: error.error.error}));
@@ -128,9 +128,7 @@ export class BannersEffects {
           map((newBannerData: any) => {
             return BannerActions.addOrEditBanner({newBanner: newBannerData.data, editFlag, drawerState: false, submitBannerLoading: false})
           }),
-          catchError((err) => {
-            console.log(err);
-
+          catchError(() => {
             return of(BannerActions.submitServerError({error: "error"}));
           })
         )

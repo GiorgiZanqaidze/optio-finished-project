@@ -13,7 +13,6 @@ export interface BannersStore extends EntityState<Banner>{
   bannerFormData: Banner,
   fileFormData: FormData,
   showDeleteButton: boolean,
-  editFileId: null | string | number,
   bannerId: null | string | number,
   formServerError: null | string,
   channels: ReferenceData[]
