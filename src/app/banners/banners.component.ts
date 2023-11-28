@@ -101,6 +101,7 @@ export class BannersComponent implements OnInit{
 
     const editFlag = localStorage.getItem('editFlag')
     if (editFlag && JSON.parse(editFlag)) {
+        console.log(editFlag)
         this.bannerStore.dispatch(setDeleteButton({show: true}))
         this.bannerStore.dispatch(openEditForm())
     }
@@ -116,7 +117,11 @@ export class BannersComponent implements OnInit{
   }
 
   drawerOpen() {
+      const editFlag = localStorage.getItem('editFlag')
      this.bannerStore.dispatch(drawerToggle({drawerState: this.drawer.opened}))
+    if (editFlag) {
+
+    }
   }
 
   drawerClose() {
@@ -143,7 +148,6 @@ export class BannersComponent implements OnInit{
   }
 
   showEditBannerForm(rowData: Banner) {
-
     this.bannerStore.dispatch(getBannerById({editFlag: true, bannerId: rowData.id}))
   }
 

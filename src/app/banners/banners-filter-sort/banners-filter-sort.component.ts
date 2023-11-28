@@ -13,12 +13,12 @@ export class BannersFilterSortComponent{
 
   constructor(private formBuilder: FormBuilder) {}
 
-
   @Input() searchBannersForm = this.formBuilder.group({
     search: '',
     sortDirection: '',
     sortBy: ''
   })
+
 
   @Output() bannersSearch = new EventEmitter<any>()
 

@@ -73,7 +73,7 @@ export const bannersReducer = createReducer(
 
     const bannersEntities = action.bannersData.entities
 
-    return adapter.addMany(
+    return adapter.setAll(
       bannersEntities,
         {
           ...state,
@@ -128,7 +128,7 @@ export const bannersReducer = createReducer(
       url: bannerData.url,
       labels: bannerData.labels
     }
-    return {...state, bannerFormData, drawer: true, editFileId: editFileId}
+    return {...state, bannerFormData, drawer: true, editFileId: editFileId, showDeleteButton: true}
   }),
 
 
@@ -162,7 +162,7 @@ export const bannersReducer = createReducer(
   }),
 
   on(setReferenceData, (state, {channels, labels, zones, languages}) => {
-    return {...state, channels, labels, zones, languages, showDeleteButton: true}
+    return {...state, channels, labels, zones, languages}
   }),
 
 //   Ui reducers

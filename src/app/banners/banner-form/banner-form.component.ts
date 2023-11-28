@@ -53,7 +53,6 @@ export class BannerFormComponent implements OnInit{
 
   onSelectedFile(event: Event) {
     const file = (event.target as HTMLInputElement)?.files?.[0];
-      console.log(file)
       if (file) this.selectedFile.emit(file)
   }
 
