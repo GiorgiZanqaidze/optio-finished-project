@@ -10,15 +10,12 @@ import {BannersStore} from "./state/banners.state";
 
 import * as BannerActions from './banners.actions';
 
-
-
 @Injectable()
 export class BannersEffects {
 
   constructor(
     private actions$: Actions,
     private apiService: ApiService,
-    private UIStore: Store<{drawer: boolean}>,
     private bannerStore: Store<{banner: BannersStore}>
   ) {}
 
@@ -94,7 +91,7 @@ export class BannersEffects {
           map(([channels, labels, zones, languages]) => {
             return BannerActions.setReferenceData({channels, labels, zones, languages})
           }),
-          catchError((error) => {
+          catchError(() => {
             return of(BannerActions.referenceDataApiError());
           })
         );
@@ -125,29 +122,6 @@ export class BannersEffects {
   );
 
 
-  submitFormData$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(BannerActions.submitFormData),
-      exhaustMap(({data, blob}) => {
-        const bannerId = JSON.parse(localStorage.getItem('bannerId') as string)
-        const editFlag = JSON.parse(localStorage.getItem('editFlag') as string)
-        return this.apiService.submitBlob(blob).pipe(
-          map((blobResponse: any) => {
-            const mergedSubmitData = {
-              ...data,
-              fileId: blobResponse.data.id,
-              id: bannerId
-            };
-            return BannerActions.submitBannerData({bannerData: mergedSubmitData, editFlag})
-          }),
-          catchError((error) => {
-            return of(BannerActions.submitServerError({error: "error"}));
-          })
-        )
-      })
-    )
-  );
-
   submitBannerData$ = createEffect(() =>
     this.actions$.pipe(
       ofType(BannerActions.submitBannerData),
@@ -156,7 +130,7 @@ export class BannersEffects {
           map((newBannerData: any) => {
             return BannerActions.addOrEditBanner({newBanner: newBannerData.data, editFlag, drawerState: false, submitBannerLoading: false})
           }),
-          catchError((error) => {
+          catchError(() => {
             return of(BannerActions.submitServerError({error: "error"}));
           })
         )

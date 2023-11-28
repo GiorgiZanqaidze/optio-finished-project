@@ -10,7 +10,6 @@ import {
   setBannersData,
   setBannersSearchAndSortForm,
   setDeleteButton,
-  setEditFileId,
   setFormData,
   setReferenceData,
   startLoading,
@@ -147,10 +146,6 @@ export const bannersReducer = createReducer(
 
   on(setDeleteButton, (state, {show}) => {
     return {...state, showDeleteButton: show}
-  }),
-
-  on(setEditFileId, (state, {id}) => {
-    return {...state, editFileId: id}
   }),
 
   on(setBannerId, (state, {id}) => {

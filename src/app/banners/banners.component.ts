@@ -21,16 +21,17 @@ import {
 } from './store/banners.selector';
 import {BannersStore} from "./store/state/banners.state";
 import {
-    deleteBanner,
+  deleteBanner,
   drawerToggle,
   getBannerById,
   openEditForm, selectFile,
-  setDeleteButton,
-  startSubmitBannerLoading, submitBannerData, submitFormData
+  setDeleteButton, setFormData,
+  startSubmitBannerLoading, submitBannerData
 } from "./store/banners.actions";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {Banner} from "../shared/types/banner";
-import {dataUrlToBlob} from "../shared/utilities/file-utils";
+import {fileReader} from "../shared/utilities/file-utils";
+import {ApiService} from "../services/api/api.service";
 
 type Input = string | null
 
@@ -77,13 +78,21 @@ export class BannersComponent implements OnInit{
   constructor(
     private bannerStore: Store<{banner: BannersStore}>,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private apiService: ApiService
   ) {}
 
 
   @ViewChild('drawer') drawer!: MatDrawer
 
   ngOnInit() {
+
+    const formData = sessionStorage.getItem('bannerFormData') as string;
+    this.bannerStore.dispatch(setFormData({formData: JSON.parse(formData)}))
+
+    this.bannerStore.select(bannerFormData).subscribe(formData => {
+      this.bannerForm.patchValue(formData)
+    })
 
     const drawerIsOpen = localStorage.getItem('drawerIsOpen')
     if (drawerIsOpen) {
@@ -101,33 +110,18 @@ export class BannersComponent implements OnInit{
 
     const editFlag = localStorage.getItem('editFlag')
     if (editFlag && JSON.parse(editFlag)) {
-        console.log(editFlag)
         this.bannerStore.dispatch(setDeleteButton({show: true}))
-        this.bannerStore.dispatch(openEditForm())
-    }
-
-    const fileUrl = localStorage.getItem('fileDataUrl')
-    const fileName = localStorage.getItem('fileName')
-    const fileType = localStorage.getItem('fileType')
-
-    if (fileUrl && fileType && fileName) {
-        const file = dataUrlToBlob(fileUrl, fileName, fileType)
-        if (file) this.bannerStore.dispatch(selectFile({file: file}))
     }
   }
 
   drawerOpen() {
-      const editFlag = localStorage.getItem('editFlag')
      this.bannerStore.dispatch(drawerToggle({drawerState: this.drawer.opened}))
-    if (editFlag) {
-
-    }
   }
 
   drawerClose() {
     this.bannerStore.dispatch(drawerToggle({drawerState: false}))
-    this.bannerForm.reset()
     this.bannerStore.dispatch(setDeleteButton({show: false}))
+    this.bannerForm.reset()
     localStorage.clear();
     sessionStorage.clear()
   }
@@ -152,21 +146,23 @@ export class BannersComponent implements OnInit{
   }
 
   submitBannerData($event: {fileId: number, bannerId: number, editFlag: boolean, blob: Blob, formData: Banner}) {
-
-    const {fileId, bannerId, editFlag, blob, formData} = $event
-
+    const {fileId, bannerId, editFlag, formData} = $event
+    const mergedBannerData = {...formData, id: bannerId, fileId: fileId}
     this.bannerStore.dispatch(startSubmitBannerLoading())
-    if (!fileId) {
-      this.bannerStore.dispatch(submitFormData({data: formData, blob: blob}))
-    } else {
-      const mergedBannerData = {...formData, id: bannerId, fileId: fileId}
-      this.bannerStore.dispatch(submitBannerData({bannerData: mergedBannerData, editFlag}))
-    }
+    this.bannerStore.dispatch(submitBannerData({bannerData: mergedBannerData, editFlag}))
     this.bannerForm.reset()
   }
 
   selectedFile(file: File) {
     this.bannerStore.dispatch(selectFile({file: file}))
+    const modifiedFile = fileReader(file)
+    const fileForm = new FormData();
+    fileForm.set('blob', modifiedFile)
+    this.apiService.submitBlob(fileForm).subscribe((res: any) => {
+      const imageID = res.data.id
+      this.bannerForm.patchValue({fileId: imageID})
+      sessionStorage.setItem('editFileId', imageID)
+    })
   }
 
   deleteBanner(bannerId: string) {

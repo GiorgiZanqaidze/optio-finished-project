@@ -51,10 +51,7 @@
       <mat-form-field>
         <mat-label *ngIf="bannerForm.controls['fileId'].value">Selected Image:</mat-label>
         <input type="text" formControlName="fileId" id="fileId" class="invisible"  matInput>
-        <img *ngIf="editFileId; else onlyFileId" [src]="apiUrl + '/blob/' + bannerForm.controls['fileId'].value" alt="banner"  class="block mx-auto max-h-[20rem]">
-        <ng-template #onlyFileId>
-          <span >{{bannerForm.controls['fileId'].value}}</span>
-        </ng-template>
+        <img *ngIf="bannerForm.controls['fileId'].value" [src]="apiUrl + '/blob/' + bannerForm.controls['fileId'].value" alt="banner"  class="block mx-auto max-h-[20rem]">
         <label for="image" class="h-10 w-full cursor-pointer flex items-center gap-2 bg-gray-300 transition-all hover:bg-gray-400 mt-2 pl-5">
           <mat-icon>image</mat-icon>
           <span>Choose Image*</span>

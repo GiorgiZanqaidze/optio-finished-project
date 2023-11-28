@@ -70,10 +70,6 @@ export const setDeleteButton = createAction(
   props<{show: boolean}>()
 )
 
-export const setEditFileId = createAction(
-  "[Form] Set Edit File Id",
-  props<{id: null | string | number}>()
-)
 
 export const setBannerId = createAction(
   "[Form] Set Banner Id",
