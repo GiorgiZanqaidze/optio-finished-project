@@ -19,7 +19,6 @@ import {
   submitServerError
 } from "../actions/banners.actions";
 import {adapter, BannersStore} from "../state/banners.state";
-import {resetBannerForm} from "../selectors/banners.selector";
 
 
 const initialState: BannersStore = adapter.getInitialState({

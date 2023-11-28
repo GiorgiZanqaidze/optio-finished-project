@@ -25,6 +25,8 @@ export class ApiService {
   }
 
   submitBannerForm(formData:any) {
+    console.log(formData);
+
     return this.http.post('/banners/save', formData)
   }
   getChannels() {

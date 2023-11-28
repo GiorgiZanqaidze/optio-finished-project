@@ -29,7 +29,7 @@ export class BannerFormComponent implements OnChanges{
 
   @Input() formApiError$!: string | null
 
-  @Output() drawerClose = new EventEmitter<any>()
+  @Output() drawerClose = new EventEmitter()
 
   @Input() banner!: Banner | null
 
@@ -86,11 +86,12 @@ export class BannerFormComponent implements OnChanges{
   }
 
   onSubmitBannerData() {
-    const fileId = sessionStorage.getItem('editFileId')
     const editFlag = JSON.parse(localStorage.getItem('editFlag') as string)
     const bannerId = JSON.parse(localStorage.getItem('bannerId') as string)
+    console.log(this.bannerForm.value.fileId);
+
     const emitPayload = {
-      fileId: fileId,
+      fileId: this.bannerForm.value.fileId,
       bannerId: bannerId,
       editFlag: editFlag,
       formData: this.bannerForm.value,

@@ -127,9 +127,12 @@ export class BannersEffects {
       exhaustMap(({bannerData, editFlag}) =>
         this.apiService.submitBannerForm(bannerData).pipe(
           map((newBannerData: any) => {
+
             return BannerActions.addOrEditBanner({newBanner: newBannerData.data, editFlag, drawerState: false, submitBannerLoading: false})
           }),
-          catchError(() => {
+          catchError((err) => {
+            console.log(err);
+
             return of(BannerActions.submitServerError({error: "error"}));
           })
         )

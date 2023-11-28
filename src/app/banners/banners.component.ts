@@ -99,10 +99,9 @@ export class BannersComponent implements OnInit{
       this.searchBannersForm.patchValue(form)
     })
 
-    const editFlag = localStorage.getItem('editFlag')
-    const editFileId = localStorage.getItem('bannerId') as string
-    if (editFlag && JSON.parse(editFlag)) {
-        this.bannerStore.dispatch(getBannerById({editFlag: true, bannerId: JSON.parse(editFileId)}))
+    const bannerId = localStorage.getItem('bannerId') as string
+    if (bannerId && JSON.parse(bannerId)) {
+        this.bannerStore.dispatch(getBannerById({editFlag: true, bannerId: JSON.parse(bannerId)}))
     }
   }
 
@@ -144,7 +143,6 @@ export class BannersComponent implements OnInit{
     const mergedBannerData = {...formData, id: bannerId, fileId: fileId}
     this.bannerStore.dispatch(startSubmitBannerLoading())
     this.bannerStore.dispatch(submitBannerData({bannerData: mergedBannerData, editFlag}))
-    // this.bannerForm.reset()
   }
 
   selectedFile(file: File) {
