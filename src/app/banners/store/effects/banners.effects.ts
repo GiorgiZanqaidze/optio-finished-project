@@ -3,12 +3,12 @@ import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {forkJoin, of} from 'rxjs';
 import {map, exhaustMap, catchError, mergeMap} from 'rxjs/operators';
 import {ROUTER_NAVIGATED} from "@ngrx/router-store";
-import {ApiService} from "../../services/api/api.service";
-import { setBannersData} from "./banners.actions";
+import {ApiService} from "../../../services/api/api.service";
+import { setBannersData} from "../actions/banners.actions";
 import {Store} from "@ngrx/store";
-import {BannersStore} from "./state/banners.state";
+import {BannersStore} from "../state/banners.state";
 
-import * as BannerActions from './banners.actions';
+import * as BannerActions from '../actions/banners.actions';
 
 @Injectable()
 export class BannersEffects {

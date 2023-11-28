@@ -1,5 +1,5 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import {adapter, BannersStore} from "./state/banners.state";
+import {adapter, BannersStore} from "../state/banners.state";
 
 const selectBannersState = createFeatureSelector<BannersStore>('banners');
 

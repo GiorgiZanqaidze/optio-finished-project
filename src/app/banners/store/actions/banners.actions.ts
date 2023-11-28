@@ -1,14 +1,14 @@
 import {createAction, props} from "@ngrx/store";
-import {Banner} from "../../shared/types/banner";
+import {Banner} from "../../../shared/types/banner";
 import { ReferenceData } from "src/app/shared/types/reference-data";
 
 export const bannersPageChange = createAction(
-  '[Banners] Change Pagination',
+  '[Banners Component] Change Pagination',
   props<{page: number, pageSize: number}>()
 )
 
 export const setBannersData = createAction(
-  "[Banners] SetData",
+  "[Banners Component] Set Banners Data",
   props<{
       bannersData: {total: number, entities: Banner[], searchAfter: string[]},
       page: number,
@@ -20,105 +20,101 @@ export const setBannersData = createAction(
 )
 
 export const setBannersSearchAndSortForm = createAction(
-"[Banners] Search And Sort",
+"[Banners Component] Search And Sort Banners",
   props<{search: string, sortBy: string, sortDirection: string}>()
 )
 
 export const deleteBanner = createAction(
-  '[Banners] Delete Banner',
+  '[Banners Component] Delete Banner',
   props<{ bannerId: number | string}>()
 );
 
 export const deleteBannerSuccess = createAction(
-  '[Banners] Delete Banner Success',
+  '[Banners Component] Delete Banner Success',
   props<{ bannerId: number | string, drawerState: boolean, submitBannerLoading: boolean}>()
 );
 
 export const addOrEditBanner = createAction(
-  "[Banner] Add Or Edit",
+  "[Banners Component] Add Or Edit",
   props<{newBanner: Banner, editFlag: boolean, drawerState: boolean, submitBannerLoading: boolean}>()
 )
 
 export const errorResponse = createAction(
-  "[Banner] Get Error Response",
+  "[Banners Component] Get Error Response",
   props<{error: string}>()
 )
 
 export const getBannerById = createAction(
-  "[Banner] Get Banner By Id",
+  "[Banners Component] Get Banner By Id",
   props<{editFlag: boolean, bannerId: number}>()
 )
 
 export const setBannerData = createAction(
-  "[Banner] Set Banner By Id",
+  "[Banners Component] Set Banner By Id",
   props<{bannerData: Banner, editFileId: number | string}>()
 )
 
-// form actions ==============================================================================
 export const setFormData = createAction(
-  "[Form] Set Data",
+  "[Banners Component] Set Data",
   props<{formData: any | undefined}>()
 )
 
 export const selectFile = createAction(
-  "[Form] Select Image File",
+  "[Banners Component] Select Image File",
   props<{file: File | undefined}>()
 )
 
 export const setDeleteButton = createAction(
-  "[Form] Set Delete Button",
+  "[Banners Component] Set Delete Button",
   props<{show: boolean}>()
 )
 
 
 export const setBannerId = createAction(
-  "[Form] Set Banner Id",
+  "[Banners Component] Set Banner Id",
   props<{id: number | string}>()
 )
 
 export const submitFormData = createAction(
-  "[Form] Submit Data",
+  "[Banners Component] Submit Data",
   props<{data: any, blob: any}>()
 )
 
 export const submitBannerData = createAction(
-  "[Form] Set Form Data Response",
+  "[Banners Component] Set Form Data Response",
   props<{bannerData: any, editFlag: boolean}>()
 )
 
 export const submitBannerDataSuccess = createAction(
-  "[Form] Set Form Data Response",
+  "[Banners Component] Set Form Data Response",
   props<{bannerData: any, editFlag: boolean, drawerState: false, submitBannerLoading: false}>()
 )
 
 export const submitServerError = createAction(
-  "[Form] Set Server Error",
+  "[Banners Component] Set Server Error",
   props<{error: string}>()
 )
 
 export const openEditForm = createAction(
-  "[Form] Open Edit Form",
+  "[Banners Component] Open Edit Form",
 )
 
 export const referenceDataApiError = createAction(
-  "[Form] Reference Data Api Error",
+  "[Banners Component] Reference Data Api Error",
 )
 
 export const setReferenceData = createAction(
-  "[Form] Set Banners Data",
+  "[Banners Component] Set Banners Data",
   props<{channels: ReferenceData[], labels: ReferenceData[], zones: ReferenceData[], languages: ReferenceData[]}>()
 )
 
-
-// UI actions ==============================================================================
-
 export const drawerToggle = createAction(
-  '[Drawer component] open',
+  '[Banners Component] open',
   props<{drawerState: boolean}>()
 )
 
-export const startLoading = createAction('[Loading] Start Loading');
-export const stopLoading = createAction('[Loading] Stop Loading');
+export const startLoading = createAction('[Banners Component] Start Loading');
+export const stopLoading = createAction('[Banners Component] Stop Loading');
 
-export const startSubmitBannerLoading = createAction('[Loading] Start Submit Banner Loading');
-export const stopSubmitBannerLoading = createAction('[Loading] Stop Submit Banner Loading');
+export const startSubmitBannerLoading = createAction('[Banners Component] Start Submit Banner Loading');
+export const stopSubmitBannerLoading = createAction('[Banners Component] Stop Submit Banner Loading');

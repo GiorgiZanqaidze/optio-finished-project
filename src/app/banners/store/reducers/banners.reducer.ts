@@ -17,9 +17,9 @@ import {
   stopLoading,
   stopSubmitBannerLoading,
   submitServerError
-} from "./banners.actions";
-import {fileReader} from "../../shared/utilities/file-utils";
-import {adapter, BannersStore} from "./state/banners.state";
+} from "../actions/banners.actions";
+import {fileReader} from "../../../shared/utilities/file-utils";
+import {adapter, BannersStore} from "../state/banners.state";
 
 
 const initialState: BannersStore = adapter.getInitialState({
@@ -30,7 +30,6 @@ const initialState: BannersStore = adapter.getInitialState({
   searchAndSortBannerForm: {search: "", sortDirection: "", sortBy: ""},
   showBannerEditForm: {editFlag: false, bannerId: 0},
   apiError: null,
-  // form store =========================================
   bannerFormData: {
     id: 0,
     name: "",
@@ -54,7 +53,6 @@ const initialState: BannersStore = adapter.getInitialState({
   zones: [],
   languages: [],
   labels: [],
-  // UI store
   drawer: false,
   isLoading: false,
   isLoadingSubmitBanner: false
@@ -130,8 +128,6 @@ export const bannersReducer = createReducer(
     return {...state, bannerFormData, drawer: true, editFileId: editFileId, showDeleteButton: true}
   }),
 
-
-//   form reducers ====================================================
   on(setFormData, (state, {formData}) => {
     return {...state, bannerFormData: formData}
   }),
@@ -159,8 +155,6 @@ export const bannersReducer = createReducer(
   on(setReferenceData, (state, {channels, labels, zones, languages}) => {
     return {...state, channels, labels, zones, languages}
   }),
-
-//   Ui reducers
 
   on(drawerToggle, (state, {drawerState}) => {
     localStorage.setItem('drawerIsOpen', JSON.stringify(drawerState))

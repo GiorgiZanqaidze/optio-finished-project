@@ -18,7 +18,7 @@ import {
   showDeleteButton,
   totalPages,
   zonesReference
-} from './store/banners.selector';
+} from './store/selectors/banners.selector';
 import {BannersStore} from "./store/state/banners.state";
 import {
   deleteBanner,
@@ -27,7 +27,7 @@ import {
   openEditForm, selectFile,
   setDeleteButton, setFormData,
   startSubmitBannerLoading, submitBannerData
-} from "./store/banners.actions";
+} from "./store/actions/banners.actions";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {Banner} from "../shared/types/banner";
 import {fileReader} from "../shared/utilities/file-utils";
