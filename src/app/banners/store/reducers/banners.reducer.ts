@@ -3,8 +3,8 @@ import {
   addOrEditBanner,
   deleteBannerSuccess,
   drawerToggle,
-  errorResponse,
-  selectFile,
+  errorResponse, resetBannerFormAction,
+  selectFileSuccess,
   setBannerData,
   setBannerId,
   setBannersData,
@@ -18,8 +18,8 @@ import {
   stopSubmitBannerLoading,
   submitServerError
 } from "../actions/banners.actions";
-import {fileReader} from "../../../shared/utilities/file-utils";
 import {adapter, BannersStore} from "../state/banners.state";
+import {resetBannerForm} from "../selectors/banners.selector";
 
 
 const initialState: BannersStore = adapter.getInitialState({
@@ -55,7 +55,9 @@ const initialState: BannersStore = adapter.getInitialState({
   labels: [],
   drawer: false,
   isLoading: false,
-  isLoadingSubmitBanner: false
+  isLoadingSubmitBanner: false,
+  imageId: null,
+  resetBannerForm: false
 })
 
 export const bannersReducer = createReducer(
@@ -78,7 +80,8 @@ export const bannersReducer = createReducer(
         isLoading: false,
         bannersPage: action.page,
         bannersPageSize: action.pageSize,
-        searchAndSortBannerForm: searchAndSortBannerForm
+        searchAndSortBannerForm: searchAndSortBannerForm,
+          bannersSuccessLoad: true
         })
   }),
 
@@ -132,12 +135,8 @@ export const bannersReducer = createReducer(
     return {...state, bannerFormData: formData}
   }),
 
-  on(selectFile, (state, {file}) => {
-    const modifiedFile = fileReader(file)
-    const fileForm = new FormData();
-    fileForm.set('blob', modifiedFile)
-    const modifiedFormData = {...state.bannerFormData, fileId: modifiedFile.name }
-    return {...state, bannerFormData: modifiedFormData, fileFormData: fileForm }
+  on(selectFileSuccess, (state, {imageId}) => {
+    return {...state, imageId }
   }),
 
   on(setDeleteButton, (state, {show}) => {
@@ -179,5 +178,13 @@ export const bannersReducer = createReducer(
   on(stopSubmitBannerLoading, (state) => ({
     ...state,
     isLoadingSubmitBanner: false,
-  }))
+  })),
+
+  on(setFormData, (state, {formData}) => {
+    return {...state, bannerFormData: formData}
+  }),
+
+  on(resetBannerFormAction, (state) => {
+    return {...state, resetBannerForm: !state.resetBannerForm}
+  })
 )

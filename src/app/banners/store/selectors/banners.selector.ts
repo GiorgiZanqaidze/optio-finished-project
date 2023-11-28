@@ -36,8 +36,6 @@ export const apiError = createSelector(
   (state) => state.apiError
 )
 
-
-// form selectors=======================================================
 export const bannerFormData = createSelector(
   selectBannersState,
   (state) => state.bannerFormData
@@ -88,8 +86,6 @@ export const labelsReference = createSelector(
   (state) => state.labels
 )
 
-
-// UI selectors
 export const drawerUI = createSelector(
   selectBannersState,
   (state) => state.drawer
@@ -103,4 +99,14 @@ export const isLoadingUI = createSelector(
 export const isLoadingSubmitBanner = createSelector(
   selectBannersState,
   (state) => state.isLoadingSubmitBanner
+);
+
+export const fileIdChanges = createSelector(
+    selectBannersState,
+    (state) => state.imageId
+);
+
+export const resetBannerForm = createSelector(
+    selectBannersState,
+    (state) => state.resetBannerForm
 );

@@ -7,7 +7,6 @@ import {ApiService} from "../../../services/api/api.service";
 import { setBannersData} from "../actions/banners.actions";
 import {Store} from "@ngrx/store";
 import {BannersStore} from "../state/banners.state";
-
 import * as BannerActions from '../actions/banners.actions';
 
 @Injectable()
@@ -137,6 +136,22 @@ export class BannersEffects {
       )
     )
   );
+
+    uploadBlob = createEffect(() =>
+        this.actions$.pipe(
+            ofType(BannerActions.selectFile),
+            exhaustMap(({file}) =>
+                this.apiService.submitBlob(file).pipe(
+                    map((image: any) => {
+                        return BannerActions.selectFileSuccess({imageId: image.data.id})
+                    }),
+                    catchError(() => {
+                        return of(BannerActions.submitServerError({error: "error"}));
+                    })
+                )
+            )
+        )
+    );
 
 
 }

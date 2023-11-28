@@ -1,14 +1,17 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {environment} from "../../../environments/environment";
 
-import {FormGroup} from "@angular/forms";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {ReferenceData} from "../../shared/types/reference-data";
+import {Banner} from "../../shared/types/banner";
+
+type FormInput = string | null
 
 @Component({
   selector: 'app-banner-form',
   templateUrl: './banner-form.component.html',
 })
-export class BannerFormComponent implements OnInit{
+export class BannerFormComponent implements OnChanges{
 
   public readonly apiUrl = environment.ApiUrl
 
@@ -28,13 +31,45 @@ export class BannerFormComponent implements OnInit{
 
   @Output() drawerClose = new EventEmitter<any>()
 
-  @Input() bannerForm!: FormGroup
+  @Input() banner!: Banner | null
 
   @Output() submitBannerData = new EventEmitter()
 
   @Output() selectedFile = new EventEmitter()
 
   @Output() deleteBanner = new EventEmitter()
+
+  @Input() fileId$!: string | number | null
+
+  @Input() resetBannerForm!: null | boolean
+
+  bannerForm = new FormGroup({
+    "name": new FormControl<FormInput>(null, [Validators.required]),
+    "zoneId": new FormControl<FormInput>(null, [Validators.required]),
+    "active": new FormControl(null, [Validators.required]),
+    "startDate": new FormControl<FormInput>(null, [Validators.required]),
+    "endDate": new FormControl<FormInput>(null),
+    "fileId": new FormControl<string | number | null>(null,  [Validators.required]),
+    "priority": new FormControl<FormInput>('', [Validators.required, Validators.min(0)]),
+    "channelId": new FormControl<FormInput>(null, [Validators.required]),
+    "language": new FormControl<FormInput>(null, [Validators.required]),
+    "url": new FormControl<FormInput>(null, [Validators.required]),
+    "labels": new FormControl<string[]>([])
+  })
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['banner']) {
+      this.bannerForm.patchValue(this.banner as Banner)
+    }
+
+    if (changes['fileId$']) {
+      this.bannerForm.patchValue({fileId: this.fileId$})
+    }
+
+    if (changes['resetBannerForm']) {
+      this.bannerForm.reset()
+    }
+  }
 
   onDeleteBanner() {
       const bannerId = localStorage.getItem("bannerId") as string
@@ -63,9 +98,5 @@ export class BannerFormComponent implements OnInit{
     this.submitBannerData.emit(emitPayload)
   }
 
-  ngOnInit() {
-    this.bannerForm.valueChanges.subscribe((formData) => {
-      sessionStorage.setItem('bannerFormData', JSON.stringify(formData));
-    })
-  }
+
 }

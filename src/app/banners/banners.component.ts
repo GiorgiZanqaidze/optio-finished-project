@@ -1,19 +1,20 @@
 import { Component, OnInit, ViewChild} from '@angular/core';
 import {MatDrawer} from "@angular/material/sidenav";
 import {Store} from "@ngrx/store";
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormControl, FormGroup} from '@angular/forms';
 import {
   apiError,
   bannerFormData,
   bannersPage,
   bannersPageSize,
   channelsReference,
-  drawerUI,
+  drawerUI, fileIdChanges,
   formServerError,
   isLoadingSubmitBanner,
   isLoadingUI,
   labelsReference,
   languagesReference,
+  resetBannerForm,
   searchAndSortBannerForm, selectBanners,
   showDeleteButton,
   totalPages,
@@ -25,15 +26,13 @@ import {
   drawerToggle,
   getBannerById,
   openEditForm, selectFile,
-  setDeleteButton, setFormData,
-  startSubmitBannerLoading, submitBannerData
+  setDeleteButton,
+  startSubmitBannerLoading, submitBannerData, resetBannerFormAction
 } from "./store/actions/banners.actions";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {Banner} from "../shared/types/banner";
 import {fileReader} from "../shared/utilities/file-utils";
-import {ApiService} from "../services/api/api.service";
 
-type Input = string | null
 
 @Component({
   selector: 'app-store',
@@ -41,19 +40,19 @@ type Input = string | null
 })
 export class BannersComponent implements OnInit{
 
-  bannerForm = new FormGroup({
-    "name": new FormControl<Input>(null, [Validators.required]),
-    "zoneId": new FormControl<Input>(null, [Validators.required]),
-    "active": new FormControl(null, [Validators.required]),
-    "startDate": new FormControl<Input>(null, [Validators.required]),
-    "endDate": new FormControl<Input>(null),
-    "fileId": new FormControl<string | number | null>(null,  [Validators.required]),
-    "priority": new FormControl<Input>('', [Validators.required, Validators.min(0)]),
-    "channelId": new FormControl<Input>(null, [Validators.required]),
-    "language": new FormControl<Input>(null, [Validators.required]),
-    "url": new FormControl<Input>(null, [Validators.required]),
-    "labels": new FormControl<string[]>([])
-  })
+  // bannerForm = new FormGroup({
+  //   "name": new FormControl<Input>(null, [Validators.required]),
+  //   "zoneId": new FormControl<Input>(null, [Validators.required]),
+  //   "active": new FormControl(null, [Validators.required]),
+  //   "startDate": new FormControl<Input>(null, [Validators.required]),
+  //   "endDate": new FormControl<Input>(null),
+  //   "fileId": new FormControl<string | number | null>(null,  [Validators.required]),
+  //   "priority": new FormControl<Input>('', [Validators.required, Validators.min(0)]),
+  //   "channelId": new FormControl<Input>(null, [Validators.required]),
+  //   "language": new FormControl<Input>(null, [Validators.required]),
+  //   "url": new FormControl<Input>(null, [Validators.required]),
+  //   "labels": new FormControl<string[]>([])
+  // })
 
 
   bannersDataEntities$ = this.bannerStore.select(selectBanners)
@@ -62,8 +61,9 @@ export class BannersComponent implements OnInit{
   bannersPageSize$ = this.bannerStore.select(bannersPageSize)
   isLoading$ = this.bannerStore.select(isLoadingUI)
   apiError$ = this.bannerStore.select(apiError)
+  resetBannerForm$ = this.bannerStore.select(resetBannerForm)
 
-
+  bannerForm$ = this.bannerStore.select(bannerFormData)
   channels$ = this.bannerStore.select(channelsReference)
   zones$ = this.bannerStore.select(zonesReference)
   languages$ = this.bannerStore.select(languagesReference)
@@ -74,12 +74,13 @@ export class BannersComponent implements OnInit{
 
   drawer$ = this.bannerStore.select(drawerUI)
 
+  fileId$ = this.bannerStore.select(fileIdChanges)
+
 
   constructor(
     private bannerStore: Store<{banner: BannersStore}>,
     private router: Router,
     private route: ActivatedRoute,
-    private apiService: ApiService
   ) {}
 
 
@@ -87,30 +88,21 @@ export class BannersComponent implements OnInit{
 
   ngOnInit() {
 
-    const formData = sessionStorage.getItem('bannerFormData') as string;
-    this.bannerStore.dispatch(setFormData({formData: JSON.parse(formData)}))
-
-    this.bannerStore.select(bannerFormData).subscribe(formData => {
-      this.bannerForm.patchValue(formData)
-    })
-
     const drawerIsOpen = localStorage.getItem('drawerIsOpen')
     if (drawerIsOpen) {
         this.bannerStore.dispatch(drawerToggle({drawerState: JSON.parse(drawerIsOpen)}))
         this.bannerStore.dispatch(openEditForm())
     }
 
-    this.bannerStore.select(bannerFormData).subscribe(formData => {
-      this.bannerForm.patchValue(formData)
-    })
-
+    // inside the child
     this.bannerStore.select(searchAndSortBannerForm).subscribe((form) => {
       this.searchBannersForm.patchValue(form)
     })
 
     const editFlag = localStorage.getItem('editFlag')
+    const editFileId = localStorage.getItem('bannerId') as string
     if (editFlag && JSON.parse(editFlag)) {
-        this.bannerStore.dispatch(setDeleteButton({show: true}))
+        this.bannerStore.dispatch(getBannerById({editFlag: true, bannerId: JSON.parse(editFileId)}))
     }
   }
 
@@ -121,7 +113,9 @@ export class BannersComponent implements OnInit{
   drawerClose() {
     this.bannerStore.dispatch(drawerToggle({drawerState: false}))
     this.bannerStore.dispatch(setDeleteButton({show: false}))
-    this.bannerForm.reset()
+    this.bannerStore.dispatch(resetBannerFormAction())
+
+    // this.bannerForm.reset()
     localStorage.clear();
     sessionStorage.clear()
   }
@@ -145,24 +139,19 @@ export class BannersComponent implements OnInit{
     this.bannerStore.dispatch(getBannerById({editFlag: true, bannerId: rowData.id}))
   }
 
-  submitBannerData($event: {fileId: number, bannerId: number, editFlag: boolean, blob: Blob, formData: Banner}) {
+  submitBannerData($event: {fileId: number, bannerId: number, editFlag: boolean, formData: Banner}) {
     const {fileId, bannerId, editFlag, formData} = $event
     const mergedBannerData = {...formData, id: bannerId, fileId: fileId}
     this.bannerStore.dispatch(startSubmitBannerLoading())
     this.bannerStore.dispatch(submitBannerData({bannerData: mergedBannerData, editFlag}))
-    this.bannerForm.reset()
+    // this.bannerForm.reset()
   }
 
   selectedFile(file: File) {
-    this.bannerStore.dispatch(selectFile({file: file}))
     const modifiedFile = fileReader(file)
     const fileForm = new FormData();
     fileForm.set('blob', modifiedFile)
-    this.apiService.submitBlob(fileForm).subscribe((res: any) => {
-      const imageID = res.data.id
-      this.bannerForm.patchValue({fileId: imageID})
-      sessionStorage.setItem('editFileId', imageID)
-    })
+    this.bannerStore.dispatch(selectFile({file: fileForm}))
   }
 
   deleteBanner(bannerId: string) {

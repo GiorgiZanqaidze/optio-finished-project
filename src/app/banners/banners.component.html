@@ -2,7 +2,7 @@
   <mat-drawer-container class="min-h-screen" [hasBackdrop]="true">
     <mat-drawer class="w-full md:w-1/3 scroll" #drawer mode="over" position="end" [opened]="drawer$ | async" (closed)="drawerClose()" (openedChange)="drawerOpen()">
       <app-banner-form
-        [bannerForm]="bannerForm"
+        [banner]="bannerForm$ | async"
         (drawerClose)="drawerClose()"
         [channels$]="channels$ | async"
         [zones$]="zones$ | async"
@@ -14,6 +14,8 @@
         (submitBannerData)="submitBannerData($event)"
         (selectedFile)="selectedFile($event)"
         (deleteBanner)="deleteBanner($event)"
+        [fileId$]="fileId$ | async"
+        [resetBannerForm]="resetBannerForm$ | async"
       ></app-banner-form>
     </mat-drawer>
     <mat-drawer-content>

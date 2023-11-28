@@ -8,7 +8,7 @@ export const bannersPageChange = createAction(
 )
 
 export const setBannersData = createAction(
-  "[Banners Component] Set Banners Data",
+  "[Banners Component] SetData",
   props<{
       bannersData: {total: number, entities: Banner[], searchAfter: string[]},
       page: number,
@@ -20,7 +20,7 @@ export const setBannersData = createAction(
 )
 
 export const setBannersSearchAndSortForm = createAction(
-"[Banners Component] Search And Sort Banners",
+"[Banners Component] Search And Sort",
   props<{search: string, sortBy: string, sortDirection: string}>()
 )
 
@@ -46,7 +46,7 @@ export const errorResponse = createAction(
 
 export const getBannerById = createAction(
   "[Banners Component] Get Banner By Id",
-  props<{editFlag: boolean, bannerId: number}>()
+  props<{editFlag?: boolean, bannerId: number}>()
 )
 
 export const setBannerData = createAction(
@@ -59,9 +59,14 @@ export const setFormData = createAction(
   props<{formData: any | undefined}>()
 )
 
+export const selectFileSuccess = createAction(
+    "[Banners Component] Select Image File",
+    props<{imageId: string | number}>()
+)
+
 export const selectFile = createAction(
   "[Banners Component] Select Image File",
-  props<{file: File | undefined}>()
+    props<{file: any}>()
 )
 
 export const setDeleteButton = createAction(
@@ -108,9 +113,15 @@ export const setReferenceData = createAction(
   props<{channels: ReferenceData[], labels: ReferenceData[], zones: ReferenceData[], languages: ReferenceData[]}>()
 )
 
+
+
 export const drawerToggle = createAction(
   '[Banners Component] open',
   props<{drawerState: boolean}>()
+)
+
+export const resetBannerFormAction = createAction(
+    '[Banners Component] Reset Banner Form',
 )
 
 export const startLoading = createAction('[Banners Component] Start Loading');
@@ -118,3 +129,5 @@ export const stopLoading = createAction('[Banners Component] Stop Loading');
 
 export const startSubmitBannerLoading = createAction('[Banners Component] Start Submit Banner Loading');
 export const stopSubmitBannerLoading = createAction('[Banners Component] Stop Submit Banner Loading');
+
+

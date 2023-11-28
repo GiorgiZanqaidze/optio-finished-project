@@ -10,7 +10,6 @@ export interface BannersStore extends EntityState<Banner>{
   searchAndSortBannerForm: {search: string, sortDirection: string, sortBy: string},
   showBannerEditForm: {editFlag: boolean, bannerId: number},
   apiError: string | null,
-  // form store =========================================
   bannerFormData: Banner,
   fileFormData: FormData,
   showDeleteButton: boolean,
@@ -21,11 +20,11 @@ export interface BannersStore extends EntityState<Banner>{
   zones: ReferenceData[]
   languages: ReferenceData[]
   labels: ReferenceData[]
-//   UI store
   drawer: boolean,
   isLoading: boolean,
-  isLoadingSubmitBanner: boolean
+  isLoadingSubmitBanner: boolean,
+  imageId: number | string | null,
+  resetBannerForm: boolean
 }
 
-export const adapter: EntityAdapter<Banner> =
-    createEntityAdapter<Banner>();
+export const adapter: EntityAdapter<Banner> = createEntityAdapter<Banner>();
