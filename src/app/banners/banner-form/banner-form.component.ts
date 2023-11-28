@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {environment} from "../../../environments/environment";
 
 import {FormControl, FormGroup, Validators} from "@angular/forms";
@@ -10,6 +10,7 @@ type FormInput = string | null
 @Component({
   selector: 'app-banner-form',
   templateUrl: './banner-form.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BannerFormComponent implements OnChanges{
 
@@ -78,7 +79,7 @@ export class BannerFormComponent implements OnChanges{
 
   onSelectedFile(event: Event) {
     const file = (event.target as HTMLInputElement)?.files?.[0];
-      if (file) this.selectedFile.emit(file)
+    if (file) this.selectedFile.emit(file)
   }
 
   onCloseDrawer() {
@@ -88,7 +89,6 @@ export class BannerFormComponent implements OnChanges{
   onSubmitBannerData() {
     const editFlag = JSON.parse(localStorage.getItem('editFlag') as string)
     const bannerId = JSON.parse(localStorage.getItem('bannerId') as string)
-    console.log(this.bannerForm.value.fileId);
 
     const emitPayload = {
       fileId: this.bannerForm.value.fileId,
@@ -98,6 +98,4 @@ export class BannerFormComponent implements OnChanges{
     }
     this.submitBannerData.emit(emitPayload)
   }
-
-
 }

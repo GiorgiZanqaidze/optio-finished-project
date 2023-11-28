@@ -40,21 +40,6 @@ import {fileReader} from "../shared/utilities/file-utils";
 })
 export class BannersComponent implements OnInit{
 
-  // bannerForm = new FormGroup({
-  //   "name": new FormControl<Input>(null, [Validators.required]),
-  //   "zoneId": new FormControl<Input>(null, [Validators.required]),
-  //   "active": new FormControl(null, [Validators.required]),
-  //   "startDate": new FormControl<Input>(null, [Validators.required]),
-  //   "endDate": new FormControl<Input>(null),
-  //   "fileId": new FormControl<string | number | null>(null,  [Validators.required]),
-  //   "priority": new FormControl<Input>('', [Validators.required, Validators.min(0)]),
-  //   "channelId": new FormControl<Input>(null, [Validators.required]),
-  //   "language": new FormControl<Input>(null, [Validators.required]),
-  //   "url": new FormControl<Input>(null, [Validators.required]),
-  //   "labels": new FormControl<string[]>([])
-  // })
-
-
   bannersDataEntities$ = this.bannerStore.select(selectBanners)
   totalPages$ = this.bannerStore.select(totalPages)
   bannersPage$ = this.bannerStore.select(bannersPage)
@@ -71,11 +56,9 @@ export class BannersComponent implements OnInit{
   submitBannerDataIsLoading$ = this.bannerStore.select(isLoadingSubmitBanner)
   showDeleteButton$ =  this.bannerStore.select(showDeleteButton)
   formApiError$ = this.bannerStore.select(formServerError)
-
+  searchBannersForm$ = this.bannerStore.select(searchAndSortBannerForm)
   drawer$ = this.bannerStore.select(drawerUI)
-
   fileId$ = this.bannerStore.select(fileIdChanges)
-
 
   constructor(
     private bannerStore: Store<{banner: BannersStore}>,
@@ -87,17 +70,11 @@ export class BannersComponent implements OnInit{
   @ViewChild('drawer') drawer!: MatDrawer
 
   ngOnInit() {
-
     const drawerIsOpen = localStorage.getItem('drawerIsOpen')
     if (drawerIsOpen) {
         this.bannerStore.dispatch(drawerToggle({drawerState: JSON.parse(drawerIsOpen)}))
         this.bannerStore.dispatch(openEditForm())
     }
-
-    // inside the child
-    this.bannerStore.select(searchAndSortBannerForm).subscribe((form) => {
-      this.searchBannersForm.patchValue(form)
-    })
 
     const bannerId = localStorage.getItem('bannerId') as string
     if (bannerId && JSON.parse(bannerId)) {
@@ -110,16 +87,10 @@ export class BannersComponent implements OnInit{
   }
 
   drawerClose() {
-    // here changes the bannerId and actionForm
     this.bannerStore.dispatch(resetBannerFormAction())
     localStorage.clear();
   }
 
-  searchBannersForm = new FormGroup({
-    "search": new FormControl<string>(''),
-    "sortDirection": new  FormControl<string>('asc'),
-    "sortBy": new FormControl<string>('name.raw')
-  })
 
 
   routeParamsChange(queryParams: Params) {
