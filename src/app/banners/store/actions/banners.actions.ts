@@ -113,8 +113,6 @@ export const setReferenceData = createAction(
   props<{channels: ReferenceData[], labels: ReferenceData[], zones: ReferenceData[], languages: ReferenceData[]}>()
 )
 
-
-
 export const drawerToggle = createAction(
   '[Banners Component] open',
   props<{drawerState: boolean}>()
@@ -129,5 +127,3 @@ export const stopLoading = createAction('[Banners Component] Stop Loading');
 
 export const startSubmitBannerLoading = createAction('[Banners Component] Start Submit Banner Loading');
 export const stopSubmitBannerLoading = createAction('[Banners Component] Stop Submit Banner Loading');
-
-

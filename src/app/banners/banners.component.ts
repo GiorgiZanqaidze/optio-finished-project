@@ -113,8 +113,6 @@ export class BannersComponent implements OnInit{
     this.bannerStore.dispatch(drawerToggle({drawerState: false}))
     this.bannerStore.dispatch(setDeleteButton({show: false}))
     this.bannerStore.dispatch(resetBannerFormAction())
-
-    // this.bannerForm.reset()
     localStorage.clear();
     sessionStorage.clear()
   }

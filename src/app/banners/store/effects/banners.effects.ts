@@ -108,7 +108,6 @@ export class BannersEffects {
 
         return this.apiService.fetchBannerById(action.bannerId).pipe(
           map((bannerData: any) => {
-            sessionStorage.setItem('editFileId', bannerData.data.fileId)
             return BannerActions.setBannerData({bannerData: bannerData.data, editFileId: bannerData.data.fileId});
           }),
           catchError((error) => {
@@ -127,7 +126,6 @@ export class BannersEffects {
       exhaustMap(({bannerData, editFlag}) =>
         this.apiService.submitBannerForm(bannerData).pipe(
           map((newBannerData: any) => {
-
             return BannerActions.addOrEditBanner({newBanner: newBannerData.data, editFlag, drawerState: false, submitBannerLoading: false})
           }),
           catchError((err) => {
@@ -140,21 +138,21 @@ export class BannersEffects {
     )
   );
 
-    uploadBlob = createEffect(() =>
-        this.actions$.pipe(
-            ofType(BannerActions.selectFile),
-            exhaustMap(({file}) =>
-                this.apiService.submitBlob(file).pipe(
-                    map((image: any) => {
-                        return BannerActions.selectFileSuccess({imageId: image.data.id})
-                    }),
-                    catchError(() => {
-                        return of(BannerActions.submitServerError({error: "error"}));
-                    })
-                )
-            )
-        )
-    );
+  uploadBlob = createEffect(() =>
+      this.actions$.pipe(
+          ofType(BannerActions.selectFile),
+          exhaustMap(({file}) =>
+              this.apiService.submitBlob(file).pipe(
+                  map((image: any) => {
+                      return BannerActions.selectFileSuccess({imageId: image.data.id})
+                  }),
+                  catchError(() => {
+                      return of(BannerActions.submitServerError({error: "error"}));
+                  })
+              )
+          )
+      )
+  );
 
 
 }
