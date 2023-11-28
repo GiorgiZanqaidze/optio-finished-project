@@ -11,7 +11,8 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  fetchBanners(search?: string | null | undefined, pageIndex?: number, pageSize?: number, sortBy?: string | null | undefined, sortDirection?: string | null | undefined) {
+  fetchBanners(payload: {search?: string | null | undefined, pageIndex?: number, pageSize?: number, sortBy?: string | null | undefined, sortDirection?: string | null | undefined}) {
+    const {search, pageIndex, pageSize, sortBy, sortDirection} = payload
     return this.http.post("/banners/find", {search, pageIndex, pageSize, sortBy, sortDirection, excludes: ['url', 'priority', 'createdAt', 'modifiedAt'],})
   }
 

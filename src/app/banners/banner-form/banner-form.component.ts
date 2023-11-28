@@ -1,161 +1,101 @@
-import {Component, OnInit} from '@angular/core';
-import {FormsService} from "../../services/banners/forms.service";
-import {dataUrlToBlob} from '../../shared/utilities/file-utils'
-import {ReferenceData} from "../../shared/types/reference-data";
-import {tap} from "rxjs";
-import {Banner} from "../../shared/types/banner";
-import {ApiService} from "../../services/api/api.service";
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {environment} from "../../../environments/environment";
-import {Store} from "@ngrx/store";
-import {drawerToggle, startSubmitBannerLoading, stopSubmitBannerLoading} from "../../store/UI/UI.action";
-import {BannersStore} from "../../store/banners/banners.reducer";
-import { deleteBanner} from "../../store/banners/banners.actions";
-import {FormStore} from "../../store/form/form.reducer";
-import {
-  selectFile,
-  setBannerId,
-  setDeleteButton,
-  setEditFileId,
-  setFormData, submitBannerData,
-  submitFormData
-} from "../../store/form/form.actions";
-import {bannerFormData, editFileId, fileFormData, showDeleteButton} from "../../store/form/form.selectors";
-import {drawerUI, isLoadingSubmitBanner} from "../../store/UI/UI.selectors";
+
+import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {ReferenceData} from "../../shared/types/reference-data";
+import {Banner} from "../../shared/types/banner";
+
+type FormInput = string | null
 
 @Component({
   selector: 'app-banner-form',
   templateUrl: './banner-form.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BannerFormComponent implements OnInit{
-
-  channels!: ReferenceData[]
-  zones!: ReferenceData[]
-  languages!: ReferenceData[]
-  labels!: ReferenceData[]
-  editFlag!: boolean
-  fileFormData!: FormData
-  showDeleteButton!: boolean
-  editFileId!: null | number | string
-  submitBannerDataIsLoading$!: boolean
-  constructor(
-    public formService: FormsService,
-    private apiService: ApiService,
-    private UIStore: Store<{UI: boolean}>,
-    private bannersStore: Store<{banners: BannersStore}>,
-    private formStore: Store<{form: FormStore}>
-  ) {
-    this.UIStore.select(isLoadingSubmitBanner).subscribe((loading) => {
-      this.submitBannerDataIsLoading$ = loading
-    })
-    this.formStore.select(bannerFormData).subscribe((form) => {
-      this.formService.bannerForm.patchValue(form)
-    })
-    this.formStore.select(fileFormData).subscribe(data => {
-      this.fileFormData = data
-    })
-    this.formStore.select(showDeleteButton).subscribe(show => {
-      this.showDeleteButton = show
-    })
-    this.formStore.select(editFileId).subscribe(id => this.editFileId = id)
-  }
-
-
-  bannerForm = this.formService.bannerForm
+export class BannerFormComponent implements OnChanges{
 
   public readonly apiUrl = environment.ApiUrl
 
-  submitBannerData() {
-    const fileId = JSON.parse(sessionStorage.getItem('editFileId') as string)
-    const editFlag = JSON.parse(localStorage.getItem('editFlag') as string)
-    const bannerId = JSON.parse(localStorage.getItem('bannerId') as string)
-    this.UIStore.dispatch(startSubmitBannerLoading())
-    if (!fileId) {
-      this.formStore.dispatch(submitFormData({data: this.bannerForm.value, blob: this.fileFormData}))
-    } else {
-      const mergedBannerData = {...this.formService.bannerForm.value, id: bannerId, fileId: fileId}
-      this.formStore.dispatch(submitBannerData({bannerData: mergedBannerData, editFlag}))
+  @Input() channels$!: ReferenceData[] | null
+
+  @Input() zones$!: ReferenceData[] | null
+
+  @Input() languages$!: ReferenceData[] | null
+
+  @Input() labels$!: ReferenceData[] | null
+
+  @Input() submitBannerDataIsLoading$!: boolean | null
+
+  @Input() showDeleteButton$!: boolean | null
+
+  @Input() formApiError$!: string | null
+
+  @Output() drawerClose = new EventEmitter()
+
+  @Input() banner!: Banner | null
+
+  @Output() submitBannerData = new EventEmitter()
+
+  @Output() selectedFile = new EventEmitter()
+
+  @Output() deleteBanner = new EventEmitter()
+
+  @Input() fileId$!: string | number | null
+
+  @Input() resetBannerForm!: null | boolean
+
+  bannerForm = new FormGroup({
+    "name": new FormControl<FormInput>(null, [Validators.required]),
+    "zoneId": new FormControl<FormInput>(null, [Validators.required]),
+    "active": new FormControl(null, [Validators.required]),
+    "startDate": new FormControl<FormInput>(null, [Validators.required]),
+    "endDate": new FormControl<FormInput>(null),
+    "fileId": new FormControl<string | number | null>(null,  [Validators.required]),
+    "priority": new FormControl<FormInput>('', [Validators.required, Validators.min(0)]),
+    "channelId": new FormControl<FormInput>(null, [Validators.required]),
+    "language": new FormControl<FormInput>(null, [Validators.required]),
+    "url": new FormControl<FormInput>(null, [Validators.required]),
+    "labels": new FormControl<string[]>([])
+  })
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['banner']) {
+      this.bannerForm.patchValue(this.banner as Banner)
     }
+
+    if (changes['fileId$']) {
+      this.bannerForm.patchValue({fileId: this.fileId$})
+    }
+
+    if (changes['resetBannerForm']) {
+      this.bannerForm.reset()
+    }
+  }
+
+  onDeleteBanner() {
+      const bannerId = localStorage.getItem("bannerId") as string
+      this.deleteBanner.emit(bannerId)
   }
 
   onSelectedFile(event: Event) {
     const file = (event.target as HTMLInputElement)?.files?.[0];
-    if (file) this.formStore.dispatch(selectFile({file: file}))
+    if (file) this.selectedFile.emit(file)
   }
 
-  ngOnInit() {
-    this.formService.getBannerIdObservable()
-      .pipe(
-        tap(() => {
-          this.UIStore.dispatch(startSubmitBannerLoading());
-          this.UIStore.dispatch(drawerToggle({drawerState: true}))
-        })
-      )
-      .subscribe((data) => {
-        this.apiService.fetchBannerById(data.bannerId)
-          .pipe(tap((banner: any | null) => {
-            const formData = banner.data as Banner
-            sessionStorage.setItem('bannerFormData', JSON.stringify(formData));
-            this.formService.bannerForm.patchValue(formData)
-            const editFileId = banner.data.fileId
-            this.formStore.dispatch(setEditFileId({id: editFileId}))
-            this.formStore.dispatch(setDeleteButton({show: true}))
-            this.formStore.dispatch(setBannerId({id: data.bannerId}))
-            sessionStorage.setItem('editFileId', JSON.stringify(editFileId))
+  onCloseDrawer() {
+      this.drawerClose.emit()
+  }
 
-          }))
-          .subscribe(() => {
-            this.UIStore.dispatch(stopSubmitBannerLoading())
-          })
-      })
+  onSubmitBannerData() {
+    const editFlag = JSON.parse(localStorage.getItem('editFlag') as string)
+    const bannerId = JSON.parse(localStorage.getItem('bannerId') as string)
 
-
-    const formData = sessionStorage.getItem('bannerFormData') as string;
-    this.formStore.dispatch(setFormData({formData: JSON.parse(formData)}))
-
-    this.formService.bannerForm.valueChanges.subscribe((formData) => {
-      sessionStorage.setItem('bannerFormData', JSON.stringify(formData));
-    })
-
-    const editFileId = sessionStorage.getItem('editFileId') as string;
-    this.formStore.dispatch(setEditFileId({id: editFileId}));
-
-    this.formService.bannerForm.controls.fileId.valueChanges.subscribe((value) => {
-      if (value !== this.editFileId) {
-        this.formStore.dispatch(setEditFileId({id: null}))
-        sessionStorage.removeItem('editFileId')
-      }
-    })
-
-    const editFlag = localStorage.getItem('editFlag')
-    if (editFlag && JSON.parse(editFlag)) { this.formStore.dispatch(setDeleteButton({show: true})) }
-
-
-    const fileUrl = localStorage.getItem('fileDataUrl')
-    const fileName = localStorage.getItem('fileName')
-    const fileType = localStorage.getItem('fileType')
-
-    if (fileUrl && fileType && fileName) {
-      const file = dataUrlToBlob(fileUrl, fileName, fileType)
-      if (file) this.formStore.dispatch(selectFile({file: file}))
+    const emitPayload = {
+      fileId: this.bannerForm.value.fileId,
+      bannerId: bannerId,
+      editFlag: editFlag,
+      formData: this.bannerForm.value,
     }
-
-    this.UIStore.select(drawerUI).subscribe(() => {
-      if (JSON.parse(localStorage.getItem('drawerIsOpen') as string)) {
-        this.formService.getReferenceData()
-          .subscribe((referenceData) => {
-            this.channels = referenceData.channels
-            this.zones = referenceData.zones
-            this.languages = referenceData.languages
-            this.labels = referenceData.labels
-          })
-      }
-    })
+    this.submitBannerData.emit(emitPayload)
   }
-
-  deleteBanner() {
-    const bannerId = localStorage.getItem("bannerId") as string
-    this.bannersStore.dispatch(deleteBanner({bannerId: JSON.parse(bannerId)}))
-  }
-
-  closeDrawer() { this.UIStore.dispatch(drawerToggle({drawerState: false})) }
 }

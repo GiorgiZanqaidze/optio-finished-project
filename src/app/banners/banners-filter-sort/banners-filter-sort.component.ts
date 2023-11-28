@@ -1,37 +1,35 @@
-import {Component, Input, Output,  EventEmitter, OnInit} from '@angular/core';
-import {RouteParamsService} from "../../services/banners/route-params.service";
-import { FormGroup } from "@angular/forms";
-import {BannersStore} from "../../store/banners/banners.reducer";
-import {Store} from "@ngrx/store";
-import {searchAndSortBannerForm} from "../../store/banners/banners.selector";
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, OnChanges, SimpleChanges} from '@angular/core';
+import {FormControl, FormGroup} from "@angular/forms";
 import {SortBy} from "../../constants/sorting-options";
 
 @Component({
-  selector: 'app-banners-filter-sort',
+  selector: 'app-store-filter-sort',
   templateUrl: './banners-filter-sort.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BannersFilterSortComponent{
+export class BannersFilterSortComponent implements OnChanges{
 
   protected readonly SortBy = SortBy;
 
-  @Input() searchBannersForm!: FormGroup
+  @Input() searchBannersForm!: {search: string, sortDirection: string, sortBy: string} | null
 
-  @Output() bannersSearch = new EventEmitter<any>()
+  searchForm = new FormGroup({
+    "search": new FormControl<string>(''),
+    "sortDirection": new  FormControl<string>('asc'),
+    "sortBy": new FormControl<string>('name.raw')
+  })
+
+
+  @Output() bannersSearch = new EventEmitter()
 
   onBannersSearch() {
-    this.bannersSearch.emit(this.searchBannersForm.value)
-   }
-
-
-  constructor(
-    private bannersStore: Store<{banners: BannersStore}>,
-    private bannersService: RouteParamsService
-  ) {
-      this.bannersStore.select(searchAndSortBannerForm).subscribe((form) => {
-        this.searchBannersForm.patchValue(form)
-      })
+    this.bannersSearch.emit(this.searchForm.value)
   }
 
-
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['searchBannersForm']) {
+      this.searchForm.patchValue(this.searchBannersForm as {search: string, sortDirection: string, sortBy: string})
+    }
+  }
 
 }

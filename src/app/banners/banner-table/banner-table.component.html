@@ -41,7 +41,7 @@
         </td>
       </ng-container>
       <ng-container matColumnDef="Image">
-        <th mat-header-cell *matHeaderCellDef> Image </th>
+        <th mat-header-cell *matHeaderCellDef>Image </th>
         <td mat-cell *matCellDef="let element">
           <div class="my-5 min-w-[9rem] min-h-[9rem] max-w-[9rem] overflow-hidden max-h-[9rem] flex items-center">
             <img [src]="apiUrl + '/blob/' + element.fileId" alt="banner" class="w-full">
@@ -52,23 +52,26 @@
       <tr
         mat-row *matRowDef="let row; columns: displayedColumns;"
         class="hover:bg-light hover:cursor-pointer border-gray-300 transition-all"
-        (click)="showEditBannerForm(row)"
+        (click)="onShowEditBannerForm(row)"
       ></tr>
     </table>
   </ng-container>
-  <div *ngIf="isLoading$" class="mt-20 flex justify-center items-center">
+  <div *ngIf="isLoading$ && !apiError$" class="mt-20 flex justify-center items-center">
     <mat-spinner></mat-spinner>
+  </div>
+  <div *ngIf="apiError$" class="text-red-500 h-full mt-8" >
+    <h1 class="flex justify-center font-bold">{{apiError$}}</h1>
   </div>
 </div>
 <mat-paginator
   style="background: #f1f1f1"
   color="primary"
-  [pageSizeOptions]="[3, 5, 10]"
-  [pageSize]="(bannersPageSize$ | async) ?? 3"
   showFirstLastButtons
-  [pageIndex]="(bannersPage$ | async) ?? 0"
-  [length]="(totalPages$ | async) ?? 0"
-  (page)="pageChange($event)"
+  [pageSizeOptions]="[3, 5, 10]"
+  [pageSize]="bannersPageSize$ ?? 3"
+  [pageIndex]="bannersPage$ ?? 0"
+  [length]="totalPages$ ?? 0"
+  (page)="onRouteParamsChange($event)"
 >
 </mat-paginator>
 
