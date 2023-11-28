@@ -1,17 +1,20 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import {BannersStore} from "./banners.reducer";
+import {adapter, BannersStore} from "./state/banners.state";
 
 const selectBannersState = createFeatureSelector<BannersStore>('banners');
+
+const { selectAll: entitiesSelectAll } = adapter.getSelectors();
+
+export const selectBanners = createSelector(
+    selectBannersState,
+    entitiesSelectAll,
+);
 
 export const bannersPage = createSelector(
   selectBannersState,
   (state) => state.bannersPage
 );
 
-export const bannersData = createSelector(
-  selectBannersState,
-  (state) => state.bannersData
-)
 
 export const totalPages = createSelector(
   selectBannersState,

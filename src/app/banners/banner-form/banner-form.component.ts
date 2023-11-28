@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {environment} from "../../../environments/environment";
 import {Store} from "@ngrx/store";
-import {BannersStore} from "../store/banners.reducer";
+import {BannersStore} from "../store/state/banners.state";
 import {
   setEditFileId,
   setFormData,

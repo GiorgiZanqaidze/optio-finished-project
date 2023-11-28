@@ -19,37 +19,11 @@ import {
   stopSubmitBannerLoading,
   submitServerError
 } from "./banners.actions";
-import {Banner} from "../../shared/types/banner";
-import {ReferenceData} from "src/app/shared/types/reference-data";
 import {fileReader} from "../../shared/utilities/file-utils";
+import {adapter, BannersStore} from "./state/banners.state";
 
 
-export interface BannersStore {
-  bannersPage: number,
-  bannersPageSize: number
-  bannersData: Banner[],
-  totalPages: number
-  searchAndSortBannerForm: {search: string, sortDirection: string, sortBy: string},
-  showBannerEditForm: {editFlag: boolean, bannerId: number},
-  apiError: string | null,
-  // form store =========================================
-  bannerFormData: Banner,
-  fileFormData: FormData,
-  showDeleteButton: boolean,
-  editFileId: null | string | number,
-  bannerId: null | string | number,
-  formServerError: null | string,
-  channels: ReferenceData[]
-  zones: ReferenceData[]
-  languages: ReferenceData[]
-  labels: ReferenceData[]
-//   UI store
-  drawer: boolean,
-  isLoading: boolean,
-  isLoadingSubmitBanner: boolean
-}
-
-const initialState: BannersStore = {
+const initialState: BannersStore = adapter.getInitialState({
   bannersPage: 0,
   bannersPageSize: 0,
   bannersData: [],
@@ -85,12 +59,10 @@ const initialState: BannersStore = {
   drawer: false,
   isLoading: false,
   isLoadingSubmitBanner: false
-}
+})
 
 export const bannersReducer = createReducer(
   initialState,
-
-
   on(setBannersData, (state, action) => {
 
     const searchAndSortBannerForm = {
@@ -98,15 +70,19 @@ export const bannersReducer = createReducer(
       sortDirection: action.sortDirection,
       sortBy: action.sortBy
     }
-    return {
-      ...state,
-      bannersData: action.bannersData.entities as Banner[],
-      totalPages: action.bannersData.total,
-      isLoading: false,
-      bannersPage: action.page,
-      bannersPageSize: action.pageSize,
-      searchAndSortBannerForm: searchAndSortBannerForm
-    }
+
+    const bannersEntities = action.bannersData.entities
+
+    return adapter.addMany(
+      bannersEntities,
+        {
+          ...state,
+        totalPages: action.bannersData.total,
+        isLoading: false,
+        bannersPage: action.page,
+        bannersPageSize: action.pageSize,
+        searchAndSortBannerForm: searchAndSortBannerForm
+        })
   }),
 
   on(setBannersSearchAndSortForm, (state, action) => {
@@ -122,26 +98,14 @@ export const bannersReducer = createReducer(
   }),
 
   on(deleteBannerSuccess, (state, action) => {
-    const filteredBanners = state.bannersData.filter((banner) => {
-      return action.bannerId !== banner.id
-    })
-    return {...state, bannersData: filteredBanners, drawer: action.drawerState, isLoadingSubmitBanner: action.submitBannerLoading}
+    return adapter.removeOne(action.bannerId.toString(), {...state, drawer: action.drawerState, isLoadingSubmitBanner: action.submitBannerLoading})
   }),
 
   on(addOrEditBanner, (state, {newBanner, editFlag}) => {
     if (editFlag) {
-      const newState = state.bannersData.map((banner) => {
-        if (newBanner.id === banner.id) {
-          return newBanner
-        } else {
-          return banner
-        }
-      })
-      return {...state, bannersData: newState, drawer: false, isLoadingSubmitBanner: false}
+      return adapter.setOne(newBanner, {...state, drawer: false, isLoadingSubmitBanner: false})
     } else {
-      const cloneBanners = state.bannersData.slice()
-      cloneBanners.unshift(newBanner)
-      return {...state, bannersData: cloneBanners, totalPages: state.totalPages + 1, drawer: false, isLoadingSubmitBanner: false}
+      return adapter.addOne(newBanner, {...state, totalPages: state.totalPages + 1, drawer: false, isLoadingSubmitBanner: false})
     }
   }),
 

@@ -5,8 +5,8 @@ import {map, exhaustMap, catchError, mergeMap} from 'rxjs/operators';
 import {ROUTER_NAVIGATED} from "@ngrx/router-store";
 import {ApiService} from "../../services/api/api.service";
 import { setBannersData} from "./banners.actions";
-import {BannersStore} from "./banners.reducer";
 import {Store} from "@ngrx/store";
+import {BannersStore} from "./state/banners.state";
 
 import * as BannerActions from './banners.actions';
 

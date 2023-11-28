@@ -5,7 +5,6 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {
   apiError,
   bannerFormData,
-  bannersData,
   bannersPage,
   bannersPageSize,
   channelsReference,
@@ -15,12 +14,12 @@ import {
   isLoadingUI,
   labelsReference,
   languagesReference,
-  searchAndSortBannerForm,
+  searchAndSortBannerForm, selectBanners,
   showDeleteButton,
   totalPages,
   zonesReference
 } from './store/banners.selector';
-import {BannersStore} from "./store/banners.reducer";
+import {BannersStore} from "./store/state/banners.state";
 import {
     deleteBanner,
   drawerToggle,
@@ -55,7 +54,8 @@ export class BannersComponent implements OnInit{
     "labels": new FormControl<string[]>([])
   })
 
-  bannersData$ = this.bannerStore.select(bannersData)
+
+  bannersDataEntities$ = this.bannerStore.select(selectBanners)
   totalPages$ = this.bannerStore.select(totalPages)
   bannersPage$ = this.bannerStore.select(bannersPage)
   bannersPageSize$ = this.bannerStore.select(bannersPageSize)
@@ -84,6 +84,7 @@ export class BannersComponent implements OnInit{
   @ViewChild('drawer') drawer!: MatDrawer
 
   ngOnInit() {
+
     const drawerIsOpen = localStorage.getItem('drawerIsOpen')
     if (drawerIsOpen) {
         this.bannerStore.dispatch(drawerToggle({drawerState: JSON.parse(drawerIsOpen)}))
