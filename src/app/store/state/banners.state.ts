@@ -1,5 +1,5 @@
-import {Banner} from "../../../shared/types/banner";
-import {ReferenceData} from "../../../shared/types/reference-data";
+import { ReferenceData } from "src/app/shared/types/reference-data";
+import { Banner } from "src/app/shared/types/banner";
 import {createEntityAdapter, EntityAdapter, EntityState} from "@ngrx/entity";
 
 export interface BannersStore extends EntityState<Banner>{

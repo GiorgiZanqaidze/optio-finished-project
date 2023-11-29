@@ -1,5 +1,5 @@
 import {createAction, props} from "@ngrx/store";
-import {Banner} from "../../../shared/types/banner";
+import {Banner} from "../../shared/types/banner";
 import { ReferenceData } from "src/app/shared/types/reference-data";
 
 export const bannersPageChange = createAction(

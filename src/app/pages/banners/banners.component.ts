@@ -19,19 +19,19 @@ import {
   showDeleteButton,
   totalPages,
   zonesReference
-} from './store/selectors/banners.selector';
-import {BannersStore} from "./store/state/banners.state";
+} from '../../store/selectors/banners.selector';
+import { BannersStore } from '../../store/state/banners.state';
+
 import {
   deleteBanner,
   drawerToggle,
   getBannerById,
   openEditForm, selectFile,
-  setDeleteButton,
   startSubmitBannerLoading, submitBannerData, resetBannerFormAction
-} from "./store/actions/banners.actions";
+} from "../../store/actions/banners.actions";
 import {ActivatedRoute, Params, Router} from "@angular/router";
-import {Banner} from "../shared/types/banner";
-import {fileReader} from "../shared/utilities/file-utils";
+import {Banner} from "../../shared/types/banner";
+import {fileReader} from "../../shared/utilities/file-utils";
 
 
 @Component({

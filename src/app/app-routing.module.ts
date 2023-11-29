@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import {BannersComponent} from "./banners/banners.component";
+import {BannersComponent} from "./pages/banners/banners.component";
 
 const routes: Routes = [
   {
