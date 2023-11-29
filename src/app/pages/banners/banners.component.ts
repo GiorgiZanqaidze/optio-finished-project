@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild} from '@angular/core';
 import {MatDrawer} from "@angular/material/sidenav";
 import {Store} from "@ngrx/store";
-import {FormControl, FormGroup} from '@angular/forms';
 import {
   apiError,
   bannerFormData,
@@ -90,8 +89,6 @@ export class BannersComponent implements OnInit{
     this.bannerStore.dispatch(resetBannerFormAction())
     localStorage.clear();
   }
-
-
 
   routeParamsChange(queryParams: Params) {
     this.router.navigate([], {
