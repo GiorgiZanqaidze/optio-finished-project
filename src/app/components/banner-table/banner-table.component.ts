@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@
 import {Banner} from "../../shared/types/banner";
 import {environment} from "../../../environments/environment";
 import {PageEvent} from "@angular/material/paginator";
-import {displayedColumns} from "../../constants/display-columns";
+import {displayedColumns} from "../../shared/constants/display-columns";
 
 @Component({
   selector: 'app-banner-table',
