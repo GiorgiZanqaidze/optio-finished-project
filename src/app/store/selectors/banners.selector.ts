@@ -40,11 +40,6 @@ export const bannerFormData = createSelector(
   (state) => state.bannerFormData
 );
 
-export const fileFormData = createSelector(
-  selectBannersState,
-  (state) => state.fileFormData
-);
-
 export const showDeleteButton = createSelector(
   selectBannersState,
   (state) => state.showDeleteButton

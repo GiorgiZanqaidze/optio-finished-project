@@ -8,10 +8,8 @@ export interface BannersStore extends EntityState<Banner>{
   bannersData: Banner[],
   totalPages: number
   searchAndSortBannerForm: {search: string, sortDirection: string, sortBy: string},
-  showBannerEditForm: {editFlag: boolean, bannerId: number},
   apiError: string | null,
   bannerFormData: Banner,
-  fileFormData: FormData,
   showDeleteButton: boolean,
   bannerId: null | string | number,
   formServerError: null | string,
