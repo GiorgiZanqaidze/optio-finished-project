@@ -3,12 +3,11 @@ import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {forkJoin, of} from 'rxjs';
 import {map, exhaustMap, catchError, mergeMap} from 'rxjs/operators';
 import {ROUTER_NAVIGATED} from "@ngrx/router-store";
-import {ApiService} from "../../../services/api/api.service";
-import { setBannersData} from "../actions/banners.actions";
+import {ApiService} from "../../services/api/api.service";
 import {Store} from "@ngrx/store";
 import {BannersStore} from "../state/banners.state";
 import * as BannerActions from '../actions/banners.actions';
-
+import * as ApiActions from "../actions/api.actions"
 @Injectable()
 export class BannersEffects {
 
@@ -47,10 +46,10 @@ export class BannersEffects {
               sortBy: sortBy || "",
               sortDirection: sortDirection || ""
             }
-            return setBannersData(actionPayload)
+            return ApiActions.setBannersData(actionPayload)
           }),
           catchError((error) => {
-            return of(BannerActions.errorResponse({error: error.error.message}));
+            return of(ApiActions.errorResponse({error: error.error.message}));
           })
         );
       })
@@ -65,11 +64,10 @@ export class BannersEffects {
       exhaustMap((action) => {
         return this.apiService.deleteBanner(action.bannerId).pipe(
           map(() => {
-
-            return BannerActions.deleteBannerSuccess({bannerId: action.bannerId, drawerState: false, submitBannerLoading: false})
+            return ApiActions.deleteBannerSuccess({bannerId: action.bannerId, drawerState: false, submitBannerLoading: false})
           }),
           catchError((error) => {
-            return of(BannerActions.errorResponse({error: error.error.error}));
+            return of(ApiActions.errorResponse({error: error.error.error}));
           })
         )
         }
@@ -88,10 +86,10 @@ export class BannersEffects {
 
         return forkJoin([channelsApi, labelsApi, zonesApi, languagesApi]).pipe(
           map(([channels, labels, zones, languages]) => {
-            return BannerActions.setReferenceData({channels, labels, zones, languages})
+            return ApiActions.setReferenceData({channels, labels, zones, languages})
           }),
           catchError(() => {
-            return of(BannerActions.referenceDataApiError());
+            return of(ApiActions.referenceDataApiError());
           })
         );
       })
@@ -108,10 +106,10 @@ export class BannersEffects {
 
         return this.apiService.fetchBannerById(action.bannerId).pipe(
           map((bannerData: any) => {
-            return BannerActions.setBannerData({bannerData: bannerData.data});
+            return ApiActions.setBannerData({bannerData: bannerData.data});
           }),
           catchError((error) => {
-            return of(BannerActions.errorResponse({error: error.error.error}));
+            return of(ApiActions.errorResponse({error: error.error.error}));
           })
         )
         }
@@ -126,10 +124,10 @@ export class BannersEffects {
       exhaustMap(({bannerData, editFlag}) =>
         this.apiService.submitBannerForm(bannerData).pipe(
           map((newBannerData: any) => {
-            return BannerActions.addOrEditBanner({newBanner: newBannerData.data, editFlag, drawerState: false, submitBannerLoading: false})
+            return ApiActions.addOrEditBanner({newBanner: newBannerData.data, editFlag, drawerState: false, submitBannerLoading: false})
           }),
           catchError(() => {
-            return of(BannerActions.submitServerError({error: "error"}));
+            return of(ApiActions.submitServerError({error: "error"}));
           })
         )
       )
@@ -142,10 +140,10 @@ export class BannersEffects {
           exhaustMap(({file}) =>
               this.apiService.submitBlob(file).pipe(
                   map((image: any) => {
-                      return BannerActions.selectFileSuccess({imageId: image.data.id})
+                      return ApiActions.selectFileSuccess({imageId: image.data.id})
                   }),
                   catchError(() => {
-                      return of(BannerActions.submitServerError({error: "error"}));
+                      return of(ApiActions.submitServerError({error: "error"}));
                   })
               )
           )

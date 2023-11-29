@@ -1,5 +1,5 @@
-import {Banner} from "../../../shared/types/banner";
-import {ReferenceData} from "../../../shared/types/reference-data";
+import { ReferenceData } from "src/app/shared/types/reference-data";
+import { Banner } from "src/app/shared/types/banner";
 import {createEntityAdapter, EntityAdapter, EntityState} from "@ngrx/entity";
 
 export interface BannersStore extends EntityState<Banner>{
@@ -8,10 +8,8 @@ export interface BannersStore extends EntityState<Banner>{
   bannersData: Banner[],
   totalPages: number
   searchAndSortBannerForm: {search: string, sortDirection: string, sortBy: string},
-  showBannerEditForm: {editFlag: boolean, bannerId: number},
   apiError: string | null,
   bannerFormData: Banner,
-  fileFormData: FormData,
   showDeleteButton: boolean,
   bannerId: null | string | number,
   formServerError: null | string,

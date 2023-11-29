@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, OnChanges, SimpleChanges} from '@angular/core';
 import {FormControl, FormGroup} from "@angular/forms";
-import {SortBy} from "../../constants/sorting-options";
+import {SortBy} from "../../shared/constants/sorting-options";
 
 @Component({
   selector: 'app-store-filter-sort',

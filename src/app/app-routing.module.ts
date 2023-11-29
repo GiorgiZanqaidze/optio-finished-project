@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import {BannersComponent} from "./banners/banners.component";
 
 const routes: Routes = [
   {
@@ -10,7 +9,7 @@ const routes: Routes = [
   },
   {
     path: "banners",
-    component: BannersComponent,
+    loadChildren: () => import("./pages/banners/banners.module").then(m => m.BannersModule)
   },
   {
     path: "**",
