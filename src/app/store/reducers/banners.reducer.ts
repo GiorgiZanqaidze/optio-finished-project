@@ -12,7 +12,7 @@ import {
   stopSubmitBannerLoading,
 } from "../actions/banners.actions";
 import {adapter, BannersStore} from "../state/banners.state";
-import { addOrEditBanner, deleteBannerSuccess, errorResponse, selectFileSuccess, setBannerData, setBannersData, setReferenceData, submitServerError } from "../actions/api.actions";
+import { addOrEditBanner, deleteBannerSuccess, errorResponse, selectFileSuccess, setBannerData, setBannersData, setReferenceData, submitServerError } from "../actions/banners-api.actions";
 
 
 const initialState: BannersStore = adapter.getInitialState({

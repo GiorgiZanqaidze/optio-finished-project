@@ -7,7 +7,7 @@ import {ApiService} from "../../services/api/api.service";
 import {Store} from "@ngrx/store";
 import {BannersStore} from "../state/banners.state";
 import * as BannerActions from '../actions/banners.actions';
-import * as ApiActions from "../actions/api.actions"
+import * as ApiActions from "../actions/banners-api.actions"
 @Injectable()
 export class BannersEffects {
 
@@ -27,6 +27,8 @@ export class BannersEffects {
         this.bannerStore.dispatch(BannerActions.startLoading())
 
         const {search, pageSize, page, sortBy, sortDirection} = action.payload.routerState.root.queryParams;
+
+        console.log(action.payload.routerState.root.queryParams)
 
         const payloadAPI = {
           search: search || "",
