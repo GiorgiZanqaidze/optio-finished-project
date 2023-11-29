@@ -32,12 +32,10 @@ export const deleteBannerSuccess = createAction(
   props<{ bannerId: number | string, drawerState: boolean, submitBannerLoading: boolean}>()
 );
 
-
 export const selectFileSuccess = createAction(
   "[Banners Component] Select Image File",
   props<{imageId: string | number}>()
 )
-
 
 export const setBannersData = createAction(
   "[Banners Component] SetData",

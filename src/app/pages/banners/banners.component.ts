@@ -25,13 +25,12 @@ import {
   deleteBanner,
   drawerToggle,
   getBannerById,
-  openEditForm, selectFile,
-  startSubmitBannerLoading, submitBannerData, resetBannerFormAction
+  selectFile,
+  submitBannerData, resetBannerFormAction, getReferenceData
 } from "../../store/actions/banners.actions";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {Banner} from "../../shared/types/banner";
 import {fileReader} from "../../shared/utilities/file-utils";
-
 
 @Component({
   selector: 'app-store',
@@ -39,54 +38,52 @@ import {fileReader} from "../../shared/utilities/file-utils";
 })
 export class BannersComponent implements OnInit{
 
-  bannersDataEntities$ = this.bannerStore.select(selectBanners)
-  totalPages$ = this.bannerStore.select(totalPages)
-  bannersPage$ = this.bannerStore.select(bannersPage)
-  bannersPageSize$ = this.bannerStore.select(bannersPageSize)
-  isLoading$ = this.bannerStore.select(isLoadingUI)
-  apiError$ = this.bannerStore.select(apiError)
-  resetBannerForm$ = this.bannerStore.select(resetBannerForm)
+  bannersDataEntities$ = this.store.select(selectBanners)
+  totalPages$ = this.store.select(totalPages)
+  bannersPage$ = this.store.select(bannersPage)
+  bannersPageSize$ = this.store.select(bannersPageSize)
+  isLoading$ = this.store.select(isLoadingUI)
+  apiError$ = this.store.select(apiError)
+  resetBannerForm$ = this.store.select(resetBannerForm)
 
-  bannerForm$ = this.bannerStore.select(bannerFormData)
-  channels$ = this.bannerStore.select(channelsReference)
-  zones$ = this.bannerStore.select(zonesReference)
-  languages$ = this.bannerStore.select(languagesReference)
-  labels$ = this.bannerStore.select(labelsReference)
-  submitBannerDataIsLoading$ = this.bannerStore.select(isLoadingSubmitBanner)
-  showDeleteButton$ =  this.bannerStore.select(showDeleteButton)
-  formApiError$ = this.bannerStore.select(formServerError)
-  searchBannersForm$ = this.bannerStore.select(searchAndSortBannerForm)
-  drawer$ = this.bannerStore.select(drawerUI)
-  fileId$ = this.bannerStore.select(fileIdChanges)
+  bannerForm$ = this.store.select(bannerFormData)
+  channels$ = this.store.select(channelsReference)
+  zones$ = this.store.select(zonesReference)
+  languages$ = this.store.select(languagesReference)
+  labels$ = this.store.select(labelsReference)
+  submitBannerDataIsLoading$ = this.store.select(isLoadingSubmitBanner)
+  showDeleteButton$ =  this.store.select(showDeleteButton)
+  formApiError$ = this.store.select(formServerError)
+  searchBannersForm$ = this.store.select(searchAndSortBannerForm)
+  drawer$ = this.store.select(drawerUI)
+  fileId$ = this.store.select(fileIdChanges)
 
   constructor(
-    private bannerStore: Store<{banner: BannersStore}>,
+    private store: Store,
     private router: Router,
     private route: ActivatedRoute,
   ) {}
-
 
   @ViewChild('drawer') drawer!: MatDrawer
 
   ngOnInit() {
     const drawerIsOpen = localStorage.getItem('drawerIsOpen')
     if (drawerIsOpen) {
-        this.bannerStore.dispatch(drawerToggle({drawerState: JSON.parse(drawerIsOpen)}))
-        this.bannerStore.dispatch(openEditForm())
+        this.store.dispatch(getReferenceData({drawerState: JSON.parse(drawerIsOpen)}))
     }
 
     const bannerId = localStorage.getItem('bannerId') as string
     if (bannerId && JSON.parse(bannerId)) {
-        this.bannerStore.dispatch(getBannerById({editFlag: true, bannerId: JSON.parse(bannerId)}))
+        this.store.dispatch(getBannerById({editFlag: true, bannerId: JSON.parse(bannerId)}))
     }
   }
 
   drawerOpen() {
-     this.bannerStore.dispatch(drawerToggle({drawerState: this.drawer.opened}))
+     this.store.dispatch(drawerToggle({drawerState: this.drawer.opened}))
   }
 
   drawerClose() {
-    this.bannerStore.dispatch(resetBannerFormAction())
+    this.store.dispatch(resetBannerFormAction())
     localStorage.clear();
   }
 
@@ -99,25 +96,23 @@ export class BannersComponent implements OnInit{
   }
 
   showEditBannerForm(rowData: Banner) {
-    this.bannerStore.dispatch(getBannerById({editFlag: true, bannerId: rowData.id}))
+    this.store.dispatch(getBannerById({editFlag: true, bannerId: rowData.id}))
   }
 
   submitBannerData($event: {fileId: number, bannerId: number, editFlag: boolean, formData: Banner}) {
     const {fileId, bannerId, editFlag, formData} = $event
     const mergedBannerData = {...formData, id: bannerId, fileId: fileId}
-    this.bannerStore.dispatch(startSubmitBannerLoading())
-    this.bannerStore.dispatch(submitBannerData({bannerData: mergedBannerData, editFlag}))
+    this.store.dispatch(submitBannerData({bannerData: mergedBannerData, editFlag}))
   }
 
   selectedFile(file: File) {
     const modifiedFile = fileReader(file)
     const fileForm = new FormData();
     fileForm.set('blob', modifiedFile)
-    this.bannerStore.dispatch(selectFile({file: fileForm}))
+    this.store.dispatch(selectFile({file: fileForm}))
   }
 
   deleteBanner(bannerId: string) {
-      this.bannerStore.dispatch(startSubmitBannerLoading())
-      this.bannerStore.dispatch(deleteBanner({bannerId: JSON.parse(bannerId)}))
+      this.store.dispatch(deleteBanner({bannerId: JSON.parse(bannerId)}))
   }
 }

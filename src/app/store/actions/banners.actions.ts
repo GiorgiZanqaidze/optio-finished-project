@@ -55,8 +55,9 @@ export const submitBannerDataSuccess = createAction(
   props<{bannerData: any, editFlag: boolean, drawerState: false, submitBannerLoading: false}>()
 )
 
-export const openEditForm = createAction(
+export const getReferenceData = createAction(
   "[Banners Component] Open Edit Form",
+  props<{drawerState: boolean}>()
 )
 
 export const drawerToggle = createAction(

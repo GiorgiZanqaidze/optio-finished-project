@@ -28,8 +28,6 @@ export class BannersEffects {
 
         const {search, pageSize, page, sortBy, sortDirection} = action.payload.routerState.root.queryParams;
 
-        console.log(action.payload.routerState.root.queryParams)
-
         const payloadAPI = {
           search: search || "",
           pageIndex: page || 0,
@@ -79,7 +77,7 @@ export class BannersEffects {
 
   onOpenEditForm$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(BannerActions.openEditForm),
+      ofType(BannerActions.getReferenceData),
       mergeMap(() => {
         const channelsApi = this.apiService.getChannels()
         const zonesApi = this.apiService.getZones()
