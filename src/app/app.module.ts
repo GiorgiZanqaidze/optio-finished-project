@@ -6,8 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {StoreModule} from "@ngrx/store";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import { EffectsModule } from '@ngrx/effects';
-import {AuthInterceptorService} from "./services/interceptors/auth/auth-interceptor.service";
-import {ApiUrlInterceptorService} from "./services/interceptors/api-url/api-url-interceptor.service";
+import {AuthInterceptorService} from "./auth/auth-interceptor.service";
 import {bannersReducer} from "./store/reducers/banners.reducer";
 import {BannersEffects} from "./store/effects/banners.effects";
 import {StoreRouterConnectingModule} from "@ngrx/router-store";
@@ -35,11 +34,6 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
       {
           provide: HTTP_INTERCEPTORS,
           useClass: AuthInterceptorService,
-          multi: true,
-      },
-      {
-          provide: HTTP_INTERCEPTORS,
-          useClass: ApiUrlInterceptorService,
           multi: true,
       },
   ],

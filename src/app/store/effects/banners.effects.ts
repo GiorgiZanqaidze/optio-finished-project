@@ -2,9 +2,7 @@ import { Injectable } from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {forkJoin, of} from 'rxjs';
 import {map, exhaustMap, catchError, mergeMap} from 'rxjs/operators';
-import {ApiService} from "../../services/api/api.service";
-import {Store} from "@ngrx/store";
-import {BannersStore} from "../state/banners.state";
+import {BannersService} from "../services/banners.service";
 import * as BannerActions from '../actions/banners.actions';
 import * as ApiActions from "../actions/banners-api.actions"
 @Injectable()
@@ -12,7 +10,7 @@ export class BannersEffects {
 
   constructor(
     private actions$: Actions,
-    private apiService: ApiService,
+    private bannersService: BannersService,
   ) {}
 
   BannersRouterNavigatedEffect$ = createEffect(() =>
@@ -29,7 +27,7 @@ export class BannersEffects {
           sortDirection: sortDirection
         }
 
-        return this.apiService.fetchBanners(payloadAPI).pipe(
+        return this.bannersService.fetchBanners(payloadAPI).pipe(
           map((bannersData: any) => {
             const actionPayload = {
               bannersData: bannersData.data,
@@ -55,7 +53,7 @@ export class BannersEffects {
       .pipe(
       ofType(BannerActions.deleteBanner),
       exhaustMap((action) => {
-        return this.apiService.deleteBanner(action.bannerId).pipe(
+        return this.bannersService.deleteBanner(action.bannerId).pipe(
           map(() => {
             return ApiActions.deleteBannerSuccess({bannerId: action.bannerId, drawerState: false, submitBannerLoading: false})
           }),
@@ -72,10 +70,10 @@ export class BannersEffects {
     this.actions$.pipe(
       ofType(BannerActions.getReferenceData),
       mergeMap(() => {
-        const channelsApi = this.apiService.getChannels()
-        const zonesApi = this.apiService.getZones()
-        const labelsApi = this.apiService.getLabels()
-        const languagesApi = this.apiService.getLanguages()
+        const channelsApi = this.bannersService.getChannels()
+        const zonesApi = this.bannersService.getZones()
+        const labelsApi = this.bannersService.getLabels()
+        const languagesApi = this.bannersService.getLanguages()
 
         return forkJoin([channelsApi, labelsApi, zonesApi, languagesApi]).pipe(
           map(([channels, labels, zones, languages]) => {
@@ -97,7 +95,7 @@ export class BannersEffects {
         localStorage.setItem("editFlag", JSON.stringify(true))
         localStorage.setItem("bannerId", JSON.stringify(action.bannerId))
 
-        return this.apiService.fetchBannerById(action.bannerId).pipe(
+        return this.bannersService.fetchBannerById(action.bannerId).pipe(
           map((bannerData: any) => {
             return ApiActions.setBannerData({bannerData: bannerData.data});
           }),
@@ -115,7 +113,7 @@ export class BannersEffects {
     this.actions$.pipe(
       ofType(BannerActions.submitBannerData),
       exhaustMap(({bannerData, editFlag}) =>
-        this.apiService.submitBannerForm(bannerData).pipe(
+        this.bannersService.submitBannerForm(bannerData).pipe(
           map((newBannerData: any) => {
             return ApiActions.addOrEditBanner({newBanner: newBannerData.data, editFlag, drawerState: false, submitBannerLoading: false})
           }),
@@ -131,7 +129,7 @@ export class BannersEffects {
       this.actions$.pipe(
           ofType(BannerActions.selectFile),
           exhaustMap(({file}) =>
-              this.apiService.submitBlob(file).pipe(
+              this.bannersService.submitBlob(file).pipe(
                   map((image: any) => {
                       return ApiActions.selectFileSuccess({imageId: image.data.id})
                   }),
