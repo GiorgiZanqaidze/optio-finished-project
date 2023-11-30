@@ -1,6 +1,9 @@
 import {createReducer, on} from "@ngrx/store";
 import {
+  deleteBanner,
   drawerToggle,
+  getBannersData,
+  getReferenceData,
   resetBannerFormAction,
   setBannerId,
   setBannersSearchAndSortForm,
@@ -10,9 +13,10 @@ import {
   startSubmitBannerLoading,
   stopLoading,
   stopSubmitBannerLoading,
+  submitBannerData,
 } from "../actions/banners.actions";
 import {adapter, BannersStore} from "../state/banners.state";
-import { addOrEditBanner, deleteBannerSuccess, errorResponse, selectFileSuccess, setBannerData, setBannersData, setReferenceData, submitServerError } from "../actions/api.actions";
+import { addOrEditBanner, deleteBannerSuccess, errorResponse, selectFileSuccess, setBannerData, setBannersData, setReferenceData, submitServerError } from "../actions/banners-api.actions";
 
 
 const initialState: BannersStore = adapter.getInitialState({
@@ -75,6 +79,11 @@ export const bannersReducer = createReducer(
         })
   }),
 
+
+  on(getBannersData, (state) => {
+    return {...state, isLoading: true}
+  }),
+
   on(setBannersSearchAndSortForm, (state, action) => {
     const modifiedForm = {
       search: action.search,
@@ -85,6 +94,10 @@ export const bannersReducer = createReducer(
       ...state,
       searchAndSortBannerForm: modifiedForm
     }
+  }),
+
+  on(deleteBanner, (state) => {
+    return {...state, isLoadingSubmitBanner: true}
   }),
 
   on(deleteBannerSuccess, (state, action) => {
@@ -174,7 +187,15 @@ export const bannersReducer = createReducer(
     return {...state, bannerFormData: formData}
   }),
 
+  on(submitBannerData, (state) => {
+    return {...state, isLoadingSubmitBanner: true}
+  }),
+
   on(resetBannerFormAction, (state) => {
     return {...state, resetBannerForm: !state.resetBannerForm, drawerState: false, showDeleteButton: false, formServerError: null}
+  }),
+
+  on(getReferenceData, (state, {drawerState}) => {
+    return {...state, drawer: drawerState}
   })
 )

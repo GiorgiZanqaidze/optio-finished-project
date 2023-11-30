@@ -7,29 +7,31 @@ import {ReferenceData} from "../../shared/types/reference-data";
 @Injectable({
   providedIn: 'root'
 })
-export class ApiService {
+export class BannersService {
+
+  private readonly baseUrl = environment.ApiUrl
 
   constructor(private http: HttpClient) { }
 
   fetchBanners(payload: {search?: string | null | undefined, pageIndex?: number, pageSize?: number, sortBy?: string | null | undefined, sortDirection?: string | null | undefined}) {
     const {search, pageIndex, pageSize, sortBy, sortDirection} = payload
-    return this.http.post("/banners/find", {search, pageIndex, pageSize, sortBy, sortDirection, excludes: ['url', 'priority', 'createdAt', 'modifiedAt'],})
+    return this.http.post(`${this.baseUrl}/banners/find`, {search, pageIndex, pageSize, sortBy, sortDirection, excludes: ['url', 'priority', 'createdAt', 'modifiedAt'],})
   }
 
   fetchBannerById(id: number) {
-    return this.http.post("/banners/find-one",{id, excludes: ['createdAt', 'modifiedAt']})
+    return this.http.post(`${this.baseUrl}/banners/find-one`,{id, excludes: ['createdAt', 'modifiedAt']})
   }
 
   submitBlob(formData: any) {
-    return this.http.post('/blob/upload', formData)
+    return this.http.post(`${this.baseUrl}/blob/upload`, formData)
   }
 
   submitBannerForm(formData:any) {
-    return this.http.post('/banners/save', formData)
+    return this.http.post(`${this.baseUrl}/banners/save`, formData)
   }
   getChannels() {
     return this.http
-      .post('/reference-data/find', {
+      .post(`${this.baseUrl}/reference-data/find`, {
         typeId: environment.channels_type_id,
         includes: ['key', 'name'],
       })
@@ -40,7 +42,7 @@ export class ApiService {
 
   getZones() {
     return this.http
-      .post('/reference-data/find', {
+      .post(`${this.baseUrl}/reference-data/find`, {
         typeId: environment.zones_type_id,
         includes: ['key', 'name'],
       })
@@ -51,7 +53,7 @@ export class ApiService {
 
   getLabels() {
     return this.http
-      .post('/reference-data/find', {
+      .post(`${this.baseUrl}/reference-data/find`, {
         typeId: environment.labels_type_id,
         includes: ['key', 'name'],
       })
@@ -62,7 +64,7 @@ export class ApiService {
 
   getLanguages() {
     return this.http
-      .post('/reference-data/find', {
+      .post(`${this.baseUrl}/reference-data/find`, {
         typeId: environment.languages_type_id,
         includes: ['key', 'name'],
       })
@@ -72,6 +74,6 @@ export class ApiService {
   }
 
   deleteBanner(id: string | number) {
-    return this.http.post('/banners/remove', {id: id})
+    return this.http.post(`${this.baseUrl}/banners/remove`, {id: id})
   }
 }
