@@ -9,7 +9,6 @@ import { EffectsModule } from '@ngrx/effects';
 import {AuthInterceptorService} from "./auth/auth-interceptor.service";
 import {bannersReducer} from "./store/reducers/banners.reducer";
 import {BannersEffects} from "./store/effects/banners.effects";
-import {StoreRouterConnectingModule} from "@ngrx/router-store";
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 @NgModule({
@@ -27,7 +26,6 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
     EffectsModule.forRoot([
       BannersEffects,
     ]),
-    StoreRouterConnectingModule.forRoot(),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() })
   ],
   providers: [
