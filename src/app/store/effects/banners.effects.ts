@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {forkJoin, of} from 'rxjs';
 import {map, exhaustMap, catchError, mergeMap} from 'rxjs/operators';
-import {ROUTER_NAVIGATED} from "@ngrx/router-store";
 import {ApiService} from "../../services/api/api.service";
 import {Store} from "@ngrx/store";
 import {BannersStore} from "../state/banners.state";
@@ -14,37 +13,31 @@ export class BannersEffects {
   constructor(
     private actions$: Actions,
     private apiService: ApiService,
-    private bannerStore: Store<{banner: BannersStore}>
   ) {}
-
-
 
   BannersRouterNavigatedEffect$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(ROUTER_NAVIGATED),
+      ofType(BannerActions.getBannersData),
       exhaustMap((action: any) => {
 
-        this.bannerStore.dispatch(BannerActions.startLoading())
-
-        const {search, pageSize, page, sortBy, sortDirection} = action.payload.routerState.root.queryParams;
-
+        const {search, sortBy, sortDirection, page, pageSize} = action.queryParams
         const payloadAPI = {
-          search: search || "",
-          pageIndex: page || 0,
-          pageSize: pageSize || 3,
-          sortBy: sortBy || "",
-          sortDirection: sortDirection || ""
+          search: search,
+          page: page | 0,
+          pageSize:  pageSize | 3,
+          sortBy: sortBy,
+          sortDirection: sortDirection
         }
 
         return this.apiService.fetchBanners(payloadAPI).pipe(
           map((bannersData: any) => {
             const actionPayload = {
               bannersData: bannersData.data,
-              page: page || 0,
-              pageSize: +pageSize || 3,
-              search: search || "",
-              sortBy: sortBy || "",
-              sortDirection: sortDirection || ""
+              page: page,
+              pageSize: pageSize,
+              search: search,
+              sortBy: sortBy,
+              sortDirection: sortDirection
             }
             return ApiActions.setBannersData(actionPayload)
           }),

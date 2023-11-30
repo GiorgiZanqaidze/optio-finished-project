@@ -65,6 +65,11 @@ export const drawerToggle = createAction(
   props<{drawerState: boolean}>()
 )
 
+export const getBannersData = createAction(
+  '[Banners Component] Get Banners Data',
+  props<{queryParams: any}>()
+)
+
 export const resetBannerFormAction = createAction(
     '[Banners Component] Reset Banner Form',
 )

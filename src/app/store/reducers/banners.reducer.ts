@@ -2,6 +2,7 @@ import {createReducer, on} from "@ngrx/store";
 import {
   deleteBanner,
   drawerToggle,
+  getBannersData,
   getReferenceData,
   resetBannerFormAction,
   setBannerId,
@@ -76,6 +77,11 @@ export const bannersReducer = createReducer(
         searchAndSortBannerForm: searchAndSortBannerForm,
           bannersSuccessLoad: true
         })
+  }),
+
+
+  on(getBannersData, (state) => {
+    return {...state, isLoading: true}
   }),
 
   on(setBannersSearchAndSortForm, (state, action) => {

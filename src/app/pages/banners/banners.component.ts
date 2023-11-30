@@ -19,14 +19,13 @@ import {
   totalPages,
   zonesReference
 } from '../../store/selectors/banners.selector';
-import { BannersStore } from '../../store/state/banners.state';
 
 import {
   deleteBanner,
   drawerToggle,
   getBannerById,
   selectFile,
-  submitBannerData, resetBannerFormAction, getReferenceData
+  submitBannerData, resetBannerFormAction, getReferenceData, getBannersData
 } from "../../store/actions/banners.actions";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {Banner} from "../../shared/types/banner";
@@ -67,6 +66,12 @@ export class BannersComponent implements OnInit{
   @ViewChild('drawer') drawer!: MatDrawer
 
   ngOnInit() {
+    this.route.queryParams
+    .subscribe((queryParams: Params) => {
+      const {search, sortBy, sortDirection, page, pageSize} = queryParams
+      this.store.dispatch(getBannersData({queryParams: {search, sortBy, sortDirection, page, pageSize}}))
+    })
+
     const drawerIsOpen = localStorage.getItem('drawerIsOpen')
     if (drawerIsOpen) {
         this.store.dispatch(getReferenceData({drawerState: JSON.parse(drawerIsOpen)}))
