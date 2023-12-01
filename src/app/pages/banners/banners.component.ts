@@ -122,7 +122,7 @@ export class BannersComponent implements OnInit{
     }
   }
 
-  submitBannerData($event: {fileId: number, bannerId: number, editFlag: boolean, formData: Banner}) {
+  submitBannerData($event: {fileId: number, formData: Banner}) {
     const {fileId, formData} = $event
     const mergedBannerData = {...formData, id: this.bannerId, fileId: fileId}
     this.store.dispatch(submitBannerData({bannerData: mergedBannerData, bannerId: this.bannerId}))

@@ -87,13 +87,8 @@ export class BannerFormComponent implements OnChanges{
   }
 
   onSubmitBannerData() {
-    const editFlag = JSON.parse(localStorage.getItem('editFlag') as string)
-    const bannerId = JSON.parse(localStorage.getItem('bannerId') as string)
-
     const emitPayload = {
       fileId: this.bannerForm.value.fileId,
-      bannerId: bannerId,
-      editFlag: editFlag,
       formData: this.bannerForm.value,
     }
     this.submitBannerData.emit(emitPayload)
