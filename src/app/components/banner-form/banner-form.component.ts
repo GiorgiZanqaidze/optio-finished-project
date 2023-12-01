@@ -44,6 +44,7 @@ export class BannerFormComponent implements OnChanges{
 
   @Input() resetBannerForm!: null | boolean
 
+
   bannerForm = new FormGroup({
     "name": new FormControl<FormInput>(null, [Validators.required]),
     "zoneId": new FormControl<FormInput>(null, [Validators.required]),
@@ -73,8 +74,7 @@ export class BannerFormComponent implements OnChanges{
   }
 
   onDeleteBanner() {
-      const bannerId = localStorage.getItem("bannerId") as string
-      this.deleteBanner.emit(bannerId)
+      this.deleteBanner.emit()
   }
 
   onSelectedFile(event: Event) {

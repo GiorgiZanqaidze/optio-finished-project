@@ -104,8 +104,8 @@ export const bannersReducer = createReducer(
     return adapter.removeOne(action.bannerId.toString(), {...state, drawer: action.drawerState, isLoadingSubmitBanner: action.submitBannerLoading})
   }),
 
-  on(addOrEditBanner, (state, {newBanner, editFlag}) => {
-    if (editFlag) {
+  on(addOrEditBanner, (state, {newBanner, bannerId}) => {
+    if (bannerId) {
       return adapter.setOne(newBanner, {...state, drawer: false, isLoadingSubmitBanner: false})
     } else {
       return adapter.addOne(newBanner, {...state, totalPages: state.totalPages + 1, drawer: false, isLoadingSubmitBanner: false})
@@ -174,4 +174,6 @@ export const bannersReducer = createReducer(
   on(resetBannerFormAction, (state) => {
     return {...state, resetBannerForm: !state.resetBannerForm, drawer: false, showDeleteButton: false, formServerError: null}
   }),
+
+
 )

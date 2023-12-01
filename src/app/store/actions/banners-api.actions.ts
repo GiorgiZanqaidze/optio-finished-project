@@ -9,7 +9,7 @@ export const submitServerError = createAction(
 
 export const addOrEditBanner = createAction(
   "[Banners Component] Add Or Edit",
-  props<{newBanner: Banner, editFlag: boolean, drawerState: boolean, submitBannerLoading: boolean}>()
+  props<{newBanner: Banner, bannerId: string | number, drawerState: boolean, submitBannerLoading: boolean}>()
 )
 
 export const referenceDataApiError = createAction(

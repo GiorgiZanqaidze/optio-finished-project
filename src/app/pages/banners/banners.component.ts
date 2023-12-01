@@ -71,7 +71,7 @@ export class BannersComponent implements OnInit{
     sortBy: ""
   }
 
-  bannerId = null
+  bannerId = ""
 
   ngOnInit() {
     this.route.queryParams
@@ -105,7 +105,7 @@ export class BannersComponent implements OnInit{
   drawerClose() {
     this.routeParamsChange({bannerId: null})
     this.store.dispatch(resetBannerFormAction())
-    this.bannerId = null
+    this.bannerId = ""
   }
 
   routeParamsChange(queryParams: Params) {
@@ -123,9 +123,9 @@ export class BannersComponent implements OnInit{
   }
 
   submitBannerData($event: {fileId: number, bannerId: number, editFlag: boolean, formData: Banner}) {
-    const {fileId, bannerId, editFlag, formData} = $event
-    const mergedBannerData = {...formData, id: bannerId, fileId: fileId}
-    this.store.dispatch(submitBannerData({bannerData: mergedBannerData, editFlag}))
+    const {fileId, formData} = $event
+    const mergedBannerData = {...formData, id: this.bannerId, fileId: fileId}
+    this.store.dispatch(submitBannerData({bannerData: mergedBannerData, bannerId: this.bannerId}))
   }
 
   selectedFile(file: File) {
@@ -135,7 +135,7 @@ export class BannersComponent implements OnInit{
     this.store.dispatch(selectFile({file: fileForm}))
   }
 
-  deleteBanner(bannerId: string) {
-      this.store.dispatch(deleteBanner({bannerId: JSON.parse(bannerId)}))
+  deleteBanner() {
+      this.store.dispatch(deleteBanner({bannerId: this.bannerId}))
   }
 }

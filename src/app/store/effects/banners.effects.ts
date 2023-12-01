@@ -109,10 +109,10 @@ export class BannersEffects {
   submitBannerData$ = createEffect(() =>
     this.actions$.pipe(
       ofType(BannerActions.submitBannerData),
-      exhaustMap(({bannerData, editFlag}) =>
+      exhaustMap(({bannerData, bannerId}) =>
         this.bannersService.submitBannerForm(bannerData).pipe(
           map((newBannerData: any) => {
-            return ApiActions.addOrEditBanner({newBanner: newBannerData.data, editFlag, drawerState: false, submitBannerLoading: false})
+            return ApiActions.addOrEditBanner({newBanner: newBannerData.data, bannerId, drawerState: false, submitBannerLoading: false})
           }),
           catchError(() => {
             return of(ApiActions.submitServerError({error: "error"}));

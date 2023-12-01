@@ -13,7 +13,7 @@
         [formApiError$]="formApiError$ | async"
         (submitBannerData)="submitBannerData($event)"
         (selectedFile)="selectedFile($event)"
-        (deleteBanner)="deleteBanner($event)"
+        (deleteBanner)="deleteBanner()"
         [fileId$]="fileId$ | async"
         [resetBannerForm]="resetBannerForm$ | async"
       ></app-banner-form>

@@ -47,7 +47,7 @@ export const submitFormData = createAction(
 
 export const submitBannerData = createAction(
   "[Banners Component] Set Form Data Response",
-  props<{bannerData: any, editFlag: boolean}>()
+  props<{bannerData: any, bannerId: number | string}>()
 )
 
 export const submitBannerDataSuccess = createAction(
