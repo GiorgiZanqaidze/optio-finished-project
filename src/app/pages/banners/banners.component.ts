@@ -20,11 +20,11 @@ import {
 } from '../../store/selectors/banners.selector';
 
 import {
-  deleteBanner,
+  deleteButtonClicked,
   drawerToggle,
-  getBannerById,
-  selectFile,
-  submitBannerData, resetBannerFormAction, getBannersData
+  tableRowClicked,
+  fileInputChanged,
+  submitBannerData, resetBannerFormAction, changeQueryParams
 } from "../../store/actions/banners.actions";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {Banner} from "../../shared/types/banner";
@@ -87,13 +87,13 @@ export class BannersComponent implements OnInit{
       }
 
       if (!deepEqual(this.queryParams, localQueries)) {
-        this.store.dispatch(getBannersData({queryParams: {search, sortBy, sortDirection, page, pageSize}}))
+        this.store.dispatch(changeQueryParams({queryParams: {search, sortBy, sortDirection, page, pageSize}}))
         this.queryParams = localQueries
       }
 
       if (bannerId && bannerId !== "0" && bannerId !== this.bannerId) {
         this.bannerId = bannerId
-        this.store.dispatch(getBannerById({editFlag: true, bannerId: JSON.parse(bannerId)}))
+        this.store.dispatch(tableRowClicked({editFlag: true, bannerId: JSON.parse(bannerId)}))
       }
 
       if(bannerId && bannerId === "0") {
@@ -132,10 +132,10 @@ export class BannersComponent implements OnInit{
     const modifiedFile = fileReader(file)
     const fileForm = new FormData();
     fileForm.set('blob', modifiedFile)
-    this.store.dispatch(selectFile({file: fileForm}))
+    this.store.dispatch(fileInputChanged({file: fileForm}))
   }
 
   deleteBanner() {
-      this.store.dispatch(deleteBanner({bannerId: this.bannerId}))
+      this.store.dispatch(deleteButtonClicked({bannerId: this.bannerId}))
   }
 }

@@ -1,18 +1,16 @@
 import {createReducer, on} from "@ngrx/store";
 import {
-  deleteBanner,
   drawerToggle,
-  getBannerById,
-  getBannersData,
+  tableRowClicked,
+  changeQueryParams,
   resetBannerFormAction,
-  setBannerId,
-  setBannersSearchAndSortForm,
-  setDeleteButton,
-  setFormData,
+  searchAndFilterFormSubmit,
+  bannerFormChanged,
   submitBannerData,
+  deleteButtonClicked,
 } from "../actions/banners.actions";
 import {adapter, BannersStore} from "../state/banners.state";
-import { addOrEditBanner, deleteBannerSuccess, errorResponse, selectFileSuccess, setBannerData, setBannersData, setReferenceData, submitServerError } from "../actions/banners-api.actions";
+import { uploadBannerSuccess, deleteBannerSuccess, submitBannerFailed, fileUploadSuccess, submitBannerSuccess, filterBannersSuccess, uploadBannerFailed, referenceDataLoadSuccess } from "../actions/banners-api.actions";
 
 
 const initialState: BannersStore = adapter.getInitialState({
@@ -52,7 +50,7 @@ const initialState: BannersStore = adapter.getInitialState({
 
 export const bannersReducer = createReducer(
   initialState,
-  on(setBannersData, (state, action) => {
+  on(filterBannersSuccess, (state, action) => {
 
     const searchAndSortBannerForm = {
       search: action.search,
@@ -75,16 +73,16 @@ export const bannersReducer = createReducer(
         })
   }),
 
-  on(getBannerById, (state) => {
+  on(tableRowClicked, (state) => {
     return {...state, drawer: true}
   }),
 
 
-  on(getBannersData, (state) => {
+  on(changeQueryParams, (state) => {
     return {...state, isLoading: true}
   }),
 
-  on(setBannersSearchAndSortForm, (state, action) => {
+  on(searchAndFilterFormSubmit, (state, action) => {
     const modifiedForm = {
       search: action.search,
       sortDirection: action.sortDirection,
@@ -96,7 +94,7 @@ export const bannersReducer = createReducer(
     }
   }),
 
-  on(deleteBanner, (state) => {
+  on(deleteButtonClicked, (state) => {
     return {...state, isLoadingSubmitBanner: true}
   }),
 
@@ -104,7 +102,7 @@ export const bannersReducer = createReducer(
     return adapter.removeOne(action.bannerId.toString(), {...state, drawer: action.drawerState, isLoadingSubmitBanner: action.submitBannerLoading})
   }),
 
-  on(addOrEditBanner, (state, {newBanner, bannerId}) => {
+  on(uploadBannerSuccess, (state, {newBanner, bannerId}) => {
     if (bannerId) {
       return adapter.setOne(newBanner, {...state, drawer: false, isLoadingSubmitBanner: false})
     } else {
@@ -112,11 +110,11 @@ export const bannersReducer = createReducer(
     }
   }),
 
-  on(errorResponse, (state, action) => {
+  on(submitBannerFailed, (state, action) => {
     return {...state, apiError: action.error, isLoading: false}
   }),
 
-  on(setBannerData, (state, {bannerData}) =>  {
+  on(submitBannerSuccess, (state, {bannerData}) =>  {
     const bannerFormData = {
       id: bannerData.id,
       name: bannerData.name,
@@ -134,27 +132,20 @@ export const bannersReducer = createReducer(
     return {...state, bannerFormData, drawer: true, showDeleteButton: true}
   }),
 
-  on(setFormData, (state, {formData}) => {
+  on(bannerFormChanged, (state, {formData}) => {
     return {...state, bannerFormData: formData}
   }),
 
-  on(selectFileSuccess, (state, {imageId}) => {
+  on(fileUploadSuccess, (state, {imageId}) => {
     return {...state, imageId }
   }),
 
-  on(setDeleteButton, (state, {show}) => {
-    return {...state, showDeleteButton: show}
-  }),
 
-  on(setBannerId, (state, {id}) => {
-    return {...state, bannerId: id}
-  }),
-
-  on(submitServerError, (state, {error}) => {
+  on(uploadBannerFailed, (state, {error}) => {
     return {...state, formServerError: error}
   }),
 
-  on(setReferenceData, (state, {channels, labels, zones, languages}) => {
+  on(referenceDataLoadSuccess, (state, {channels, labels, zones, languages}) => {
     return {...state, channels, labels, zones, languages}
   }),
 
@@ -163,7 +154,7 @@ export const bannersReducer = createReducer(
     return {...state, drawer: drawerState}
   }),
 
-  on(setFormData, (state, {formData}) => {
+  on(bannerFormChanged, (state, {formData}) => {
     return {...state, bannerFormData: formData}
   }),
 
