@@ -38,8 +38,8 @@ export class BannersEffects {
             }
             return ApiActions.filterBannersSuccess(actionPayload)
           }),
-          catchError((error) => {
-            return of(ApiActions.submitBannerFailed({error: error.error.message}));
+          catchError(() => {
+            return of(ApiActions.filterBannersFailed());
           })
         );
       })
