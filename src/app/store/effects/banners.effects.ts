@@ -7,7 +7,6 @@ import * as BannerActions from '../actions/banners.actions';
 import * as ApiActions from "../actions/banners-api.actions"
 @Injectable()
 export class BannersEffects {
-
   constructor(
     private actions$: Actions,
     private bannersService: BannersService,
@@ -21,7 +20,7 @@ export class BannersEffects {
         const {search, sortBy, sortDirection, page, pageSize} = action.queryParams
         const payloadAPI = {
           search: search,
-          page: page | 0,
+          pageIndex: page | 0,
           pageSize:  pageSize | 3,
           sortBy: sortBy,
           sortDirection: sortDirection
@@ -57,8 +56,8 @@ export class BannersEffects {
           map(() => {
             return ApiActions.deleteBannerSuccess({bannerId: action.bannerId, drawerState: false, submitBannerLoading: false})
           }),
-          catchError((error) => {
-            return of(ApiActions.errorResponse({error: error.error.error}));
+          catchError(() => {
+            return of(ApiActions.submitServerError({error: "API ERROR"}));
           })
         )
         }
@@ -68,7 +67,7 @@ export class BannersEffects {
 
   onOpenEditForm$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(BannerActions.getReferenceData),
+      ofType(BannerActions.getBannerById),
       mergeMap(() => {
         const channelsApi = this.bannersService.getChannels()
         const zonesApi = this.bannersService.getZones()
@@ -92,8 +91,6 @@ export class BannersEffects {
       .pipe(
       ofType(BannerActions.getBannerById),
       exhaustMap((action) => {
-        localStorage.setItem("editFlag", JSON.stringify(true))
-        localStorage.setItem("bannerId", JSON.stringify(action.bannerId))
 
         return this.bannersService.fetchBannerById(action.bannerId).pipe(
           map((bannerData: any) => {

@@ -1,5 +1,4 @@
-import { Component, OnInit, ViewChild} from '@angular/core';
-import {MatDrawer} from "@angular/material/sidenav";
+import { Component, OnInit} from '@angular/core';
 import {Store} from "@ngrx/store";
 import {
   apiError,
@@ -25,12 +24,12 @@ import {
   drawerToggle,
   getBannerById,
   selectFile,
-  submitBannerData, resetBannerFormAction, getReferenceData, getBannersData
+  submitBannerData, resetBannerFormAction, getBannersData
 } from "../../store/actions/banners.actions";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {Banner} from "../../shared/types/banner";
 import {fileReader} from "../../shared/utilities/file-utils";
-
+import {deepEqual} from "../../shared/utilities/deep-equal"
 @Component({
   selector: 'app-store',
   templateUrl: './banners.component.html',
@@ -63,33 +62,50 @@ export class BannersComponent implements OnInit{
     private route: ActivatedRoute,
   ) {}
 
-  @ViewChild('drawer') drawer!: MatDrawer
+
+  queryParams = {
+    page: 0,
+    pageSize: 3,
+    search: "",
+    sortDirection: "",
+    sortBy: ""
+  }
+
+  bannerId = null
 
   ngOnInit() {
     this.route.queryParams
     .subscribe((queryParams: Params) => {
-      const {search, sortBy, sortDirection, page, pageSize} = queryParams
-      this.store.dispatch(getBannersData({queryParams: {search, sortBy, sortDirection, page, pageSize}}))
-    })
+      const {search, sortBy, sortDirection, page, pageSize, bannerId} = queryParams
 
-    const drawerIsOpen = localStorage.getItem('drawerIsOpen')
-    if (drawerIsOpen) {
-        this.store.dispatch(getReferenceData({drawerState: JSON.parse(drawerIsOpen)}))
-    }
+      const localQueries = {
+        page,
+        pageSize,
+        search,
+        sortDirection,
+        sortBy
+      }
 
-    const bannerId = localStorage.getItem('bannerId') as string
-    if (bannerId && JSON.parse(bannerId)) {
+      if (!deepEqual(this.queryParams, localQueries)) {
+        this.store.dispatch(getBannersData({queryParams: {search, sortBy, sortDirection, page, pageSize}}))
+        this.queryParams = localQueries
+      }
+
+      if (bannerId && bannerId !== "0" && bannerId !== this.bannerId) {
+        this.bannerId = bannerId
         this.store.dispatch(getBannerById({editFlag: true, bannerId: JSON.parse(bannerId)}))
-    }
-  }
+      }
 
-  drawerOpen() {
-     this.store.dispatch(drawerToggle({drawerState: this.drawer.opened}))
+      if(bannerId && bannerId === "0") {
+        this.store.dispatch(drawerToggle({drawerState: true}))
+      }
+    })
   }
 
   drawerClose() {
+    this.routeParamsChange({bannerId: null})
     this.store.dispatch(resetBannerFormAction())
-    localStorage.clear();
+    this.bannerId = null
   }
 
   routeParamsChange(queryParams: Params) {
@@ -100,8 +116,10 @@ export class BannersComponent implements OnInit{
     }).catch(err => console.log(err))
   }
 
-  showEditBannerForm(rowData: Banner) {
-    this.store.dispatch(getBannerById({editFlag: true, bannerId: rowData.id}))
+  showEditBannerForm(bannerId?: number | number) {
+    if (bannerId) {
+      this.routeParamsChange({bannerId: bannerId})
+    }
   }
 
   submitBannerData($event: {fileId: number, bannerId: number, editFlag: boolean, formData: Banner}) {

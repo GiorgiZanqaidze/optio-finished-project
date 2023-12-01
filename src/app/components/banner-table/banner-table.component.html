@@ -68,8 +68,8 @@
   color="primary"
   showFirstLastButtons
   [pageSizeOptions]="[3, 5, 10]"
-  [pageSize]="bannersPageSize$ ?? 3"
-  [pageIndex]="bannersPage$ ?? 0"
+  [pageSize]="queryParams.pageSize ?? 3"
+  [pageIndex]="queryParams.page ?? 0"
   [length]="totalPages$ ?? 0"
   (page)="onRouteParamsChange($event)"
 >

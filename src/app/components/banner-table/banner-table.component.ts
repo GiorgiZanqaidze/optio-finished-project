@@ -31,8 +31,10 @@ export class BannerTableComponent {
 
   @Output() showEditBannerForm = new EventEmitter()
 
+  @Input() queryParams!: any
+
   onShowEditBannerForm(rowData: Banner) {
-    this.showEditBannerForm.emit(rowData)
+    this.showEditBannerForm.emit(rowData.id)
   }
 
   onRouteParamsChange(event: PageEvent) {

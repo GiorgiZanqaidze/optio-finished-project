@@ -2,17 +2,13 @@ import {createReducer, on} from "@ngrx/store";
 import {
   deleteBanner,
   drawerToggle,
+  getBannerById,
   getBannersData,
-  getReferenceData,
   resetBannerFormAction,
   setBannerId,
   setBannersSearchAndSortForm,
   setDeleteButton,
   setFormData,
-  startLoading,
-  startSubmitBannerLoading,
-  stopLoading,
-  stopSubmitBannerLoading,
   submitBannerData,
 } from "../actions/banners.actions";
 import {adapter, BannersStore} from "../state/banners.state";
@@ -77,6 +73,10 @@ export const bannersReducer = createReducer(
         searchAndSortBannerForm: searchAndSortBannerForm,
           bannersSuccessLoad: true
         })
+  }),
+
+  on(getBannerById, (state) => {
+    return {...state, drawer: true}
   }),
 
 
@@ -163,26 +163,6 @@ export const bannersReducer = createReducer(
     return {...state, drawer: drawerState}
   }),
 
-  on(startLoading, (state) => ({
-    ...state,
-    isLoading: true,
-  })),
-
-  on(stopLoading, (state) => ({
-    ...state,
-    isLoading: false,
-  })),
-
-  on(startSubmitBannerLoading, (state) => ({
-    ...state,
-    isLoadingSubmitBanner: true,
-  })),
-
-  on(stopSubmitBannerLoading, (state) => ({
-    ...state,
-    isLoadingSubmitBanner: false,
-  })),
-
   on(setFormData, (state, {formData}) => {
     return {...state, bannerFormData: formData}
   }),
@@ -192,10 +172,6 @@ export const bannersReducer = createReducer(
   }),
 
   on(resetBannerFormAction, (state) => {
-    return {...state, resetBannerForm: !state.resetBannerForm, drawerState: false, showDeleteButton: false, formServerError: null}
+    return {...state, resetBannerForm: !state.resetBannerForm, drawer: false, showDeleteButton: false, formServerError: null}
   }),
-
-  on(getReferenceData, (state, {drawerState}) => {
-    return {...state, drawer: drawerState}
-  })
 )
