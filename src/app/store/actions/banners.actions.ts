@@ -40,6 +40,6 @@ export const changeQueryParams = createAction(
   props<{queryParams: any}>()
 )
 
-export const resetBannerFormAction = createAction(
+export const closeDrawer = createAction(
     '[Banners Component] Reset Banner Form',
 )

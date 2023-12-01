@@ -24,7 +24,7 @@ import {
   drawerToggle,
   tableRowClicked,
   fileInputChanged,
-  submitBannerData, resetBannerFormAction, changeQueryParams
+  submitBannerData, closeDrawer, changeQueryParams
 } from "../../store/actions/banners.actions";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {Banner} from "../../shared/types/banner";
@@ -104,7 +104,7 @@ export class BannersComponent implements OnInit{
 
   drawerClose() {
     this.routeParamsChange({bannerId: null})
-    this.store.dispatch(resetBannerFormAction())
+    this.store.dispatch(closeDrawer())
     this.bannerId = ""
   }
 

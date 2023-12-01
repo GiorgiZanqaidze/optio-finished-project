@@ -3,7 +3,7 @@ import {
   drawerToggle,
   tableRowClicked,
   changeQueryParams,
-  resetBannerFormAction,
+  closeDrawer,
   searchAndFilterFormSubmit,
   bannerFormChanged,
   submitBannerData,
@@ -162,7 +162,7 @@ export const bannersReducer = createReducer(
     return {...state, isLoadingSubmitBanner: true}
   }),
 
-  on(resetBannerFormAction, (state) => {
+  on(closeDrawer, (state) => {
     return {...state, resetBannerForm: !state.resetBannerForm, drawer: false, showDeleteButton: false, formServerError: null}
   }),
 
