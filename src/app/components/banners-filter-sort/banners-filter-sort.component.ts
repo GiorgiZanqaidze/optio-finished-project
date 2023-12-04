@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, OnChanges, SimpleChanges, OnInit} from '@angular/core';
 import {FormControl, FormGroup} from "@angular/forms";
-import {SortBy} from "../../shared/constants/sorting-options";
 import { debounceTime } from 'rxjs';
+import { untilDestroyed } from '@ngneat/until-destroy';
 
 @Component({
   selector: 'app-store-filter-sort',
@@ -20,13 +20,18 @@ export class BannersFilterSortComponent implements OnChanges{
 
   @Output() bannersSearch = new EventEmitter()
 
+
+
   onBannersSearch() {
     this.bannersSearch.emit(this.searchForm.value)
   }
 
   constructor() {
     this.searchForm.valueChanges
-    .pipe( debounceTime(500))
+    .pipe(
+       debounceTime(500),
+       untilDestroyed(this)
+       )
     .subscribe((res: any) => {
       this.bannersSearch.emit(res)
     })
