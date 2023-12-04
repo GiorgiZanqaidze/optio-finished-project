@@ -71,7 +71,7 @@ export class BannersComponent implements OnInit{
   ngOnInit() {
     this.route.queryParams
     .subscribe((queryParams: Params) => {
-      const {search, sortBy, sortDirection, page, pageSize, bannerId} = queryParams
+      const {search, sortBy, sortDirection, page, pageSize, bannerId, showForm} = queryParams
 
       const localQueries = {
         page,
@@ -86,19 +86,19 @@ export class BannersComponent implements OnInit{
         this.queryParams = localQueries
       }
 
-      if (bannerId && bannerId !== "0" && bannerId !== this.bannerId) {
+      if (bannerId && bannerId !== this.bannerId) {
         this.bannerId = bannerId
         this.store.dispatch(tableRowClicked({editFlag: true, bannerId: JSON.parse(bannerId)}))
       }
 
-      if(bannerId && bannerId === "0") {
+      if(showForm) {
         this.store.dispatch(drawerToggle({drawerState: true}))
       }
     })
   }
 
   drawerClose() {
-    this.routeParamsChange({bannerId: null})
+    this.routeParamsChange({bannerId: null, showForm: null})
     this.store.dispatch(closeDrawer())
     this.bannerId = ""
   }
@@ -114,7 +114,10 @@ export class BannersComponent implements OnInit{
   showEditBannerForm(bannerId?: number | number) {
     if (bannerId) {
       this.routeParamsChange({bannerId: bannerId})
+    } else {
+      this.routeParamsChange({showForm: true})
     }
+
   }
 
   submitBannerData($event: {fileId: number, formData: Banner}) {
