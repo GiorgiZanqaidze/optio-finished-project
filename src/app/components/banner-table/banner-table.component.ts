@@ -3,7 +3,6 @@ import {Banner} from "../../shared/types/banner";
 import {environment} from "../../../environments/environment";
 import {PageEvent} from "@angular/material/paginator";
 import {displayedColumns} from "../../shared/constants/display-columns";
-
 @Component({
   selector: 'app-banner-table',
   templateUrl: './banner-table.component.html',
@@ -36,6 +35,10 @@ export class BannerTableComponent {
   onRouteParamsChange(event: PageEvent) {
     const queryParams = {page: event.pageIndex, pageSize: event.pageSize};
     this.routeParamsChange.emit(queryParams)
+  }
+
+  announceSortChange(event: any) {
+    this.routeParamsChange.emit({sortBy: event.active, sortDirection: event.direction})
   }
 }
 
