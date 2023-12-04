@@ -3,8 +3,6 @@ import {Store} from "@ngrx/store";
 import {
   apiError,
   bannerFormData,
-  bannersPage,
-  bannersPageSize,
   channelsReference,
   drawerUI, fileIdChanges,
   formServerError,
@@ -13,18 +11,18 @@ import {
   labelsReference,
   languagesReference,
   resetBannerForm,
-  searchAndSortBannerForm, selectBanners,
+  selectBanners,
   showDeleteButton,
   totalPages,
   zonesReference
 } from '../../store/selectors/banners.selector';
 
 import {
-  deleteBanner,
+  deleteButtonClicked,
   drawerToggle,
-  getBannerById,
-  selectFile,
-  submitBannerData, resetBannerFormAction, getBannersData
+  tableRowClicked,
+  fileInputChanged,
+  submitBannerData, closeDrawer, changeQueryParams
 } from "../../store/actions/banners.actions";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {Banner} from "../../shared/types/banner";
@@ -38,8 +36,6 @@ export class BannersComponent implements OnInit{
 
   bannersDataEntities$ = this.store.select(selectBanners)
   totalPages$ = this.store.select(totalPages)
-  bannersPage$ = this.store.select(bannersPage)
-  bannersPageSize$ = this.store.select(bannersPageSize)
   isLoading$ = this.store.select(isLoadingUI)
   apiError$ = this.store.select(apiError)
   resetBannerForm$ = this.store.select(resetBannerForm)
@@ -52,7 +48,6 @@ export class BannersComponent implements OnInit{
   submitBannerDataIsLoading$ = this.store.select(isLoadingSubmitBanner)
   showDeleteButton$ =  this.store.select(showDeleteButton)
   formApiError$ = this.store.select(formServerError)
-  searchBannersForm$ = this.store.select(searchAndSortBannerForm)
   drawer$ = this.store.select(drawerUI)
   fileId$ = this.store.select(fileIdChanges)
 
@@ -76,7 +71,7 @@ export class BannersComponent implements OnInit{
   ngOnInit() {
     this.route.queryParams
     .subscribe((queryParams: Params) => {
-      const {search, sortBy, sortDirection, page, pageSize, bannerId} = queryParams
+      const {search, sortBy, sortDirection, page, pageSize, bannerId, showForm} = queryParams
 
       const localQueries = {
         page,
@@ -87,24 +82,24 @@ export class BannersComponent implements OnInit{
       }
 
       if (!deepEqual(this.queryParams, localQueries)) {
-        this.store.dispatch(getBannersData({queryParams: {search, sortBy, sortDirection, page, pageSize}}))
+        this.store.dispatch(changeQueryParams({queryParams: {search, sortBy, sortDirection, page, pageSize}}))
         this.queryParams = localQueries
       }
 
-      if (bannerId && bannerId !== "0" && bannerId !== this.bannerId) {
+      if (bannerId && bannerId !== this.bannerId) {
         this.bannerId = bannerId
-        this.store.dispatch(getBannerById({editFlag: true, bannerId: JSON.parse(bannerId)}))
+        this.store.dispatch(tableRowClicked({editFlag: true, bannerId: JSON.parse(bannerId)}))
       }
 
-      if(bannerId && bannerId === "0") {
+      if(showForm) {
         this.store.dispatch(drawerToggle({drawerState: true}))
       }
     })
   }
 
   drawerClose() {
-    this.routeParamsChange({bannerId: null})
-    this.store.dispatch(resetBannerFormAction())
+    this.routeParamsChange({bannerId: null, showForm: null})
+    this.store.dispatch(closeDrawer())
     this.bannerId = ""
   }
 
@@ -119,7 +114,10 @@ export class BannersComponent implements OnInit{
   showEditBannerForm(bannerId?: number | number) {
     if (bannerId) {
       this.routeParamsChange({bannerId: bannerId})
+    } else {
+      this.routeParamsChange({showForm: true})
     }
+
   }
 
   submitBannerData($event: {fileId: number, formData: Banner}) {
@@ -132,10 +130,10 @@ export class BannersComponent implements OnInit{
     const modifiedFile = fileReader(file)
     const fileForm = new FormData();
     fileForm.set('blob', modifiedFile)
-    this.store.dispatch(selectFile({file: fileForm}))
+    this.store.dispatch(fileInputChanged({file: fileForm}))
   }
 
   deleteBanner() {
-      this.store.dispatch(deleteBanner({bannerId: this.bannerId}))
+      this.store.dispatch(deleteButtonClicked({bannerId: this.bannerId}))
   }
 }

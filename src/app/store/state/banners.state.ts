@@ -3,15 +3,10 @@ import { Banner } from "src/app/shared/types/banner";
 import {createEntityAdapter, EntityAdapter, EntityState} from "@ngrx/entity";
 
 export interface BannersStore extends EntityState<Banner>{
-  bannersPage: number,
-  bannersPageSize: number
-  bannersData: Banner[],
   totalPages: number
-  searchAndSortBannerForm: {search: string, sortDirection: string, sortBy: string},
   apiError: string | null,
   bannerFormData: Banner,
   showDeleteButton: boolean,
-  bannerId: null | string | number,
   formServerError: null | string,
   channels: ReferenceData[]
   zones: ReferenceData[]

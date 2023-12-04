@@ -10,24 +10,10 @@ export const selectBanners = createSelector(
     entitiesSelectAll,
 );
 
-export const bannersPage = createSelector(
-  selectBannersState,
-  (state) => state.bannersPage
-);
 
 export const totalPages = createSelector(
   selectBannersState,
   (state) => state.totalPages
-)
-
-export const bannersPageSize = createSelector(
-  selectBannersState,
-  (state) => state.bannersPageSize
-)
-
-export const searchAndSortBannerForm = createSelector(
-  selectBannersState,
-  (state) => state.searchAndSortBannerForm
 )
 
 export const apiError = createSelector(
@@ -45,10 +31,6 @@ export const showDeleteButton = createSelector(
   (state) => state.showDeleteButton
 );
 
-export const bannerId = createSelector(
-  selectBannersState,
-  (state) => state.bannerId
-)
 
 export const formServerError = createSelector(
   selectBannersState,

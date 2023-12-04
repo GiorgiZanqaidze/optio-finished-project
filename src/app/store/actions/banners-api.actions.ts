@@ -2,29 +2,23 @@ import { createAction, props } from "@ngrx/store";
 import { Banner } from "src/app/shared/types/banner";
 import { ReferenceData } from "src/app/shared/types/reference-data";
 
-export const submitServerError = createAction(
-  "[Banners Component] Set Server Error",
+export const uploadBannerFailed = createAction(
+  "[Banners Component] Upload Banner Failed",
   props<{error: string}>()
 )
 
-export const addOrEditBanner = createAction(
-  "[Banners Component] Add Or Edit",
+export const uploadBannerSuccess = createAction(
+  "[Banners Component] Upload Banner Success",
   props<{newBanner: Banner, bannerId: string | number, drawerState: boolean, submitBannerLoading: boolean}>()
 )
 
-export const referenceDataApiError = createAction(
-  "[Banners Component] Reference Data Api Error",
-)
-
-export const setReferenceData = createAction(
-  "[Banners Component] Set Banners Data",
+export const referenceDataLoadSuccess = createAction(
+  "[Banners Component] Reference Data Load Success",
   props<{channels: ReferenceData[], labels: ReferenceData[], zones: ReferenceData[], languages: ReferenceData[]}>()
 )
 
-
-export const errorResponse = createAction(
-  "[Banners Component] Get Error Response",
-  props<{error: string}>()
+export const referenceDataLoadFailed = createAction(
+  "[Banners Component] Reference Data Load Failed",
 )
 
 export const deleteBannerSuccess = createAction(
@@ -32,13 +26,21 @@ export const deleteBannerSuccess = createAction(
   props<{ bannerId: number | string, drawerState: boolean, submitBannerLoading: boolean}>()
 );
 
-export const selectFileSuccess = createAction(
-  "[Banners Component] Select Image File",
+export const deleteBannerFailed = createAction(
+  '[Banners Component] Delete Banner Failed',
+);
+
+export const fileUploadSuccess = createAction(
+  "[Banners Component] Upload File Success",
   props<{imageId: string | number}>()
 )
 
-export const setBannersData = createAction(
-  "[Banners Component] SetData",
+export const fileUploadFailed = createAction(
+  "[Banners Component] Upload File Failed",
+)
+
+export const filterBannersSuccess = createAction(
+  "[Banners Component] Filter Banners Success",
   props<{
       bannersData: {total: number, entities: Banner[], searchAfter: string[]},
       page: number,
@@ -49,7 +51,17 @@ export const setBannersData = createAction(
     }>()
 )
 
-export const setBannerData = createAction(
-  "[Banners Component] Set Banner By Id",
+export const filterBannersFailed = createAction(
+  "[Banners Component] Filter Banners Failed",
+)
+
+export const submitBannerSuccess = createAction(
+  "[Banners Component] Submit Banner Success",
   props<{bannerData: Banner}>()
+)
+
+
+export const submitBannerFailed = createAction(
+  "[Banners Component] Submit Banner Failed",
+  props<{error: string}>()
 )

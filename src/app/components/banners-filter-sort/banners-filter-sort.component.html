@@ -1,20 +1,6 @@
-<form [formGroup]="searchForm" (submit)="onBannersSearch()" class="flex gap-5  flex-col md:flex-row">
+<form [formGroup]="searchForm">
   <mat-form-field appearance="fill" color="primary">
     <mat-label>Search By Name</mat-label>
     <input  matInput placeholder="Banner name" formControlName="search">
   </mat-form-field>
-  <mat-form-field>
-    <mat-label>Order</mat-label>
-    <mat-select formControlName="sortDirection">
-      <mat-option value="asc">Increasing</mat-option>
-      <mat-option value="desc">Decreasing</mat-option>
-    </mat-select>
-  </mat-form-field>
-  <mat-form-field>
-    <mat-label>Sort By</mat-label>
-    <mat-select formControlName="sortBy" >
-      <mat-option *ngFor="let sort of SortBy" [value]="sort.key">{{sort.name | titlecase}}</mat-option>
-    </mat-select>
-  </mat-form-field>
-  <button class="md:ml-4" mat-raised-button color="warn" style="background: #FF6B6B">Filter & Sort<mat-icon>filter_list</mat-icon></button>
 </form>

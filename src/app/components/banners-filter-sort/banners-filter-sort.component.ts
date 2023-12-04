@@ -1,7 +1,8 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, OnChanges, SimpleChanges} from '@angular/core';
 import {FormControl, FormGroup} from "@angular/forms";
-import {SortBy} from "../../shared/constants/sorting-options";
-
+import { debounceTime } from 'rxjs';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+@UntilDestroy()
 @Component({
   selector: 'app-store-filter-sort',
   templateUrl: './banners-filter-sort.component.html',
@@ -9,9 +10,7 @@ import {SortBy} from "../../shared/constants/sorting-options";
 })
 export class BannersFilterSortComponent implements OnChanges{
 
-  protected readonly SortBy = SortBy;
-
-  @Input() searchBannersForm!: {search: string, sortDirection: string, sortBy: string} | null
+  @Input() searchBannersForm!: {search: string} | null
 
   searchForm = new FormGroup({
     "search": new FormControl<string>(''),
@@ -19,11 +18,17 @@ export class BannersFilterSortComponent implements OnChanges{
     "sortBy": new FormControl<string>('name.raw')
   })
 
-
   @Output() bannersSearch = new EventEmitter()
 
-  onBannersSearch() {
-    this.bannersSearch.emit(this.searchForm.value)
+  constructor() {
+    this.searchForm.valueChanges
+    .pipe(
+       debounceTime(500),
+       untilDestroyed(this)
+       )
+    .subscribe((res: any) => {
+      this.bannersSearch.emit(res)
+    })
   }
 
   ngOnChanges(changes: SimpleChanges) {
