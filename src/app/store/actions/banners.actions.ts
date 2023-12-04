@@ -15,11 +15,6 @@ export const tableRowClicked = createAction(
   props<{editFlag?: boolean, bannerId: number}>()
 )
 
-export const bannerFormChanged = createAction(
-  "[Banners Component] Banner Form Changed",
-  props<{formData: any | undefined}>()
-)
-
 export const fileInputChanged = createAction(
   "[Banners Component] File Input Changed",
     props<{file: any}>()

@@ -4,8 +4,6 @@ import {
   tableRowClicked,
   changeQueryParams,
   closeDrawer,
-  searchAndFilterFormSubmit,
-  bannerFormChanged,
   submitBannerData,
   deleteButtonClicked,
 } from "../actions/banners.actions";
@@ -14,11 +12,7 @@ import { uploadBannerSuccess, deleteBannerSuccess, submitBannerFailed, fileUploa
 
 
 const initialState: BannersStore = adapter.getInitialState({
-  bannersPage: 0,
-  bannersPageSize: 0,
-  bannersData: [],
   totalPages: 0,
-  searchAndSortBannerForm: {search: "", sortDirection: "", sortBy: ""},
   apiError: null,
   bannerFormData: {
     id: 0,
@@ -35,7 +29,6 @@ const initialState: BannersStore = adapter.getInitialState({
     labels: []
   },
   showDeleteButton: false,
-  bannerId: null,
   formServerError: null,
   channels: [],
   zones: [],
@@ -51,24 +44,16 @@ const initialState: BannersStore = adapter.getInitialState({
 export const bannersReducer = createReducer(
   initialState,
   on(filterBannersSuccess, (state, action) => {
-
-    const searchAndSortBannerForm = {
-      search: action.search,
-      sortDirection: action.sortDirection,
-      sortBy: action.sortBy
-    }
-
     const bannersEntities = action.bannersData.entities
 
     return adapter.setAll(
       bannersEntities,
         {
           ...state,
-        totalPages: action.bannersData.total,
-        isLoading: false,
-        bannersPage: action.page,
-        bannersPageSize: action.pageSize,
-        searchAndSortBannerForm: searchAndSortBannerForm,
+          totalPages: action.bannersData.total,
+          isLoading: false,
+          bannersPage: action.page,
+          bannersPageSize: action.pageSize,
           bannersSuccessLoad: true
         })
   }),
@@ -77,21 +62,8 @@ export const bannersReducer = createReducer(
     return {...state, drawer: true}
   }),
 
-
   on(changeQueryParams, (state) => {
     return {...state, isLoading: true}
-  }),
-
-  on(searchAndFilterFormSubmit, (state, action) => {
-    const modifiedForm = {
-      search: action.search,
-      sortDirection: action.sortDirection,
-      sortBy: action.sortBy
-    }
-    return {
-      ...state,
-      searchAndSortBannerForm: modifiedForm
-    }
   }),
 
   on(deleteButtonClicked, (state) => {
@@ -132,14 +104,9 @@ export const bannersReducer = createReducer(
     return {...state, bannerFormData, drawer: true, showDeleteButton: true}
   }),
 
-  on(bannerFormChanged, (state, {formData}) => {
-    return {...state, bannerFormData: formData}
-  }),
-
   on(fileUploadSuccess, (state, {imageId}) => {
     return {...state, imageId }
   }),
-
 
   on(uploadBannerFailed, (state, {error}) => {
     return {...state, formServerError: error}
@@ -154,10 +121,6 @@ export const bannersReducer = createReducer(
     return {...state, drawer: drawerState}
   }),
 
-  on(bannerFormChanged, (state, {formData}) => {
-    return {...state, bannerFormData: formData}
-  }),
-
   on(submitBannerData, (state) => {
     return {...state, isLoadingSubmitBanner: true}
   }),
@@ -165,6 +128,4 @@ export const bannersReducer = createReducer(
   on(closeDrawer, (state) => {
     return {...state, resetBannerForm: !state.resetBannerForm, drawer: false, showDeleteButton: false, formServerError: null}
   }),
-
-
 )

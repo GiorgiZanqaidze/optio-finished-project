@@ -3,8 +3,6 @@ import {Store} from "@ngrx/store";
 import {
   apiError,
   bannerFormData,
-  bannersPage,
-  bannersPageSize,
   channelsReference,
   drawerUI, fileIdChanges,
   formServerError,
@@ -13,7 +11,7 @@ import {
   labelsReference,
   languagesReference,
   resetBannerForm,
-  searchAndSortBannerForm, selectBanners,
+  selectBanners,
   showDeleteButton,
   totalPages,
   zonesReference
@@ -38,8 +36,6 @@ export class BannersComponent implements OnInit{
 
   bannersDataEntities$ = this.store.select(selectBanners)
   totalPages$ = this.store.select(totalPages)
-  bannersPage$ = this.store.select(bannersPage)
-  bannersPageSize$ = this.store.select(bannersPageSize)
   isLoading$ = this.store.select(isLoadingUI)
   apiError$ = this.store.select(apiError)
   resetBannerForm$ = this.store.select(resetBannerForm)
@@ -52,7 +48,6 @@ export class BannersComponent implements OnInit{
   submitBannerDataIsLoading$ = this.store.select(isLoadingSubmitBanner)
   showDeleteButton$ =  this.store.select(showDeleteButton)
   formApiError$ = this.store.select(formServerError)
-  searchBannersForm$ = this.store.select(searchAndSortBannerForm)
   drawer$ = this.store.select(drawerUI)
   fileId$ = this.store.select(fileIdChanges)
 

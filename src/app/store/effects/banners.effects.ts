@@ -3,8 +3,7 @@ import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {forkJoin, of} from 'rxjs';
 import {map, exhaustMap, catchError, mergeMap} from 'rxjs/operators';
 import {BannersService} from "../services/banners.service";
-import * as BannerActions from '../actions/banners.actions';
-import * as ApiActions from "../actions/banners-api.actions"
+import {BannersListPageActions, BannersApiActions} from "../actions"
 @Injectable()
 export class BannersEffects {
   constructor(
@@ -14,7 +13,7 @@ export class BannersEffects {
 
   BannersRouterNavigatedEffect$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(BannerActions.changeQueryParams),
+      ofType(BannersListPageActions.changeQueryParams),
       exhaustMap((action: any) => {
 
         const {search, sortBy, sortDirection, page, pageSize} = action.queryParams
@@ -36,10 +35,10 @@ export class BannersEffects {
               sortBy: sortBy,
               sortDirection: sortDirection
             }
-            return ApiActions.filterBannersSuccess(actionPayload)
+            return BannersApiActions.filterBannersSuccess(actionPayload)
           }),
           catchError(() => {
-            return of(ApiActions.filterBannersFailed());
+            return of(BannersApiActions.filterBannersFailed());
           })
         );
       })
@@ -50,14 +49,14 @@ export class BannersEffects {
   deleteBanner$ = createEffect(() =>
     this.actions$
       .pipe(
-      ofType(BannerActions.deleteButtonClicked),
+      ofType(BannersListPageActions.deleteButtonClicked),
       exhaustMap((action) => {
         return this.bannersService.deleteBanner(action.bannerId).pipe(
           map(() => {
-            return ApiActions.deleteBannerSuccess({bannerId: action.bannerId, drawerState: false, submitBannerLoading: false})
+            return BannersApiActions.deleteBannerSuccess({bannerId: action.bannerId, drawerState: false, submitBannerLoading: false})
           }),
           catchError(() => {
-            return of(ApiActions.deleteBannerFailed());
+            return of(BannersApiActions.deleteBannerFailed());
           })
         )
         }
@@ -67,7 +66,7 @@ export class BannersEffects {
 
   onOpenEditForm$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(BannerActions.tableRowClicked),
+      ofType(BannersListPageActions.tableRowClicked),
       mergeMap(() => {
         const channelsApi = this.bannersService.getChannels()
         const zonesApi = this.bannersService.getZones()
@@ -76,10 +75,10 @@ export class BannersEffects {
 
         return forkJoin([channelsApi, labelsApi, zonesApi, languagesApi]).pipe(
           map(([channels, labels, zones, languages]) => {
-            return ApiActions.referenceDataLoadSuccess({channels, labels, zones, languages})
+            return BannersApiActions.referenceDataLoadSuccess({channels, labels, zones, languages})
           }),
           catchError(() => {
-            return of(ApiActions.referenceDataLoadFailed());
+            return of(BannersApiActions.referenceDataLoadFailed());
           })
         );
       })
@@ -89,15 +88,15 @@ export class BannersEffects {
   getBannerById$ = createEffect(() =>
     this.actions$
       .pipe(
-      ofType(BannerActions.tableRowClicked),
+      ofType(BannersListPageActions.tableRowClicked),
       exhaustMap((action) => {
 
         return this.bannersService.fetchBannerById(action.bannerId).pipe(
           map((bannerData: any) => {
-            return ApiActions.submitBannerSuccess({bannerData: bannerData.data});
+            return BannersApiActions.submitBannerSuccess({bannerData: bannerData.data});
           }),
           catchError((error) => {
-            return of(ApiActions.submitBannerFailed({error: error.error.error}));
+            return of(BannersApiActions.submitBannerFailed({error: error.error.error}));
           })
         )
         }
@@ -108,14 +107,14 @@ export class BannersEffects {
 
   submitBannerData$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(BannerActions.submitBannerData),
+      ofType(BannersListPageActions.submitBannerData),
       exhaustMap(({bannerData, bannerId}) =>
         this.bannersService.submitBannerForm(bannerData).pipe(
           map((newBannerData: any) => {
-            return ApiActions.uploadBannerSuccess({newBanner: newBannerData.data, bannerId, drawerState: false, submitBannerLoading: false})
+            return BannersApiActions.uploadBannerSuccess({newBanner: newBannerData.data, bannerId, drawerState: false, submitBannerLoading: false})
           }),
           catchError(() => {
-            return of(ApiActions.uploadBannerFailed({error: "error"}));
+            return of(BannersApiActions.uploadBannerFailed({error: "error"}));
           })
         )
       )
@@ -124,14 +123,14 @@ export class BannersEffects {
 
   uploadBlob = createEffect(() =>
       this.actions$.pipe(
-          ofType(BannerActions.fileInputChanged),
+          ofType(BannersListPageActions.fileInputChanged),
           exhaustMap(({file}) =>
               this.bannersService.submitBlob(file).pipe(
                   map((image: any) => {
-                      return ApiActions.fileUploadSuccess({imageId: image.data.id})
+                      return BannersApiActions.fileUploadSuccess({imageId: image.data.id})
                   }),
                   catchError(() => {
-                      return of(ApiActions.fileUploadFailed());
+                      return of(BannersApiActions.fileUploadFailed());
                   })
               )
           )

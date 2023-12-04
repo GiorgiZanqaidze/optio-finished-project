@@ -21,10 +21,6 @@ export class BannerTableComponent {
 
   @Input() totalPages$!: number | null
 
-  @Input() bannersPage$!: number | null
-
-  @Input() bannersPageSize$!: number | null
-
   @Input() isLoading$!: boolean | null
 
   @Input() apiError$!: string | null
