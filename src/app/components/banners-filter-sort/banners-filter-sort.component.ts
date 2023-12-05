@@ -14,7 +14,6 @@ export class BannersFilterSortComponent implements OnChanges{
 
   @Output() bannersSearch = new EventEmitter()
 
-
   searchForm = new FormGroup({
     "search": new FormControl<string>(''),
     "sortDirection": new  FormControl<string>('asc'),
