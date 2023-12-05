@@ -88,7 +88,7 @@ export class BannersComponent implements OnInit{
 
       if (bannerId && bannerId !== this.bannerId) {
         this.bannerId = bannerId
-        this.store.dispatch(tableRowClicked({editFlag: true, bannerId: JSON.parse(bannerId)}))
+        this.store.dispatch(tableRowClicked({editFlag: true, bannerId: bannerId}))
       }
 
       if(showForm) {
