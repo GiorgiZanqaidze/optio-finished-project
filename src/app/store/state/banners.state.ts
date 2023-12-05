@@ -16,7 +16,8 @@ export interface BannersStore extends EntityState<Banner>{
   isLoading: boolean,
   isLoadingSubmitBanner: boolean,
   imageId: number | string | null,
-  resetBannerForm: boolean
+  resetBannerForm: boolean,
+  uploadBlobLoader: boolean
 }
 
 export const adapter: EntityAdapter<Banner> = createEntityAdapter<Banner>();

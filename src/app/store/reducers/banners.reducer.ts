@@ -7,6 +7,7 @@ import {
   submitBannerData,
   deleteButtonClicked,
   drawerOpen,
+  fileInputChanged,
 } from "../actions/banners.actions";
 import {adapter, BannersStore} from "../state/banners.state";
 import { uploadBannerSuccess, deleteBannerSuccess, submitBannerFailed, fileUploadSuccess, submitBannerSuccess, filterBannersSuccess, uploadBannerFailed, referenceDataLoadSuccess } from "../actions/banners-api.actions";
@@ -39,7 +40,8 @@ const initialState: BannersStore = adapter.getInitialState({
   isLoading: false,
   isLoadingSubmitBanner: false,
   imageId: null,
-  resetBannerForm: false
+  resetBannerForm: false,
+  uploadBlobLoader: false
 })
 
 export const bannersReducer = createReducer(
@@ -106,7 +108,7 @@ export const bannersReducer = createReducer(
   }),
 
   on(fileUploadSuccess, (state, {imageId}) => {
-    return {...state, imageId }
+    return {...state, imageId, uploadBlobLoader: false }
   }),
 
   on(uploadBannerFailed, (state, {error}) => {
@@ -132,5 +134,9 @@ export const bannersReducer = createReducer(
 
   on(drawerOpen, (state) => {
     return {...state, drawer: true}
+  }),
+
+  on(fileInputChanged, (state) => {
+    return {...state, uploadBlobLoader: true}
   })
 )

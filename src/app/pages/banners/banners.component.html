@@ -16,6 +16,10 @@
         (deleteBanner)="deleteBanner()"
         [fileId$]="fileId$ | async"
         [resetBannerForm]="resetBannerForm$ | async"
+        [uploadBlobLoader]="uploadBlobLoader$ | async"
+        [confirmationDialog]="confirmationDialog"
+        (openConfirmationModal)="openConfirmationModal()"
+        (closeConfirmationModal)="closeConfirmationModal()"
       ></app-banner-form>
     </mat-drawer>
     <mat-drawer-content>

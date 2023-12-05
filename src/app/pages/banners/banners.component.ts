@@ -28,6 +28,7 @@ export class BannersComponent implements OnInit{
   formApiError$ = this.store.select(BannersSelectors.formServerError)
   drawer$ = this.store.select(BannersSelectors.drawerUI)
   fileId$ = this.store.select(BannersSelectors.fileIdChanges)
+  uploadBlobLoader$ = this.store.select(BannersSelectors.uploadBlobLoader)
 
   constructor(
     private store: Store,
@@ -45,6 +46,8 @@ export class BannersComponent implements OnInit{
   }
 
   bannerId = ""
+
+  confirmationDialog = false
 
   ngOnInit() {
     this.route.queryParams
@@ -79,6 +82,15 @@ export class BannersComponent implements OnInit{
     this.routeParamsChange({bannerId: null, showForm: null})
     this.store.dispatch(BannersListPageActions.closeDrawer())
     this.bannerId = ""
+    this.confirmationDialog = false
+  }
+
+  openConfirmationModal() {
+    this.confirmationDialog = true
+  }
+
+  closeConfirmationModal() {
+    this.confirmationDialog = false
   }
 
   routeParamsChange(queryParams: Params) {
