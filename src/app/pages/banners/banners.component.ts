@@ -107,7 +107,6 @@ export class BannersComponent implements OnInit{
     } else {
       this.routeParamsChange({showForm: true})
     }
-
   }
 
   submitBannerData($event: {fileId: number, formData: Banner}) {
