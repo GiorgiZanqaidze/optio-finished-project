@@ -10,10 +10,14 @@ export const selectBanners = createSelector(
     entitiesSelectAll,
 );
 
-
 export const totalPages = createSelector(
   selectBannersState,
   (state) => state.totalPages
+)
+
+export const uploadBlobLoader = createSelector(
+  selectBannersState,
+  (state) => state.uploadBlobLoader
 )
 
 export const apiError = createSelector(

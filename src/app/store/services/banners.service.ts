@@ -29,6 +29,7 @@ export class BannersService {
   submitBannerForm(formData:any) {
     return this.http.post(`${this.baseUrl}/banners/save`, formData)
   }
+
   getChannels() {
     return this.http
       .post(`${this.baseUrl}/reference-data/find`, {

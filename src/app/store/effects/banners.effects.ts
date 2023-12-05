@@ -11,7 +11,7 @@ export class BannersEffects {
     private bannersService: BannersService,
   ) {}
 
-  BannersRouterNavigatedEffect$ = createEffect(() =>
+  queryParamsChanged$ = createEffect(() =>
     this.actions$.pipe(
       ofType(BannersListPageActions.changeQueryParams),
       exhaustMap((action: any) => {
@@ -46,7 +46,7 @@ export class BannersEffects {
   );
 
 
-  deleteBanner$ = createEffect(() =>
+  bannerDeleted$ = createEffect(() =>
     this.actions$
       .pipe(
       ofType(BannersListPageActions.deleteButtonClicked),
@@ -64,9 +64,9 @@ export class BannersEffects {
     )
   );
 
-  onOpenEditForm$ = createEffect(() =>
+  editFormOpened$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(BannersListPageActions.tableRowClicked),
+      ofType(BannersListPageActions.tableRowClicked, BannersListPageActions.drawerOpen),
       mergeMap(() => {
         const channelsApi = this.bannersService.getChannels()
         const zonesApi = this.bannersService.getZones()
@@ -85,7 +85,7 @@ export class BannersEffects {
     )
   );
 
-  getBannerById$ = createEffect(() =>
+  tableRowClicked$ = createEffect(() =>
     this.actions$
       .pipe(
       ofType(BannersListPageActions.tableRowClicked),

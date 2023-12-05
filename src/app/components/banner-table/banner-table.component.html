@@ -1,6 +1,6 @@
 <div class="overflow-x-scroll md:overflow-auto border-x border-t text-xs md:text-sm scroll" style="max-height: calc(100vh - 30vh); min-height: calc(100vh - 30vh)">
-  <ng-container *ngIf="bannersData$ && !isLoading$">
-    <table mat-table [dataSource]="bannersData$" matSort (matSortChange)="announceSortChange($event)">
+  <ng-container >
+    <table mat-table [dataSource]="bannersData$ ?? []" [matSortActive]="queryParams.sortBy" matSortDisableClear="true" [matSortDirection]="queryParams.sortDirection"  matSort (matSortChange)="announceSortChange($event)">
       <ng-container matColumnDef="name.raw">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
         <td mat-cell *matCellDef="let element"> {{element.name}} </td>
@@ -49,11 +49,13 @@
         </td>
       </ng-container>
       <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" style="background: #f1f1f1"></tr>
-      <tr
+      <ng-container *ngIf="bannersData$ && !isLoading$">
+        <tr
         mat-row *matRowDef="let row; columns: displayedColumns;"
         class="hover:bg-light hover:cursor-pointer border-gray-300 transition-all"
         (click)="onShowEditBannerForm(row)"
       ></tr>
+      </ng-container>
     </table>
   </ng-container>
   <div *ngIf="isLoading$ && !apiError$" class="mt-20 flex justify-center items-center">

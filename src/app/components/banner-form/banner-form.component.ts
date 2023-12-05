@@ -44,6 +44,14 @@ export class BannerFormComponent implements OnChanges{
 
   @Input() resetBannerForm!: null | boolean
 
+  @Input() uploadBlobLoader!: boolean | null
+
+  @Input() confirmationDialog!: boolean | null
+
+  @Output() openConfirmationModal = new EventEmitter()
+
+  @Output() closeConfirmationModal = new EventEmitter()
+
 
   bannerForm = new FormGroup({
     "name": new FormControl<FormInput>(null, [Validators.required]),
@@ -84,6 +92,14 @@ export class BannerFormComponent implements OnChanges{
 
   onCloseDrawer() {
       this.drawerClose.emit()
+  }
+
+  onOpenConfirmationModal() {
+    this.openConfirmationModal.emit()
+  }
+
+  onCloseConfirmationModal() {
+    this.closeConfirmationModal.emit()
   }
 
   onSubmitBannerData() {

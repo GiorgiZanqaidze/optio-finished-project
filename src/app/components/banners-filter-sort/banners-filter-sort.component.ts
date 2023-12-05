@@ -12,13 +12,13 @@ export class BannersFilterSortComponent implements OnChanges{
 
   @Input() searchBannersForm!: {search: string} | null
 
+  @Output() bannersSearch = new EventEmitter()
+
   searchForm = new FormGroup({
     "search": new FormControl<string>(''),
     "sortDirection": new  FormControl<string>('asc'),
     "sortBy": new FormControl<string>('name.raw')
   })
-
-  @Output() bannersSearch = new EventEmitter()
 
   constructor() {
     this.searchForm.valueChanges
