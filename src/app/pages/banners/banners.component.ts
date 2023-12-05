@@ -1,29 +1,7 @@
 import { Component, OnInit} from '@angular/core';
 import {Store} from "@ngrx/store";
-import {
-  apiError,
-  bannerFormData,
-  channelsReference,
-  drawerUI, fileIdChanges,
-  formServerError,
-  isLoadingSubmitBanner,
-  isLoadingUI,
-  labelsReference,
-  languagesReference,
-  resetBannerForm,
-  selectBanners,
-  showDeleteButton,
-  totalPages,
-  zonesReference
-} from '../../store/selectors/banners.selector';
-
-import {
-  deleteButtonClicked,
-  drawerToggle,
-  tableRowClicked,
-  fileInputChanged,
-  submitBannerData, closeDrawer, changeQueryParams
-} from "../../store/actions/banners.actions";
+import {BannersSelectors} from "../../store/selectors"
+import {BannersListPageActions} from "../../store/actions"
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {Banner} from "../../shared/types/banner";
 import {fileReader} from "../../shared/utilities/file-utils";
@@ -34,22 +12,22 @@ import {deepEqual} from "../../shared/utilities/deep-equal"
 })
 export class BannersComponent implements OnInit{
 
-  bannersDataEntities$ = this.store.select(selectBanners)
-  totalPages$ = this.store.select(totalPages)
-  isLoading$ = this.store.select(isLoadingUI)
-  apiError$ = this.store.select(apiError)
-  resetBannerForm$ = this.store.select(resetBannerForm)
+  bannersDataEntities$ = this.store.select(BannersSelectors.selectBanners)
+  totalPages$ = this.store.select(BannersSelectors.totalPages)
+  isLoading$ = this.store.select(BannersSelectors.isLoadingUI)
+  apiError$ = this.store.select(BannersSelectors.apiError)
+  resetBannerForm$ = this.store.select(BannersSelectors.resetBannerForm)
 
-  bannerForm$ = this.store.select(bannerFormData)
-  channels$ = this.store.select(channelsReference)
-  zones$ = this.store.select(zonesReference)
-  languages$ = this.store.select(languagesReference)
-  labels$ = this.store.select(labelsReference)
-  submitBannerDataIsLoading$ = this.store.select(isLoadingSubmitBanner)
-  showDeleteButton$ =  this.store.select(showDeleteButton)
-  formApiError$ = this.store.select(formServerError)
-  drawer$ = this.store.select(drawerUI)
-  fileId$ = this.store.select(fileIdChanges)
+  bannerForm$ = this.store.select(BannersSelectors.bannerFormData)
+  channels$ = this.store.select(BannersSelectors.channelsReference)
+  zones$ = this.store.select(BannersSelectors.zonesReference)
+  languages$ = this.store.select(BannersSelectors.languagesReference)
+  labels$ = this.store.select(BannersSelectors.labelsReference)
+  submitBannerDataIsLoading$ = this.store.select(BannersSelectors.isLoadingSubmitBanner)
+  showDeleteButton$ =  this.store.select(BannersSelectors.showDeleteButton)
+  formApiError$ = this.store.select(BannersSelectors.formServerError)
+  drawer$ = this.store.select(BannersSelectors.drawerUI)
+  fileId$ = this.store.select(BannersSelectors.fileIdChanges)
 
   constructor(
     private store: Store,
@@ -82,24 +60,24 @@ export class BannersComponent implements OnInit{
       }
 
       if (!deepEqual(this.queryParams, localQueries)) {
-        this.store.dispatch(changeQueryParams({queryParams: {search, sortBy, sortDirection, page, pageSize}}))
+        this.store.dispatch(BannersListPageActions.changeQueryParams({queryParams: {search, sortBy, sortDirection, page, pageSize}}))
         this.queryParams = localQueries
       }
 
       if (bannerId && bannerId !== this.bannerId) {
         this.bannerId = bannerId
-        this.store.dispatch(tableRowClicked({editFlag: true, bannerId: bannerId}))
+        this.store.dispatch(BannersListPageActions.tableRowClicked({editFlag: true, bannerId: bannerId}))
       }
 
       if(showForm) {
-        this.store.dispatch(drawerToggle({drawerState: true}))
+        this.store.dispatch(BannersListPageActions.drawerToggle({drawerState: true}))
       }
     })
   }
 
   drawerClose() {
     this.routeParamsChange({bannerId: null, showForm: null})
-    this.store.dispatch(closeDrawer())
+    this.store.dispatch(BannersListPageActions.closeDrawer())
     this.bannerId = ""
   }
 
@@ -123,17 +101,17 @@ export class BannersComponent implements OnInit{
   submitBannerData($event: {fileId: number, formData: Banner}) {
     const {fileId, formData} = $event
     const mergedBannerData = {...formData, id: this.bannerId, fileId: fileId}
-    this.store.dispatch(submitBannerData({bannerData: mergedBannerData, bannerId: this.bannerId}))
+    this.store.dispatch(BannersListPageActions.submitBannerData({bannerData: mergedBannerData, bannerId: this.bannerId}))
   }
 
   selectedFile(file: File) {
     const modifiedFile = fileReader(file)
     const fileForm = new FormData();
     fileForm.set('blob', modifiedFile)
-    this.store.dispatch(fileInputChanged({file: fileForm}))
+    this.store.dispatch(BannersListPageActions.fileInputChanged({file: fileForm}))
   }
 
   deleteBanner() {
-      this.store.dispatch(deleteButtonClicked({bannerId: this.bannerId}))
+      this.store.dispatch(BannersListPageActions.deleteButtonClicked({bannerId: this.bannerId}))
   }
 }
