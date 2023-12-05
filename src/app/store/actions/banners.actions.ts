@@ -38,3 +38,7 @@ export const changeQueryParams = createAction(
 export const closeDrawer = createAction(
     '[Banners Component] Close Drawer',
 )
+
+export const drawerOpen = createAction(
+  "[Banners Component] Open Drawer"
+)

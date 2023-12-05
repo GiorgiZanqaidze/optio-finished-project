@@ -6,6 +6,7 @@ import {
   closeDrawer,
   submitBannerData,
   deleteButtonClicked,
+  drawerOpen,
 } from "../actions/banners.actions";
 import {adapter, BannersStore} from "../state/banners.state";
 import { uploadBannerSuccess, deleteBannerSuccess, submitBannerFailed, fileUploadSuccess, submitBannerSuccess, filterBannersSuccess, uploadBannerFailed, referenceDataLoadSuccess } from "../actions/banners-api.actions";
@@ -128,4 +129,8 @@ export const bannersReducer = createReducer(
   on(closeDrawer, (state) => {
     return {...state, resetBannerForm: !state.resetBannerForm, drawer: false, showDeleteButton: false, formServerError: null}
   }),
+
+  on(drawerOpen, (state) => {
+    return {...state, drawer: true}
+  })
 )

@@ -66,7 +66,7 @@ export class BannersEffects {
 
   onOpenEditForm$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(BannersListPageActions.tableRowClicked),
+      ofType(BannersListPageActions.tableRowClicked, BannersListPageActions.drawerOpen),
       mergeMap(() => {
         const channelsApi = this.bannersService.getChannels()
         const zonesApi = this.bannersService.getZones()

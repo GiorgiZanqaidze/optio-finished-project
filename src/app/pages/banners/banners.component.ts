@@ -70,7 +70,7 @@ export class BannersComponent implements OnInit{
       }
 
       if(showForm) {
-        this.store.dispatch(BannersListPageActions.drawerToggle({drawerState: true}))
+        this.store.dispatch(BannersListPageActions.drawerOpen())
       }
     })
   }
