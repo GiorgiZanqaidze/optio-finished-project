@@ -9,7 +9,7 @@
         [languages$]="languages$ | async"
         [labels$]="labels$ | async"
         [submitBannerDataIsLoading$]="submitBannerDataIsLoading$ | async"
-        [showDeleteButton$]="showDeleteButton$ | async"
+        [bannerId]="bannerId"
         [formApiError$]="formApiError$ | async"
         (submitBannerData)="submitBannerData($event)"
         (selectedFile)="selectedFile($event)"

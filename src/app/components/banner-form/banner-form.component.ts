@@ -26,7 +26,7 @@ export class BannerFormComponent implements OnChanges{
 
   @Input() submitBannerDataIsLoading$!: boolean | null
 
-  @Input() showDeleteButton$!: boolean | null
+  @Input() bannerId!: string
 
   @Input() formApiError$!: string | null
 
