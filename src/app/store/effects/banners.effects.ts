@@ -93,7 +93,7 @@ export class BannersEffects {
 
         return this.bannersService.fetchBannerById(action.bannerId).pipe(
           map((bannerData: any) => {
-            return BannersApiActions.submitBannerSuccess({bannerData: bannerData.data});
+            return BannersApiActions.findBannerSuccess({bannerData: bannerData.data});
           }),
           catchError((error) => {
             return of(BannersApiActions.submitBannerFailed({error: error.error.error}));

@@ -73,7 +73,7 @@ export const isLoadingUI = createSelector(
 
 export const isLoadingSubmitBanner = createSelector(
   selectBannersState,
-  (state) => state.isLoadingSubmitBanner
+  (state) => state.isFormLoading
 );
 
 export const fileIdChanges = createSelector(

@@ -55,7 +55,7 @@ export const filterBannersFailed = createAction(
   "[Banners Component] Filter Banners Failed",
 )
 
-export const submitBannerSuccess = createAction(
+export const findBannerSuccess = createAction(
   "[Banners Component] Submit Banner Success",
   props<{bannerData: Banner}>()
 )

@@ -27,7 +27,7 @@ const initialState: BannersStore = adapter.getInitialState({
   labels: [],
   drawer: false,
   isLoading: false,
-  isLoadingSubmitBanner: false,
+  isFormLoading: false,
   imageId: null,
   resetBannerForm: false,
   uploadBlobLoader: false
@@ -51,7 +51,7 @@ export const bannersReducer = createReducer(
   }),
 
   on(BannersListPageActions.tableRowClicked, (state) => {
-    return {...state, drawer: true, isLoadingSubmitBanner: true}
+    return {...state, drawer: true, isFormLoading: true}
   }),
 
   on(BannersListPageActions.changeQueryParams, (state) => {
@@ -59,18 +59,18 @@ export const bannersReducer = createReducer(
   }),
 
   on(BannersListPageActions.deleteButtonClicked, (state) => {
-    return {...state, isLoadingSubmitBanner: true}
+    return {...state, isFormLoading: true}
   }),
 
   on(BannersApiActions.deleteBannerSuccess, (state, action) => {
-    return adapter.removeOne(action.bannerId.toString(), {...state, drawer: action.drawerState, isLoadingSubmitBanner: action.submitBannerLoading})
+    return adapter.removeOne(action.bannerId.toString(), {...state, drawer: action.drawerState, isFormLoading: action.submitBannerLoading})
   }),
 
   on(BannersApiActions.uploadBannerSuccess, (state, {newBanner, bannerId}) => {
     if (bannerId) {
-      return adapter.setOne(newBanner, {...state, drawer: false, isLoadingSubmitBanner: false})
+      return adapter.setOne(newBanner, {...state, drawer: false, isFormLoading: false})
     } else {
-      return adapter.addOne(newBanner, {...state, totalPages: state.totalPages + 1, drawer: false, isLoadingSubmitBanner: false})
+      return adapter.addOne(newBanner, {...state, totalPages: state.totalPages + 1, drawer: false, isFormLoading: false})
     }
   }),
 
@@ -78,22 +78,8 @@ export const bannersReducer = createReducer(
     return {...state, apiError: action.error, isLoading: false}
   }),
 
-  on(BannersApiActions.submitBannerSuccess, (state, {bannerData}) =>  {
-    const bannerFormData = {
-      id: bannerData.id,
-      name: bannerData.name,
-      zoneId: bannerData.zoneId,
-      active: bannerData.active,
-      startDate: bannerData.startDate,
-      endDate: bannerData.endDate,
-      fileId: bannerData.fileId,
-      priority: bannerData.priority,
-      channelId: bannerData.channelId,
-      language: bannerData.language,
-      url: bannerData.url,
-      labels: bannerData.labels
-    }
-    return {...state, bannerFormData, drawer: true, showDeleteButton: true}
+  on(BannersApiActions.findBannerSuccess, (state, {bannerData}) =>  {
+    return {...state, bannerFormData: bannerData, drawer: true, showDeleteButton: true}
   }),
 
   on(BannersApiActions.fileUploadSuccess, (state, {imageId}) => {
@@ -105,11 +91,11 @@ export const bannersReducer = createReducer(
   }),
 
   on(BannersApiActions.referenceDataLoadSuccess, (state, {channels, labels, zones, languages}) => {
-    return {...state, channels, labels, zones, languages, isLoadingSubmitBanner: false}
+    return {...state, channels, labels, zones, languages, isFormLoading: false}
   }),
 
   on(BannersListPageActions.submitBannerData, (state) => {
-    return {...state, isLoadingSubmitBanner: true}
+    return {...state, isFormLoading: true}
   }),
 
   on(BannersListPageActions.closeDrawer, (state) => {

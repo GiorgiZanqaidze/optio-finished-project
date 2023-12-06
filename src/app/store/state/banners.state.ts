@@ -14,7 +14,7 @@ export interface BannersStore extends EntityState<Banner>{
   labels: ReferenceData[]
   drawer: boolean,
   isLoading: boolean,
-  isLoadingSubmitBanner: boolean,
+  isFormLoading: boolean,
   imageId: number | string | null,
   resetBannerForm: boolean,
   uploadBlobLoader: boolean
