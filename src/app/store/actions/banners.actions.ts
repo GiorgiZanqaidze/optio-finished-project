@@ -30,7 +30,7 @@ export const changeQueryParams = createAction(
   props<{queryParams: any}>()
 )
 
-export const closeDrawer = createAction(
+export const drawerClosed = createAction(
     '[Banners Component] Close Drawer',
 )
 

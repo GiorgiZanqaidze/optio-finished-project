@@ -80,7 +80,7 @@ export class BannersComponent implements OnInit{
 
   drawerClose() {
     this.routeParamsChange({bannerId: null, showForm: null})
-    this.store.dispatch(BannersListPageActions.closeDrawer())
+    this.store.dispatch(BannersListPageActions.drawerClosed())
     this.bannerId = ""
     this.confirmationDialog = false
   }

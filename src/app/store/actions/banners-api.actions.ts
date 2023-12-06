@@ -3,44 +3,44 @@ import { Banner } from "src/app/shared/types/banner";
 import { ReferenceData } from "src/app/shared/types/reference-data";
 
 export const uploadBannerFailed = createAction(
-  "[Banners Component] Upload Banner Failed",
+  "[Banners Api] Upload Banner Failed",
   props<{error: string}>()
 )
 
 export const uploadBannerSuccess = createAction(
-  "[Banners Component] Upload Banner Success",
+  "[Banners Api] Upload Banner Success",
   props<{newBanner: Banner, bannerId: string | number, drawerState: boolean, submitBannerLoading: boolean}>()
 )
 
 export const referenceDataLoadSuccess = createAction(
-  "[Banners Component] Reference Data Load Success",
+  "[Banners Api] Reference Data Load Success",
   props<{channels: ReferenceData[], labels: ReferenceData[], zones: ReferenceData[], languages: ReferenceData[]}>()
 )
 
 export const referenceDataLoadFailed = createAction(
-  "[Banners Component] Reference Data Load Failed",
+  "[Banners Api] Reference Data Load Failed",
 )
 
 export const deleteBannerSuccess = createAction(
-  '[Banners Component] Delete Banner Success',
+  '[Banners Api] Delete Banner Success',
   props<{ bannerId: number | string}>()
 );
 
 export const deleteBannerFailed = createAction(
-  '[Banners Component] Delete Banner Failed',
+  '[Banners Api] Delete Banner Failed',
 );
 
 export const fileUploadSuccess = createAction(
-  "[Banners Component] Upload File Success",
+  "[Banners Api] Upload File Success",
   props<{imageId: string | number}>()
 )
 
 export const fileUploadFailed = createAction(
-  "[Banners Component] Upload File Failed",
+  "[Banners Api] Upload File Failed",
 )
 
 export const filterBannersSuccess = createAction(
-  "[Banners Component] Filter Banners Success",
+  "[Banners Api] Filter Banners Success",
   props<{
       bannersData: {total: number, entities: Banner[], searchAfter: string[]},
       page: number,
@@ -52,15 +52,15 @@ export const filterBannersSuccess = createAction(
 )
 
 export const filterBannersFailed = createAction(
-  "[Banners Component] Filter Banners Failed",
+  "[Banners Api] Filter Banners Failed",
 )
 
 export const findBannerSuccess = createAction(
-  "[Banners Component] Find Banner Success",
+  "[Banners Api] Find Banner Success",
   props<{bannerData: Banner}>()
 )
 
 export const submitBannerFailed = createAction(
-  "[Banners Component] Submit Banner Failed",
+  "[Banners Api] Submit Banner Failed",
   props<{error: string}>()
 )
