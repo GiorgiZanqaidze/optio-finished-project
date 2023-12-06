@@ -63,15 +63,11 @@ export const bannersReducer = createReducer(
   }),
 
   on(BannersApiActions.deleteBannerSuccess, (state, action) => {
-    return adapter.removeOne(action.bannerId.toString(), {...state, drawer: action.drawerState, isFormLoading: action.submitBannerLoading})
+    return adapter.removeOne(action.bannerId.toString(), {...state, drawer: false, isFormLoading: false})
   }),
 
-  on(BannersApiActions.uploadBannerSuccess, (state, {newBanner, bannerId}) => {
-    if (bannerId) {
-      return adapter.setOne(newBanner, {...state, drawer: false, isFormLoading: false, resetBannerForm: !state.resetBannerForm})
-    } else {
-      return adapter.addOne(newBanner, {...state, totalPages: state.totalPages + 1, drawer: false, isFormLoading: false, resetBannerForm: !state.resetBannerForm})
-    }
+  on(BannersApiActions.uploadBannerSuccess, (state, {newBanner}) => {
+    return adapter.setOne(newBanner, {...state, drawer: false, isFormLoading: false, resetBannerForm: !state.resetBannerForm})
   }),
 
   on(BannersApiActions.submitBannerFailed, (state, action) => {

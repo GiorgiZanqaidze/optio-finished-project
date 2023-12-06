@@ -3,6 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {environment} from "../../../environments/environment";
 import {map} from "rxjs";
 import {ReferenceData} from "../../shared/types/reference-data";
+import { Banner } from 'src/app/shared/types/banner';
 
 @Injectable({
   providedIn: 'root'
@@ -22,11 +23,11 @@ export class BannersService {
     return this.http.post(`${this.baseUrl}/banners/find-one`,{id, excludes: ['createdAt', 'modifiedAt']})
   }
 
-  submitBlob(formData: any) {
-    return this.http.post(`${this.baseUrl}/blob/upload`, formData)
+  submitBlob(fileData: FormData) {
+    return this.http.post(`${this.baseUrl}/blob/upload`, fileData)
   }
 
-  submitBannerForm(formData:any) {
+  submitBannerForm(formData: Banner) {
     return this.http.post(`${this.baseUrl}/banners/save`, formData)
   }
 

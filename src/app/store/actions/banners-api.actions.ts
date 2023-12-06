@@ -23,7 +23,7 @@ export const referenceDataLoadFailed = createAction(
 
 export const deleteBannerSuccess = createAction(
   '[Banners Component] Delete Banner Success',
-  props<{ bannerId: number | string, drawerState: boolean, submitBannerLoading: boolean}>()
+  props<{ bannerId: number | string}>()
 );
 
 export const deleteBannerFailed = createAction(
@@ -59,7 +59,6 @@ export const findBannerSuccess = createAction(
   "[Banners Component] Find Banner Success",
   props<{bannerData: Banner}>()
 )
-
 
 export const submitBannerFailed = createAction(
   "[Banners Component] Submit Banner Failed",

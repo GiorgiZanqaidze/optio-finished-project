@@ -45,7 +45,6 @@ export class BannersEffects {
     )
   );
 
-
   bannerDeleted$ = createEffect(() =>
     this.actions$
       .pipe(
@@ -53,7 +52,7 @@ export class BannersEffects {
       exhaustMap((action) => {
         return this.bannersService.deleteBanner(action.bannerId).pipe(
           map(() => {
-            return BannersApiActions.deleteBannerSuccess({bannerId: action.bannerId, drawerState: false, submitBannerLoading: false})
+            return BannersApiActions.deleteBannerSuccess({bannerId: action.bannerId})
           }),
           catchError(() => {
             return of(BannersApiActions.deleteBannerFailed());
@@ -90,7 +89,6 @@ export class BannersEffects {
       .pipe(
       ofType(BannersListPageActions.tableRowClicked),
       exhaustMap((action) => {
-
         return this.bannersService.fetchBannerById(action.bannerId).pipe(
           map((bannerData: any) => {
             return BannersApiActions.findBannerSuccess({bannerData: bannerData.data});
@@ -103,7 +101,6 @@ export class BannersEffects {
       )
     )
   );
-
 
   submitBannerData$ = createEffect(() =>
     this.actions$.pipe(
