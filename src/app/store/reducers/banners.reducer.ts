@@ -1,17 +1,6 @@
 import {createReducer, on} from "@ngrx/store";
-import {
-  drawerToggle,
-  tableRowClicked,
-  changeQueryParams,
-  closeDrawer,
-  submitBannerData,
-  deleteButtonClicked,
-  drawerOpen,
-  fileInputChanged,
-} from "../actions/banners.actions";
 import {adapter, BannersStore} from "../state/banners.state";
-import { uploadBannerSuccess, deleteBannerSuccess, submitBannerFailed, fileUploadSuccess, submitBannerSuccess, filterBannersSuccess, uploadBannerFailed, referenceDataLoadSuccess } from "../actions/banners-api.actions";
-
+import {BannersListPageActions, BannersApiActions} from "../actions"
 
 const initialState: BannersStore = adapter.getInitialState({
   totalPages: 0,
@@ -46,7 +35,7 @@ const initialState: BannersStore = adapter.getInitialState({
 
 export const bannersReducer = createReducer(
   initialState,
-  on(filterBannersSuccess, (state, action) => {
+  on(BannersApiActions.filterBannersSuccess, (state, action) => {
     const bannersEntities = action.bannersData.entities
 
     return adapter.setAll(
@@ -61,23 +50,23 @@ export const bannersReducer = createReducer(
         })
   }),
 
-  on(tableRowClicked, (state) => {
-    return {...state, drawer: true}
+  on(BannersListPageActions.tableRowClicked, (state) => {
+    return {...state, drawer: true, isLoadingSubmitBanner: true}
   }),
 
-  on(changeQueryParams, (state) => {
+  on(BannersListPageActions.changeQueryParams, (state) => {
     return {...state, isLoading: true}
   }),
 
-  on(deleteButtonClicked, (state) => {
+  on(BannersListPageActions.deleteButtonClicked, (state) => {
     return {...state, isLoadingSubmitBanner: true}
   }),
 
-  on(deleteBannerSuccess, (state, action) => {
+  on(BannersApiActions.deleteBannerSuccess, (state, action) => {
     return adapter.removeOne(action.bannerId.toString(), {...state, drawer: action.drawerState, isLoadingSubmitBanner: action.submitBannerLoading})
   }),
 
-  on(uploadBannerSuccess, (state, {newBanner, bannerId}) => {
+  on(BannersApiActions.uploadBannerSuccess, (state, {newBanner, bannerId}) => {
     if (bannerId) {
       return adapter.setOne(newBanner, {...state, drawer: false, isLoadingSubmitBanner: false})
     } else {
@@ -85,11 +74,11 @@ export const bannersReducer = createReducer(
     }
   }),
 
-  on(submitBannerFailed, (state, action) => {
+  on(BannersApiActions.submitBannerFailed, (state, action) => {
     return {...state, apiError: action.error, isLoading: false}
   }),
 
-  on(submitBannerSuccess, (state, {bannerData}) =>  {
+  on(BannersApiActions.submitBannerSuccess, (state, {bannerData}) =>  {
     const bannerFormData = {
       id: bannerData.id,
       name: bannerData.name,
@@ -107,36 +96,31 @@ export const bannersReducer = createReducer(
     return {...state, bannerFormData, drawer: true, showDeleteButton: true}
   }),
 
-  on(fileUploadSuccess, (state, {imageId}) => {
+  on(BannersApiActions.fileUploadSuccess, (state, {imageId}) => {
     return {...state, imageId, uploadBlobLoader: false }
   }),
 
-  on(uploadBannerFailed, (state, {error}) => {
+  on(BannersApiActions.uploadBannerFailed, (state, {error}) => {
     return {...state, formServerError: error}
   }),
 
-  on(referenceDataLoadSuccess, (state, {channels, labels, zones, languages}) => {
-    return {...state, channels, labels, zones, languages}
+  on(BannersApiActions.referenceDataLoadSuccess, (state, {channels, labels, zones, languages}) => {
+    return {...state, channels, labels, zones, languages, isLoadingSubmitBanner: false}
   }),
 
-  on(drawerToggle, (state, {drawerState}) => {
-    localStorage.setItem('drawerIsOpen', JSON.stringify(drawerState))
-    return {...state, drawer: drawerState}
-  }),
-
-  on(submitBannerData, (state) => {
+  on(BannersListPageActions.submitBannerData, (state) => {
     return {...state, isLoadingSubmitBanner: true}
   }),
 
-  on(closeDrawer, (state) => {
+  on(BannersListPageActions.closeDrawer, (state) => {
     return {...state, resetBannerForm: !state.resetBannerForm, drawer: false, showDeleteButton: false, formServerError: null}
   }),
 
-  on(drawerOpen, (state) => {
-    return {...state, drawer: true}
+  on(BannersListPageActions.drawerOpen, (state) => {
+    return {...state, drawer: true, isLoadingSubmitBanner: true}
   }),
 
-  on(fileInputChanged, (state) => {
+  on(BannersListPageActions.fileInputChanged, (state) => {
     return {...state, uploadBlobLoader: true}
   })
 )

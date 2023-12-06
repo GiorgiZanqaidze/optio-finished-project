@@ -25,11 +25,6 @@ export const submitBannerData = createAction(
   props<{bannerData: any, bannerId: number | string}>()
 )
 
-export const drawerToggle = createAction(
-  '[Banners Component] Drawer Toggled',
-  props<{drawerState: boolean}>()
-)
-
 export const changeQueryParams = createAction(
   '[Banners Component] Change Query Params',
   props<{queryParams: any}>()
