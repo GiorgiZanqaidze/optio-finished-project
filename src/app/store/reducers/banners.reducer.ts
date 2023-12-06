@@ -68,9 +68,9 @@ export const bannersReducer = createReducer(
 
   on(BannersApiActions.uploadBannerSuccess, (state, {newBanner, bannerId}) => {
     if (bannerId) {
-      return adapter.setOne(newBanner, {...state, drawer: false, isFormLoading: false})
+      return adapter.setOne(newBanner, {...state, drawer: false, isFormLoading: false, resetBannerForm: !state.resetBannerForm})
     } else {
-      return adapter.addOne(newBanner, {...state, totalPages: state.totalPages + 1, drawer: false, isFormLoading: false})
+      return adapter.addOne(newBanner, {...state, totalPages: state.totalPages + 1, drawer: false, isFormLoading: false, resetBannerForm: !state.resetBannerForm})
     }
   }),
 
