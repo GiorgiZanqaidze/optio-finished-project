@@ -117,7 +117,7 @@ export const bannersReducer = createReducer(
   }),
 
   on(BannersListPageActions.drawerOpen, (state) => {
-    return {...state, drawer: true, isLoadingSubmitBanner: true}
+    return {...state, drawer: true}
   }),
 
   on(BannersListPageActions.fileInputChanged, (state) => {
