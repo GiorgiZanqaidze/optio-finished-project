@@ -34,6 +34,6 @@ export const drawerClosed = createAction(
     '[Banners Component] Close Drawer',
 )
 
-export const drawerOpen = createAction(
+export const drawerOpened = createAction(
   "[Banners Component] Open Drawer"
 )

@@ -98,7 +98,7 @@ export const bannersReducer = createReducer(
     return {...state, resetBannerForm: !state.resetBannerForm, drawer: false, showDeleteButton: false, formServerError: null}
   }),
 
-  on(BannersListPageActions.drawerOpen, (state) => {
+  on(BannersListPageActions.drawerOpened, (state) => {
     return {...state, drawer: true}
   }),
 

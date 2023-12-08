@@ -73,7 +73,7 @@ export class BannersComponent implements OnInit{
       }
 
       if(showForm) {
-        this.store.dispatch(BannersListPageActions.drawerOpen())
+        this.store.dispatch(BannersListPageActions.drawerOpened())
       }
     })
   }
